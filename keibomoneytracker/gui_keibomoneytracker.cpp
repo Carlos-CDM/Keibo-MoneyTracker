@@ -196,11 +196,14 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
                iUserGuide.setCurrentLanguage(initialLanguage);
                iUserGuide.exec();
                updateUiToLanguage(initialLanguage);
+               displayMonthOnLabel();
                requestAccountCreation();
 
            }
            else {
                updateUiToLanguage(initialLanguage);
+               displayMonthOnLabel();
+               requestAccountCreation();
            }
         }
     } else if (AccountsExist) {
@@ -2389,7 +2392,13 @@ void Gui_KeiboMoneyTracker::on_monthForwardButton_clicked()
 
 void Gui_KeiboMoneyTracker::displayMonthOnLabel()
 {
-    this->ui->monthLabel->setText(QString::fromStdString(getMonthInLanguage(currentMonth, currentAccount.getAccountLanguage()) ));
+    if (ACCOUNT_SET)
+    {
+        this->ui->monthLabel->setText(QString::fromStdString(getMonthInLanguage(currentMonth, currentAccount.getAccountLanguage()) ));
+    }
+    else {
+        this->ui->monthLabel->setText(QString::fromStdString(getMonthInLanguage(currentMonth, initialLanguage)) );
+    }
 }
 
 void Gui_KeiboMoneyTracker::on_yearForwardButton_clicked()
