@@ -135,13 +135,13 @@ void MonthBarChartColorWidget::updateSpace()
     monthYpOutcomeFinal[3] = (150.0f/500.0f)*normalizeHeight;
 }
 
-void MonthBarChartColorWidget::setBarColors(const int &incomeSelected, const int &incomeUnselected,
+void MonthBarChartColorWidget::setBarColors(const int &incomeSelected,  const int &incomeUnselected,
                                             const int &outcomeSelected, const int &outcomeUnselected)
 {
-    colorIncomeSelected = incomeSelected;
+    colorIncomeSelected   = incomeSelected;
     colorIncomeUnselected = incomeUnselected;
 
-    colorOutcomeSelected = outcomeSelected;
+    colorOutcomeSelected   = outcomeSelected;
     colorOutcomeUnselected = outcomeUnselected;
 }
 
@@ -472,6 +472,8 @@ ThemeColorsDialog::ThemeColorsDialog(QWidget *parent) :
     ui->label_ColorBarBackground->installEventFilter(this);
     ui->label_ColorIncomeAmountText->installEventFilter(this);
     ui->buttonSaveAndSet->installEventFilter(this);
+    ui->comboBox->installEventFilter(this);
+    ui->comboBoxOverallTheme->installEventFilter(this);
 
     ui->radioGroupIncome->setChecked(true); //Radio button for groups
     ui->radioBarIncome->setChecked(true);
@@ -1591,6 +1593,14 @@ bool ThemeColorsDialog::eventFilter(QObject *obj, QEvent *event)
           {
             this->ui->buttonSaveAndSet->setColorForMouseButtonPressEvent();
           }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBox)
+          {
+            this->ui->comboBox->setColorForMouseButtonPressEvent();
+          }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBoxOverallTheme)
+          {
+            this->ui->comboBoxOverallTheme->setColorForMouseButtonPressEvent();
+          }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////
         else if (qobject_cast<QLabel*>(obj) == ui->label_ColorBarSelected)
         {
@@ -1640,6 +1650,14 @@ bool ThemeColorsDialog::eventFilter(QObject *obj, QEvent *event)
         else if (qobject_cast<QPushButton*>(obj) == ui->buttonSaveAndSet)
           {
             this->ui->buttonSaveAndSet->setColorForEnterEvent();
+          }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBox)
+          {
+            this->ui->comboBox->setColorForEnterEvent();
+          }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBoxOverallTheme)
+          {
+            this->ui->comboBoxOverallTheme->setColorForEnterEvent();
           }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////
         else if (qobject_cast<QLabel*>(obj) == ui->label_ColorBarSelected)
@@ -1699,6 +1717,14 @@ bool ThemeColorsDialog::eventFilter(QObject *obj, QEvent *event)
           {
             this->ui->buttonSaveAndSet->setColorForLeaveEvent();
           }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBox)
+          {
+            this->ui->comboBox->setColorForLeaveEvent();
+          }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBoxOverallTheme)
+          {
+            this->ui->comboBoxOverallTheme->setColorForLeaveEvent();
+          }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////
         else if (qobject_cast<QLabel*>(obj) == ui->label_ColorBarSelected)
         {
@@ -1732,6 +1758,14 @@ bool ThemeColorsDialog::eventFilter(QObject *obj, QEvent *event)
         if (qobject_cast<QWidget*>(obj) == ui->buttonSaveAndSet) {
             this->ui->buttonSaveAndSet->setColorForEnterEvent();
         }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBox)
+          {
+            this->ui->comboBox->setColorForEnterEvent();
+          }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBoxOverallTheme)
+          {
+            this->ui->comboBoxOverallTheme->setColorForEnterEvent();
+          }
     }
 
     else if (event->type() == QEvent::KeyPress)
@@ -1763,7 +1797,7 @@ void ThemeColorsDialog::on_buttonSaveAndSet_clicked()
         iEraseConfirmationDialog.setOverallThemeStyleSheet(overallThemeStyleSheet, currentColorConfigIt->useDarkOverallTheme);
         if (iLanguage == GERMAN) {
             iEraseConfirmationDialog.setWindowTitle(" Achtung");
-            iEraseConfirmationDialog.setInfoText("?");
+            iEraseConfirmationDialog.setInfoText("Die Farben für die ausgewählten Balken des Einkommens und der Ausgaben sind gleich. Um sie besser zu unterscheiden, wählen Sie unterschiedliche Farben. Wollen Sie fortfahren?");
         } else if (iLanguage == SPANISH) {
             iEraseConfirmationDialog.setWindowTitle(" Aviso");
             iEraseConfirmationDialog.setInfoText("Los colores para las barras de ingreso y egreso seleccionados son los mismos, para diferenciar mejor se recomienda usar colores diferentes. Desea continuar de todas maneras?");
@@ -1785,7 +1819,7 @@ void ThemeColorsDialog::on_buttonSaveAndSet_clicked()
         iEraseConfirmationDialog.setOverallThemeStyleSheet(overallThemeStyleSheet, currentColorConfigIt->useDarkOverallTheme);
         if (iLanguage == GERMAN) {
             iEraseConfirmationDialog.setWindowTitle(" Achtung");
-            iEraseConfirmationDialog.setInfoText("?");
+            iEraseConfirmationDialog.setInfoText("Die Farben der ausgewählten und nicht ausgewählten Balken des Einkommens sind gleich. Um sie besser zu unterscheiden, wählen Sie unterschiedliche Farben. Wollen Sie fortfahren?");
         } else if (iLanguage == SPANISH) {
             iEraseConfirmationDialog.setWindowTitle(" Aviso");
             iEraseConfirmationDialog.setInfoText("Los colores para las barras de ingreso seleccionados y no seleccionados son los mismos, para diferenciar mejor se recomienda usar colores diferentes. Desea continuar de todas maneras?");
@@ -1807,7 +1841,7 @@ void ThemeColorsDialog::on_buttonSaveAndSet_clicked()
         iEraseConfirmationDialog.setOverallThemeStyleSheet(overallThemeStyleSheet, currentColorConfigIt->useDarkOverallTheme);
         if (iLanguage == GERMAN) {
             iEraseConfirmationDialog.setWindowTitle(" Achtung");
-            iEraseConfirmationDialog.setInfoText("?");
+            iEraseConfirmationDialog.setInfoText("Die Farben der ausgewählten und nicht ausgewählten Balken der Ausgaben sind gleich. Um sie besser zu unterscheiden, wählen Sie unterschiedliche Farben. Wollen Sie fortfahren?");
         } else if (iLanguage == SPANISH) {
             iEraseConfirmationDialog.setWindowTitle(" Aviso");
             iEraseConfirmationDialog.setInfoText("Los colores para las barras de egreso seleccionados y no seleccionados son los mismos, para diferenciar mejor se recomienda usar colores diferentes. Desea continuar de todas maneras?");
@@ -1831,7 +1865,7 @@ void ThemeColorsDialog::on_buttonSaveAndSet_clicked()
         iEraseConfirmationDialog.setOverallThemeStyleSheet(overallThemeStyleSheet, currentColorConfigIt->useDarkOverallTheme);
         if (iLanguage == GERMAN) {
             iEraseConfirmationDialog.setWindowTitle(" Achtung");
-            iEraseConfirmationDialog.setInfoText("?");
+            iEraseConfirmationDialog.setInfoText("Prüfen Sie bitte die Farben der Einkommensgruppe. Um sie besser zu unterscheiden, wählen Sie unterschiedliche Farben. Wollen Sie fortfahren?");
         } else if (iLanguage == SPANISH) {
             iEraseConfirmationDialog.setWindowTitle(" Aviso");
             iEraseConfirmationDialog.setInfoText("Verifique los colores de grupos de ingreso, para diferenciarlos mejor se recomienda usar colores diferentes. Desea continuar de todas maneras?");
@@ -1863,7 +1897,7 @@ void ThemeColorsDialog::on_buttonSaveAndSet_clicked()
         iEraseConfirmationDialog.setOverallThemeStyleSheet(overallThemeStyleSheet, currentColorConfigIt->useDarkOverallTheme);
         if (iLanguage == GERMAN) {
             iEraseConfirmationDialog.setWindowTitle(" Achtung");
-            iEraseConfirmationDialog.setInfoText("?");
+            iEraseConfirmationDialog.setInfoText("Prüfen Sie bitte die Farben der Ausgabensgruppe. Um sie besser zu unterscheiden, wählt man unterschiedliche Farben. Wollen Sie fortfahren?");
         } else if (iLanguage == SPANISH) {
             iEraseConfirmationDialog.setWindowTitle(" Aviso");
             iEraseConfirmationDialog.setInfoText("Verifique los colores de grupos de egreso, para diferenciarlos mejor se recomienda usar colores diferentes. Desea continuar de todas maneras?");
@@ -2045,10 +2079,12 @@ void ThemeColorsDialog::updateColorsOnScreen()
      ///--------------------------------------------------------------------------///--------------------------------------------------------------------------///
      //Set color for Overall background, text and borders depending on value Light/Dark.
      this->ui->tableWidget->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
-     overallThemeStyleSheet = getStyleSheetString("", currentColorConfigIt->colorOverallBackground, true, false) +
-                                      getStyleSheetString("",currentColorConfigIt->colorOverallText, false, false);
+     overallThemeStyleSheet = getStyleSheetString("", currentColorConfigIt->colorOverallBackground,  true,  false) +
+                              getStyleSheetString("", currentColorConfigIt->colorOverallText, false, false);
      this->setStyleSheet(overallThemeStyleSheet);
      this->ui->buttonSaveAndSet->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
+     this->ui->comboBox->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
+     this->ui->comboBoxOverallTheme->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
 }
 
 void ThemeColorsDialog::addCustomColorConfiguration(const ColorConfiguration &customColorConfig)

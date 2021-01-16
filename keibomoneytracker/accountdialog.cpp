@@ -296,6 +296,42 @@ bool AccountDialog::eventFilter(QObject *obj, QEvent *event)
             this->ui->comboBoxLanguage->setColorForEnterEvent();
         }
     }
+    else if (event->type() == QEvent::FocusIn)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->buttonCreateAccount) {
+            this->ui->buttonCreateAccount->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->selectImageButton) {
+            this->ui->selectImageButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->textEditAccountName) {
+            this->ui->textEditAccountName->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCurrency) {
+            this->ui->comboBoxCurrency->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxLanguage) {
+            this->ui->comboBoxLanguage->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::FocusOut)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->buttonCreateAccount) {
+            this->ui->buttonCreateAccount->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->selectImageButton) {
+            this->ui->selectImageButton->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->textEditAccountName) {
+            this->ui->textEditAccountName->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCurrency) {
+            this->ui->comboBoxCurrency->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxLanguage) {
+            this->ui->comboBoxLanguage->setColorForLeaveEvent();
+        }
+    }
     return false;
 }
 

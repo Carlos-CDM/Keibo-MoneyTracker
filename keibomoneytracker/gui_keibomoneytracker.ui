@@ -1667,9 +1667,9 @@ QGroupBox::title {
         </item>
        </layout>
        <zorder>groupBoxOverall</zorder>
-       <zorder>groupBoxGroups</zorder>
        <zorder>groupBox_3</zorder>
        <zorder>groupBoxMain</zorder>
+       <zorder>groupBoxGroups</zorder>
       </widget>
      </widget>
     </item>

@@ -2231,6 +2231,17 @@ void Gui_KeiboMoneyTracker::on_editItemButton_clicked()
 
 void Gui_KeiboMoneyTracker::displayArticlesOnTable()
 {
+    if (currentAccount.getBalanceInMonth(currentMonth) >= abs(10000.0)  ){
+        ui->lineMonthlyBalance->setFixedWidth(90);
+    } else {
+        ui->lineMonthlyBalance->setFixedWidth(70);
+    }
+    if (currentAccount.getBalanceInYear() >= abs(10000.0)  ){
+        ui->lineYearlyBalance->setFixedWidth(90);
+    } else {
+        ui->lineYearlyBalance->setFixedWidth(70);
+    }
+
     ui->tableWidget->setColumnCount(4);
     QStringList tableHeader;
     if (currentAccount.getAccountLanguage() == ENGLISH){
