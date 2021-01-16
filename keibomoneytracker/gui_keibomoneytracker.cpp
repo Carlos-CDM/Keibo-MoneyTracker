@@ -2234,12 +2234,12 @@ void Gui_KeiboMoneyTracker::displayArticlesOnTable()
     if (currentAccount.getBalanceInMonth(currentMonth) >= abs(10000.0)  ){
         ui->lineMonthlyBalance->setFixedWidth(90);
     } else {
-        ui->lineMonthlyBalance->setFixedWidth(70);
+        ui->lineMonthlyBalance->setFixedWidth(82);
     }
     if (currentAccount.getBalanceInYear() >= abs(10000.0)  ){
         ui->lineYearlyBalance->setFixedWidth(90);
     } else {
-        ui->lineYearlyBalance->setFixedWidth(70);
+        ui->lineYearlyBalance->setFixedWidth(82);
     }
 
     ui->tableWidget->setColumnCount(4);
