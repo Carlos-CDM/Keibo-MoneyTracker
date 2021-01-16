@@ -95,7 +95,7 @@ public:
 
     void getExistingAccounts(std::vector<std::string> &existingAccounts);
 
-    void setOverallThemeStyleSheet(QString styleSheetString);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool usingDarkTheme);
 
 private slots:
     void on_buttonCreateAccount_clicked();

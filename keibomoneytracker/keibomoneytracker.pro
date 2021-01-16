@@ -4,7 +4,7 @@ QT -= gui
 QT += widgets
 
 TARGET = keibomoneytracker
-CONFIG += console
+#CONFIG += console
 CONFIG -= app_bundle
 CONFIG += c++11
 
@@ -14,6 +14,9 @@ SOURCES += main.cpp \
     aboutdialog.cpp \
     accountstatsdialog.cpp \
     checkfaultytransactionsdialog.cpp \
+    customcombobox.cpp \
+    custompushbutton.cpp \
+    customtextedit.cpp \
     donatedialog.cpp \
     gui_keibomoneytracker.cpp \
     keibomoneytracker.cpp \
@@ -36,6 +39,9 @@ HEADERS += \
     aboutdialog.h \
     accountstatsdialog.h \
     checkfaultytransactionsdialog.h \
+    customcombobox.h \
+    custompushbutton.h \
+    customtextedit.h \
     donatedialog.h \
     gui_keibomoneytracker.h \
     keibomoneytracker.h \
@@ -82,6 +88,7 @@ unix {
 
 win32 {
     LIBS += -lopengl32
+    DEFINES += USING_WINDOWS
 }
 
 RESOURCES += \

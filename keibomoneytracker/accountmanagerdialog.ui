@@ -40,10 +40,10 @@
    </property>
    <property name="font">
     <font>
-     <family>Noto Sans</family>
+     <family>MS Shell Dlg 2</family>
      <pointsize>26</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -61,7 +61,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Umpush</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
    <property name="text">
@@ -79,7 +79,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Umpush</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
    <property name="text">
@@ -97,7 +97,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Umpush</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
    <property name="text">
@@ -115,9 +115,18 @@
    </property>
    <property name="font">
     <font>
-     <family>Umpush</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
+   <property name="cornerButtonEnabled">
+    <bool>false</bool>
+   </property>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
   </widget>
  </widget>
  <resources/>

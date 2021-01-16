@@ -45,7 +45,7 @@ public:
     std::string newGroupName = "";
     int         itemIdNumber = 0;
 
-    void setOverallThemeStyleSheet(QString styleSheetString, QString tableHeaderStyleSheet);
+    void setOverallThemeStyleSheet(QString styleSheetString, QString tTableHeaderStyleSheet, bool tUsingDarkTheme);
     void setLanguage(const Language & accountLanguage);
 
 private slots:
@@ -75,7 +75,9 @@ private:
     bool groupEdited   = false;
     bool groupDeleted  = false;
 
+    bool usingDarkTheme = false;
     QString overallThemeStyleSheetString;
+    QString tableHeaderStyleSheet;
 };
 
 #endif // MANAGEGROUPSDIALOG_H

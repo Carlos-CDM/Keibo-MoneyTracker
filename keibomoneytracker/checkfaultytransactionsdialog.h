@@ -53,7 +53,7 @@ public:
     void provideArticleInfo(Transaction &iTransaction, bool isIncome);
 
     void addUpdatedTransactionToList();
-    void setOverallThemeStyleSheet(QString styleSheetString);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme);
 
 private slots:
     void on_SetAndNextButton_clicked();
@@ -85,6 +85,7 @@ private:
     void checkAndSetTransaction();
 
     QString overallThemeStyleSheetString;
+    bool usingDarkTheme = false;
 };
 
 #endif // CHECKFAULTYTRANSACTIONSDIALOG_H

@@ -89,6 +89,7 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     this->ui->addExpenseButton->installEventFilter(this);
     this->ui->editItemButton->installEventFilter(this);
     this->ui->deleteItemButton->installEventFilter(this);
+    this->ui->pushButtonToggleGroups->installEventFilter(this);
     this->ui->tableOfGroups->installEventFilter(this);
     this->ui->widget1->installEventFilter(this);
     this->ui->labelAccountIcon->installEventFilter(this);
@@ -292,7 +293,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     TopOfTableReached = false;
                     this->ui->tableWidget->selectRow(newSelectedRow);
                 } else if ( (newSelectedRow == 0) && (TopOfTableReached == false) ) {
-                    //std::cout<<"Row on the bottom REACHED"<<'\n';
+                    std::cout<<"Row on the bottom REACHED"<<'\n';
                     this->ui->tableWidget->selectRow(newSelectedRow);
                     TopOfTableReached = true;
                 }
@@ -305,7 +306,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     BottomOfTableReached = false;
                     this->ui->tableWidget->selectRow(newSelectedRow);
                 } else if ((newSelectedRow >= (ui->tableWidget->rowCount()-1)) && (BottomOfTableReached == false)) {
-                    //std::cout<<"Row on the top REACHED"<<'\n';
+                    std::cout<<"Row on the top REACHED"<<'\n';
                     this->ui->tableWidget->selectRow(newSelectedRow);
                     BottomOfTableReached = true;
                 }
@@ -314,6 +315,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             else if (key->key() == Qt::Key_Right)
             {
                 int previousSelectedElement = ui->tableWidget->currentRow();
+                std::cout<<"PREVIOUS SELECTED ELEMENT "<<previousSelectedElement<<'\n';
                 if (currentMonth>=0 && currentMonth<11) {
                     ++currentMonth;
                     updateToCurrentMonth();
@@ -323,6 +325,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     updateToCurrentYear();
                 }
                 if (previousSelectedElement > ui->tableWidget->rowCount()-1){
+                    std::cout<<"PREVIOUS SELECTED ELEMENT WAS BIGGET THAN CURRENT LIST"<<'\n';
                     this->ui->tableWidget->selectRow(ui->tableWidget->rowCount()-1);
                 }
                 return true;
@@ -330,6 +333,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             else if (key->key() == Qt::Key_Left)
             {
                 int previousSelectedElement = ui->tableWidget->currentRow();
+                std::cout<<"PREVIOUS SELECTED ELEMENT "<<previousSelectedElement<<'\n';
                 if (currentMonth>0 && currentMonth<=11) {
                    --currentMonth;
                     updateToCurrentMonth();
@@ -466,6 +470,40 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             this->showGroupsMenu();
             return true;
         }
+        else if (qobject_cast<QWidget*>(obj) == ui->addIncomeButton) {
+            this->ui->addIncomeButton->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
+            this->ui->addExpenseButton->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
+            this->ui->editItemButton->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->deleteItemButton) {
+            this->ui->deleteItemButton->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->pushButtonToggleGroups) {
+            this->ui->pushButtonToggleGroups->setColorForMouseButtonPressEvent();
+        }
+    }
+
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->addIncomeButton) {
+            this->ui->addIncomeButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
+            this->ui->addExpenseButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
+            this->ui->editItemButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->deleteItemButton) {
+            this->ui->deleteItemButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->pushButtonToggleGroups) {
+            this->ui->pushButtonToggleGroups->setColorForEnterEvent();
+        }
     }
 
     else if (event->type() == QEvent::FocusIn)
@@ -556,6 +594,21 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
              ui->groupBackwardsButton->setStyleSheet(buttonStyle);
              return true;
          }
+         else if (qobject_cast<QWidget*>(obj) == ui->addIncomeButton) {
+             this->ui->addIncomeButton->setColorForEnterEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
+             this->ui->addExpenseButton->setColorForEnterEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
+             this->ui->editItemButton->setColorForEnterEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->deleteItemButton) {
+             this->ui->deleteItemButton->setColorForEnterEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->pushButtonToggleGroups) {
+             this->ui->pushButtonToggleGroups->setColorForEnterEvent();
+         }
      }
 
     else if (event->type() == QEvent::Leave)
@@ -595,6 +648,21 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
              QString buttonStyle = "QPushButton{border: 1px solid white; border-color: rgba(0,0,0,0); background-color:rgba(0, 0, 0, 0); border-radius: 5px;}";
              ui->groupBackwardsButton->setStyleSheet(buttonStyle);
              return true;
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->addIncomeButton) {
+             this->ui->addIncomeButton->setColorForLeaveEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
+             this->ui->addExpenseButton->setColorForLeaveEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
+             this->ui->editItemButton->setColorForLeaveEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->deleteItemButton) {
+             this->ui->deleteItemButton->setColorForLeaveEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->pushButtonToggleGroups) {
+             this->ui->pushButtonToggleGroups->setColorForLeaveEvent();
          }
      }
 
@@ -747,15 +815,15 @@ void Gui_KeiboMoneyTracker::updateToCurrentYear() //Updates also to the selected
         if (yearDataExists && (currentAccount.allTransactionsOk == false)){
             eraseConfirmation_dialog eraseConfirmationWindow;
             eraseConfirmationWindow.setModal(true);
-            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             if (currentAccount.getAccountLanguage() == ENGLISH)            {
-                eraseConfirmationWindow.setWindowTitle("Information");
+                eraseConfirmationWindow.setWindowTitle(" Information");
                 eraseConfirmationWindow.setInfoText("The data file for the current year has been externally modified. Please verify the following transactions.");
             } else if (currentAccount.getAccountLanguage() == GERMAN) {
-                eraseConfirmationWindow.setWindowTitle("Information");
+                eraseConfirmationWindow.setWindowTitle(" Information");
                 eraseConfirmationWindow.setInfoText("Die Datei für das gewählte Jahr wurde gerändert. Bitte prüfen Sie die folgenden Transaktionen.");
             } else if (currentAccount.getAccountLanguage() == SPANISH) {
-                eraseConfirmationWindow.setWindowTitle("Información");
+                eraseConfirmationWindow.setWindowTitle(" Información");
                 eraseConfirmationWindow.setInfoText("El archivo de datos del año seleccionado ha sido externamente modificado. Por favor verifique las siguientes transacciones.");
             }
             eraseConfirmationWindow.exec();
@@ -789,7 +857,7 @@ void Gui_KeiboMoneyTracker::updateToCurrentYear() //Updates also to the selected
             checkTransactionsDialog.getFaultyTransactionsData(listOfFaultyTransactions, currentAccount.getYear());
             checkTransactionsDialog.getGroups(currentAccount.IncomeGroupsNames, currentAccount.ExpensesGroupsNames);
             checkTransactionsDialog.updateInfo();
-            checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             checkTransactionsDialog.exec();
 
             //Get updated data
@@ -884,7 +952,7 @@ void Gui_KeiboMoneyTracker::updateColorsOnScreen(std::vector<ColorConfiguration>
     }
 
     ///--------------------------------------------------------------------------///--------------------------------------------------------------------------///
-    //Set color for Overall background, text and borders depending on theme's value (Light/Dark).
+    //Set color for Overall background, text, buttons and borders depending on theme's value (Light/Dark).
     int r_OB= 0, g_OB = 0, b_OB= 0;
     getColorCode(currentColorConfigIt->colorOverallBackground, r_OB, g_OB, b_OB);
     QString overallBackgroundColor = "background-color: rgb("+   //Overall background
@@ -905,10 +973,38 @@ void Gui_KeiboMoneyTracker::updateColorsOnScreen(std::vector<ColorConfiguration>
             ");";
     this->currentOverallThemeStyleSheet = overallBackgroundColor+overallTextColor;
     this->usingDarkTheme = currentColorConfigIt->useDarkOverallTheme;
-    this->setStyleSheet(currentOverallThemeStyleSheet);
-    this->tablesHeaderStyleSheet = "QTableCornerButton::section {" + overallBackgroundColor + "} QHeaderView::section {" + overallBackgroundColor + "}";
-    this->ui->tableWidget->setStyleSheet(tablesHeaderStyleSheet);
+    this->tablesHeaderStyleSheet = "QTableCornerButton::section {" + overallBackgroundColor + "border-radius : 6px; }"
+                                   "QHeaderView::section { background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 255); border-right-style:rgba(255, 255, 255, 0);}"
+                                   "QTableWidget{border: 1px solid gray; border-color: rgb(186, 189, 182); border-radius : 3px;}"
+                                   "QHeaderView{border-bottom: 1px solid gray;}";
+    this->ui->tableWidget->setStyleSheet(tablesHeaderStyleSheet);    
     this->ui->tableOfGroups->setStyleSheet(tablesHeaderStyleSheet);
+    this->ui->tableWidget->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
+    this->ui->tableOfGroups->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
+
+
+    this->ui->tableWidget->verticalScrollBar()->setStyleSheet(
+                "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px;}"
+                "QScrollBar::add-line:vertical { border: none; background: none;}"
+                "QScrollBar::sub-line:vertical { border: none; background: none;}"
+                "QScrollBar::handle:vertical {background: rgb(32, 47, 130), min-height: 0px;}");
+    this->ui->tableOfGroups->verticalScrollBar()->setStyleSheet(
+                "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px;}"
+                "QScrollBar::add-line:vertical { border: none; background: none;}"
+                "QScrollBar::sub-line:vertical { border: none; background: none;}");
+    this->ui->tableOfGroups->horizontalScrollBar()->setStyleSheet(
+                "QScrollBar:horizontal { width: 15px; margin: 0px 0px 0px 0px;}"
+                "QScrollBar::add-line:horizontal { border: none; background: none;}"
+                "QScrollBar::sub-line:horizontal { border: none; background: none;}");
+
+    this->setStyleSheet(currentOverallThemeStyleSheet);
+
+    this->ui->addIncomeButton->updateColorTheme(usingDarkTheme);
+    this->ui->addExpenseButton->updateColorTheme(usingDarkTheme);
+    this->ui->editItemButton->updateColorTheme(usingDarkTheme);
+    this->ui->deleteItemButton->updateColorTheme(usingDarkTheme);
+    this->ui->pushButtonToggleGroups->updateColorTheme(usingDarkTheme);
+
 
     ///--------------------------------------------------------------------------///--------------------------------------------------------------------------///
     //Style sheet for menus.
@@ -928,6 +1024,7 @@ void Gui_KeiboMoneyTracker::on_actionAppearance_triggered() //TAB Renamed to "Ap
 {
     if (ACCOUNT_SET == true)
     {
+        std::cout<<"OPENNING APPEARANCE 1" <<'\n';
         ThemeColorsDialog iAppearanceDialog;
         iAppearanceDialog.setLanguage(currentAccount.getAccountLanguage());
         iAppearanceDialog.setModal(true);
@@ -938,8 +1035,8 @@ void Gui_KeiboMoneyTracker::on_actionAppearance_triggered() //TAB Renamed to "Ap
         iAppearanceDialog.exec();
 
         if (iAppearanceDialog.colorSelectionConfirmed)
-        {
-            //Temporary variables to store color coming from Appearance-Dialog-Widgets
+        {   //Temporary variables to store color coming from Appearance-Dialog-Widgets
+            std::cout<<"iAppearanceDialog.currentColorTheme "<<iAppearanceDialog.currentColorTheme<<'\n';
             currentAccount.setAccountCurrentColorTheme(iAppearanceDialog.currentColorTheme);
             std::vector<ColorConfiguration>::iterator tempCurrentColorConfigIt = iAppearanceDialog.colorConfigurationList.begin()
                                                                              +currentAccount.getAccountCurrentColorTheme();
@@ -970,15 +1067,15 @@ void Gui_KeiboMoneyTracker::on_actionAppearance_triggered() //TAB Renamed to "Ap
     else {
         eraseConfirmation_dialog iAccountCreationConfirmedDialog;
         iAccountCreationConfirmedDialog.setModal(true);
-        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
         if (initialLanguage == ENGLISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Please create or select an account first.");
         } else if (initialLanguage == GERMAN) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Bitte erstellen/wählen Sie zuerst ein Konto.");
         } else if (initialLanguage == SPANISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Información");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Información");
             iAccountCreationConfirmedDialog.setInfoText("Por favor cree o seleccione una cuenta primero.");
         }
         iAccountCreationConfirmedDialog.exec();
@@ -1012,15 +1109,15 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
    if (yearDataExists && (currentAccount.allTransactionsOk == false)){
        eraseConfirmation_dialog eraseConfirmationWindow;
        eraseConfirmationWindow.setModal(true);
-       eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+       eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
        if (currentAccount.getAccountLanguage() == ENGLISH)            {
-           eraseConfirmationWindow.setWindowTitle("Information");
+           eraseConfirmationWindow.setWindowTitle(" Information");
            eraseConfirmationWindow.setInfoText("The data file for the current year has been externally modified. Please verify the following transactions.");
        } else if (currentAccount.getAccountLanguage() == GERMAN) {
-           eraseConfirmationWindow.setWindowTitle("Information");
+           eraseConfirmationWindow.setWindowTitle(" Information");
            eraseConfirmationWindow.setInfoText("Die Datei für das gewählte Jahr wurde gerändert. Bitte prüfen Sie die folgenden Transaktionen.");
        } else if (currentAccount.getAccountLanguage() == SPANISH) {
-           eraseConfirmationWindow.setWindowTitle("Información");
+           eraseConfirmationWindow.setWindowTitle(" Información");
            eraseConfirmationWindow.setInfoText("El archivo de datos del año seleccionado ha sido externamente modificado. Por favor verifique las siguientes transacciones.");
        }
        eraseConfirmationWindow.exec();
@@ -1054,7 +1151,7 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
        checkTransactionsDialog.getFaultyTransactionsData(listOfFaultyTransactions, currentAccount.getYear());
        checkTransactionsDialog.getGroups(currentAccount.IncomeGroupsNames, currentAccount.ExpensesGroupsNames);
        checkTransactionsDialog.updateInfo();
-       checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+       checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
        checkTransactionsDialog.exec();
 
        //Get updated data
@@ -1109,7 +1206,7 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
                                                            currentAccount.ExpensesGroupsNames,
                                                            colorOfIncomeAmount,
                                                            currentAccount.getAccountLanguage());
-           iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+           iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
            iNewElementsAddedAutomatically.exec();
        }
 
@@ -1225,22 +1322,22 @@ void Gui_KeiboMoneyTracker::verifyAccountInfo(std::string &accountName, std::str
     //Show information
     eraseConfirmation_dialog iAccountCreationConfirmedDialog;
     if (currentAccount.getAccountLanguage() == ENGLISH)            {
-        iAccountCreationConfirmedDialog.setWindowTitle("Information");
+        iAccountCreationConfirmedDialog.setWindowTitle(" Information");
         iAccountCreationConfirmedDialog.setInfoText("Files for this account have been externally modified. Please verify the account information.");
     } else if (currentAccount.getAccountLanguage() == GERMAN) {
-        iAccountCreationConfirmedDialog.setWindowTitle("Information");
+        iAccountCreationConfirmedDialog.setWindowTitle(" Information");
         iAccountCreationConfirmedDialog.setInfoText("Dateien für dieses Konto wurden geändert. Bitte prüfen Sie die Kontoinformation.");
     } else if (currentAccount.getAccountLanguage() == SPANISH) {
-        iAccountCreationConfirmedDialog.setWindowTitle("Información");
+        iAccountCreationConfirmedDialog.setWindowTitle(" Información");
         iAccountCreationConfirmedDialog.setInfoText("Archivos de esta cuenta han sido externamente modificados. Por favor verifique la información de cuenta.");
     }
     iAccountCreationConfirmedDialog.setModal(true);
-    iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+    iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
     iAccountCreationConfirmedDialog.exec();
 
     //Faulty Properties have to be loaded again, in case a good account was previously opened. Values of current opened account have to be cleaned.
     if (CURRENT_SELECTED_ACCOUNT > -1){ //If an Account was previously opened, clear previous property values.
-        //std::cout<<"ACCOUNT WAS PREVIOUSLY OPENED, CLEARING PROPERTY VALUES"<<'\n';
+        std::cout<<"ACCOUNT WAS PREVIOUSLY OPENED, CLEARING PROPERTY VALUES"<<'\n';
         this->currentAccount.clearAccountProperties(true);
         this->currentAccount.loadAccountProperties(accountName,accountPath);
     }
@@ -1260,7 +1357,7 @@ void Gui_KeiboMoneyTracker::verifyAccountInfo(std::string &accountName, std::str
                                             tempAccountCurrency,
                                             tempAccountImagePath);
     iAccountDialog.getExistingAccounts(ListOfExistingAccounts);
-    iAccountDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+    iAccountDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
 
     iAccountDialog.exec();
     //There is a pause at this point for Gui_KeiboMoneyTracker. Waiting for dialog to be closed
@@ -1298,21 +1395,21 @@ void Gui_KeiboMoneyTracker::verifyAccountInfo(std::string &accountName, std::str
 
         eraseConfirmation_dialog iAccountCreationConfirmedDialog;
         if (currentAccount.getAccountLanguage() == ENGLISH)            {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Account information updated.");
         } else if (currentAccount.getAccountLanguage() == GERMAN) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Konto Daten wurden aktualisiert.");
         } else if (currentAccount.getAccountLanguage() == SPANISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Información");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Información");
             iAccountCreationConfirmedDialog.setInfoText("Información de cuenta actualizada.");
         }
         iAccountCreationConfirmedDialog.setModal(true);
-        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
         iAccountCreationConfirmedDialog.exec();
 
         this->setCurrentAccount();
-        this->setWindowTitle(QString::fromStdString(tempAccountName));
+        this->setWindowTitle(QString("  ") + QString::fromStdString(tempAccountName));
 
         if (currentAccount.hasProfileImage()){
             QImage srcImg(QString::fromStdString(tempAccountImagePath));
@@ -1323,30 +1420,32 @@ void Gui_KeiboMoneyTracker::verifyAccountInfo(std::string &accountName, std::str
             ui->labelAccountIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         }
         CURRENT_SELECTED_ACCOUNT = CURRENT_SELECTED_ACCOUNT_INDEX_FROM_MANAGER;
+        std::cout<<"CURRENT SELECTED AFTER EDITION: "<<CURRENT_SELECTED_ACCOUNT<<'\n';
     } else {
         eraseConfirmation_dialog iAccountCreationConfirmedDialog;
         if (currentAccount.getAccountLanguage() == ENGLISH)            {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Process canceled.");
         } else if (currentAccount.getAccountLanguage() == GERMAN) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Prozess abgebrochen.");
         } else if (currentAccount.getAccountLanguage() == SPANISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Información");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Información");
             iAccountCreationConfirmedDialog.setInfoText("Proceso cancelado.");
         }
         iAccountCreationConfirmedDialog.setModal(true);
-        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
         iAccountCreationConfirmedDialog.exec();
 
         if (CURRENT_SELECTED_ACCOUNT > -1){ //Allow enableling of controls only if an account has already been set
+                std::cout<<"CURRENT SELECTED AFTER CANCELED EDITION: "<<CURRENT_SELECTED_ACCOUNT<<'\n';
                 std::string pathOfCurrentSelectedAccount = ListOfExistingAccountsPaths[CURRENT_SELECTED_ACCOUNT];
                 std::string nameOfCurrentSelectedAccount = ListOfExistingAccounts[CURRENT_SELECTED_ACCOUNT];
                 bool accountPropertiesExist = currentAccount.loadAccountProperties(nameOfCurrentSelectedAccount,pathOfCurrentSelectedAccount);
                 if(accountPropertiesExist) //change to if(accountPropertiesOk) THIS VERIFIES THAT Properties are GOOD!!!
                 {
                     this->setCurrentAccount();
-                    this->setWindowTitle(QString::fromStdString(currentAccount.getAccountName()));
+                    this->setWindowTitle(QString("  ") + QString::fromStdString(currentAccount.getAccountName()));
                     if (currentAccount.hasProfileImage()){
                         QImage srcImg(QString::fromStdString(currentAccount.getAccountIconPath()));
                         QPixmap imagePixmap = QPixmap::fromImage(srcImg);
@@ -1364,15 +1463,16 @@ void Gui_KeiboMoneyTracker::requestAccountOpening(std::string &accountName, std:
 {
     //In case a good account was previously opened. Values of previously opened account have to be cleaned.
     if (CURRENT_SELECTED_ACCOUNT > -1){
+        std::cout<<"ACCOUNT WAS PREVIOUSLY OPENED, CLEARING PROPERTY VALUES"<<'\n';
         this->currentAccount.clearAccountProperties(true);
     }
     bool accountPropertiesOk = currentAccount.loadAccountProperties(accountName, accountPath);
 
     if(accountPropertiesOk)
     {
-        //std::cout<<"ACCOUNT OPENED - PROPERTIES ARE OK"<<'\n';
+        std::cout<<"ACCOUNT OPENED - PROPERTIES ARE OK"<<'\n';
         this->setCurrentAccount();
-        this->setWindowTitle(QString::fromStdString(currentAccount.getAccountName()));
+        this->setWindowTitle(QString("  ") + QString::fromStdString(currentAccount.getAccountName()));
         CURRENT_SELECTED_ACCOUNT = CURRENT_SELECTED_ACCOUNT_INDEX_FROM_MANAGER;
         if (currentAccount.hasProfileImage()){
             QImage srcImg(QString::fromStdString(currentAccount.getAccountIconPath()));
@@ -1383,7 +1483,7 @@ void Gui_KeiboMoneyTracker::requestAccountOpening(std::string &accountName, std:
             ui->labelAccountIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         }
     } else{
-        //std::cout<<"ACCOUNT NOT OPENED BECAUSE PROPERTIES ARE NOK \n PLEASE CHECK ACCOUNT INFORMATION"<<'\n';
+        std::cout<<"ACCOUNT NOT OPENED BECAUSE PROPERTIES ARE NOK \n PLEASE CHECK ACCOUNT INFORMATION"<<'\n';
         this->verifyAccountInfo(accountName, accountPath);
     }
 }
@@ -1409,7 +1509,7 @@ void Gui_KeiboMoneyTracker::requestAccountEditing(std::string &accountName, std:
                                                 tempAccountCurrency,
                                                 tempAccountImagePath);
         iAccountDialog.getExistingAccounts(ListOfExistingAccounts);
-        iAccountDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        iAccountDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
 
         //iAccountDialog.setModal(true);
         iAccountDialog.exec();
@@ -1449,21 +1549,21 @@ void Gui_KeiboMoneyTracker::requestAccountEditing(std::string &accountName, std:
 
             eraseConfirmation_dialog iAccountCreationConfirmedDialog;
             if (currentAccount.getAccountLanguage() == ENGLISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("Account information updated.");
             } else if (currentAccount.getAccountLanguage() == GERMAN){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("Kontoinformation wurde aktualisiert.");
             } else if (currentAccount.getAccountLanguage() == SPANISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Información");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Información");
                 iAccountCreationConfirmedDialog.setInfoText("Información de cuenta actualizada.");
             }
             iAccountCreationConfirmedDialog.setModal(true);
-            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             iAccountCreationConfirmedDialog.exec();
 
             this->setCurrentAccount();
-            this->setWindowTitle(QString::fromStdString(tempAccountName));
+            this->setWindowTitle(QString("  ") + QString::fromStdString(tempAccountName));
 
             if (currentAccount.hasProfileImage()){
                 QImage srcImg(QString::fromStdString(tempAccountImagePath));
@@ -1474,30 +1574,32 @@ void Gui_KeiboMoneyTracker::requestAccountEditing(std::string &accountName, std:
                 ui->labelAccountIcon->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
             }
             CURRENT_SELECTED_ACCOUNT = CURRENT_SELECTED_ACCOUNT_INDEX_FROM_MANAGER;
+            std::cout<<"CURRENT SELECTED AFTER EDITION: "<<CURRENT_SELECTED_ACCOUNT<<'\n';
         } else {
             eraseConfirmation_dialog iAccountCreationConfirmedDialog;
             if (currentAccount.getAccountLanguage() == ENGLISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("No changes were made.");
             } else if (currentAccount.getAccountLanguage() == GERMAN){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("Keine Änderung wurde gemacht.");
             } else if (currentAccount.getAccountLanguage() == SPANISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Información");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Información");
                 iAccountCreationConfirmedDialog.setInfoText("No se realizó ningún cambio.");
             }
             iAccountCreationConfirmedDialog.setModal(true);
-            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             iAccountCreationConfirmedDialog.exec();
 
             if (CURRENT_SELECTED_ACCOUNT > -1){ //Allow enableling of controls only if an account has already been set
+                    std::cout<<"CURRENT SELECTED AFTER CANCELED EDITION: "<<CURRENT_SELECTED_ACCOUNT<<'\n';
                     std::string pathOfCurrentSelectedAccount = ListOfExistingAccountsPaths[CURRENT_SELECTED_ACCOUNT];
                     std::string nameOfCurrentSelectedAccount = ListOfExistingAccounts[CURRENT_SELECTED_ACCOUNT];
                     bool accountPropertiesExist = currentAccount.loadAccountProperties(nameOfCurrentSelectedAccount,pathOfCurrentSelectedAccount);
                     if(accountPropertiesExist) //change to if(accountPropertiesOk) THIS VERIFIES THAT Properties are GOOD!!!
                     {
                         this->setCurrentAccount();
-                        this->setWindowTitle(QString::fromStdString(currentAccount.getAccountName()));
+                        this->setWindowTitle(QString("  ") + QString::fromStdString(currentAccount.getAccountName()));
                         if (currentAccount.hasProfileImage()){
                             QImage srcImg(QString::fromStdString(currentAccount.getAccountIconPath()));
                             QPixmap imagePixmap = QPixmap::fromImage(srcImg);
@@ -1510,7 +1612,7 @@ void Gui_KeiboMoneyTracker::requestAccountEditing(std::string &accountName, std:
                }
         }
     } else {
-            //std::cout<<"ACCOUNT NOT OPENED BECAUSE PROPERTIES ARE NOK \n PLEASE CHECK ACCOUNT INFORMATION"<<'\n';
+            std::cout<<"ACCOUNT NOT OPENED BECAUSE PROPERTIES ARE NOK \n PLEASE CHECK ACCOUNT INFORMATION"<<'\n';
             this->verifyAccountInfo(accountName, accountPath);
     }
 }
@@ -1518,17 +1620,17 @@ void Gui_KeiboMoneyTracker::requestAccountDeletion(std::string &accountName, std
 {
     eraseConfirmation_dialog iDeletionDialog;
     if (currentAccount.getAccountLanguage() == ENGLISH)            {
-        iDeletionDialog.setWindowTitle("Delete Account");
+        iDeletionDialog.setWindowTitle(" Delete Account");
         iDeletionDialog.setInfoText("Are you sure you want to delete the account "+accountName+" ?");
     } else if (currentAccount.getAccountLanguage() == GERMAN) {
-        iDeletionDialog.setWindowTitle("Konto löschen");
+        iDeletionDialog.setWindowTitle(" Konto löschen");
         iDeletionDialog.setInfoText("Möchten Sie das Konto "+accountName+ " wirklich löschen?");
     } else if (currentAccount.getAccountLanguage() == SPANISH) {
-        iDeletionDialog.setWindowTitle("Eliminar cuenta");
+        iDeletionDialog.setWindowTitle(" Eliminar cuenta");
         iDeletionDialog.setInfoText("¿En realidad desea eliminar la cuenta "+accountName+ " ?");
     }
     iDeletionDialog.setModal(true);
-    iDeletionDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+    iDeletionDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
     iDeletionDialog.exec();
 
     if (iDeletionDialog.comfirmed())
@@ -1548,7 +1650,8 @@ void Gui_KeiboMoneyTracker::requestAccountDeletion(std::string &accountName, std
             updateListOfGroups();
             displayArticlesOnTable();
             ui->labelAccountIcon->clear();
-            this->setWindowTitle(QString(' '));
+            this->setWindowTitle(QString("  "));
+            std::cout<<"CURRENT_SELECTED_ACCOUNT EQUAL TO SELECTED INDEX= "<<CURRENT_SELECTED_ACCOUNT<<'\n';
         } else if (CURRENT_SELECTED_ACCOUNT != CURRENT_SELECTED_ACCOUNT_INDEX_FROM_MANAGER) {//Else if account-deleted is a different account to the current
 
         }
@@ -1562,14 +1665,16 @@ void Gui_KeiboMoneyTracker::requestAccountDeletion(std::string &accountName, std
             {
                 if (CURRENT_SELECTED_ACCOUNT > -1){ //Allow enableling of controls only if an account has already been set
                     ACCOUNT_SET = true;
-                    //std::cout<<"AN ACCOUNT WAS ALREADY OPENED & KEEPS BEING SET= "<<'\n';
+                    std::cout<<"AN ACCOUNT WAS ALREADY OPENED & KEEPS BEING SET= "<<'\n';
                 }
                 if (CURRENT_SELECTED_ACCOUNT > CURRENT_SELECTED_ACCOUNT_INDEX_FROM_MANAGER){
                     CURRENT_SELECTED_ACCOUNT-=1;
+                    std::cout<<"CURRENT_SELECTED_ACCOUNT IS BIGGER THAN SELECTED INDEX, -1 = "<<CURRENT_SELECTED_ACCOUNT<<'\n';
                 }
             }
             requestAccountManager();
         }
+        std::cout<<"CURRENT_SELECTED_ACCOUNT FINAL= "<<CURRENT_SELECTED_ACCOUNT<<'\n';
     } else {        
         //searchForExistingAccounts();
         if (!AccountsExist)
@@ -1594,7 +1699,7 @@ void Gui_KeiboMoneyTracker::requestAccountCreation()
         iAccountDialog.setLanguageList(currentAccount.getLanguageList());
         iAccountDialog.setCurrencyList(currentAccount.getCurrencyList());
         iAccountDialog.getExistingAccounts(ListOfExistingAccounts);
-        iAccountDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        iAccountDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
 
         iAccountDialog.setInitialLanguage(initialLanguage);
 
@@ -1631,23 +1736,23 @@ void Gui_KeiboMoneyTracker::requestAccountCreation()
 
             eraseConfirmation_dialog iAccountCreationConfirmedDialog;
             if (currentAccount.getAccountLanguage() == ENGLISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("Account Created.");
             } else if (currentAccount.getAccountLanguage() == GERMAN){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("Konto wurde erstellt.");
             } else if (currentAccount.getAccountLanguage() == SPANISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Información");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Información");
                 iAccountCreationConfirmedDialog.setInfoText("Cuenta creada.");
             }
             iAccountCreationConfirmedDialog.setModal(true);
-            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             iAccountCreationConfirmedDialog.exec();
 
             this->setCurrentAccount(); //Sets ACCOUNT_SET = true;
             CURRENT_SELECTED_ACCOUNT = ListOfExistingAccounts.size(); //It is zero because even if an account was just created List of existing accounts hasn't been pushed back by searchForExistingAccounts
 
-            this->setWindowTitle(QString::fromStdString(tempAccountName));
+            this->setWindowTitle(QString("  ") + QString::fromStdString(tempAccountName));
             if (currentAccount.hasProfileImage()){
                 QImage srcImg(QString::fromStdString(tempAccountImagePath));
                 QPixmap imagePixmap = QPixmap::fromImage(srcImg);
@@ -1659,19 +1764,20 @@ void Gui_KeiboMoneyTracker::requestAccountCreation()
         } else {
             eraseConfirmation_dialog iAccountCreationConfirmedDialog;
             if (initialLanguage == ENGLISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("Account Creation Canceled.");
             } else if (initialLanguage == GERMAN){
-                iAccountCreationConfirmedDialog.setWindowTitle("Information");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Information");
                 iAccountCreationConfirmedDialog.setInfoText("Konto Erstellung wurde abgebrochen.");
             } else if (initialLanguage == SPANISH){
-                iAccountCreationConfirmedDialog.setWindowTitle("Información");
+                iAccountCreationConfirmedDialog.setWindowTitle(" Información");
                 iAccountCreationConfirmedDialog.setInfoText("Creación de cuenta cancelada.");
             }
             iAccountCreationConfirmedDialog.setModal(true);
-            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             iAccountCreationConfirmedDialog.exec();
 
+            std::cout<<"CURRENT SELECTED AFTER CANCELING  CREATION: "<<CURRENT_SELECTED_ACCOUNT<<'\n';
             if (AccountsExist)
             {
                 if (CURRENT_SELECTED_ACCOUNT > -1){ //Restore of controls only if an account has already been set
@@ -1681,7 +1787,7 @@ void Gui_KeiboMoneyTracker::requestAccountCreation()
                     if(accountPropertiesExist) //change to if(accountPropertiesOk) THIS VERIFIES THAT Properties are GOOD!!!
                     {
                         this->setCurrentAccount();
-                        this->setWindowTitle(QString::fromStdString(currentAccount.getAccountName()));
+                        this->setWindowTitle(QString("  ") + QString::fromStdString(currentAccount.getAccountName()));
                         if (currentAccount.hasProfileImage()){
                             QImage srcImg(QString::fromStdString(currentAccount.getAccountIconPath()));
                             QPixmap imagePixmap = QPixmap::fromImage(srcImg);
@@ -1702,7 +1808,7 @@ void Gui_KeiboMoneyTracker::requestAccountManager()
     //Else if there is at least one account (folder and properties file), open AccountManagerDialog
         AccountManagerDialog iAccountManagerDialog;
         iAccountManagerDialog.setModal(true);
-        iAccountManagerDialog.setWindowTitle(" ");
+        iAccountManagerDialog.setWindowTitle(QString("  "));
         iAccountManagerDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
         iAccountManagerDialog.fillListWithExistingAccounts(ListOfExistingAccounts,
                                                            ListOfExistingAccountsPaths);
@@ -1747,7 +1853,7 @@ void Gui_KeiboMoneyTracker::requestAccountManager()
 void Gui_KeiboMoneyTracker::searchForExistingAccounts()//this function also creates app directory if no app directory is found.
 {
     homeDir.setPath(QDir::homePath());
-    //std::cout<<"homeDir is: "<<homeDir.dirName().toStdString()<<'\n';
+    std::cout<<"homeDir is: "<<homeDir.dirName().toStdString()<<'\n';
 
     //Clean Global Info of existing accounts
     AccountsExist = false;
@@ -1766,7 +1872,7 @@ void Gui_KeiboMoneyTracker::searchForExistingAccounts()//this function also crea
                 APP_DIR_FOUND = true;
                 MainAppDirectoryExists = true;
                 AppDir.setCurrent(ListOfElementsInHome[i].absoluteFilePath());
-                //std::cout<<"Directoy My Money already exists, setting it as App Directoty "<<'\n';
+                std::cout<<"Directoy My Money already exists, setting it as App Directoty "<<'\n';
                 AppDir.setPath(homeDir.absolutePath() + "/"+APP_DIR_NAME);
                 break;
             }
@@ -1781,6 +1887,7 @@ void Gui_KeiboMoneyTracker::searchForExistingAccounts()//this function also crea
         QStringList prefix;
         prefix<< "KMT_*";
         ListOfElementsInAppFolder = AppDir.entryInfoList(prefix, QDir::Dirs);
+        std::cout<<"APP DIR: "<<AppDir.absolutePath().toStdString()<<'\n';
         for (int i = 0; i != ListOfElementsInAppFolder.size(); ++i)
         {
             if ((ListOfElementsInAppFolder[i].isDir())){
@@ -1800,10 +1907,10 @@ void Gui_KeiboMoneyTracker::searchForExistingAccounts()//this function also crea
         }
     }  else   {
         //In this case the main APP folder has to be created
-        //std::cout<<"Directoy My Money does not exist."<<'\n';
+        std::cout<<"Directoy My Money does not exist."<<'\n';
         homeDir.mkdir(APP_DIR_NAME);
         AppDir.setPath(homeDir.absolutePath() + "/"+APP_DIR_NAME);
-        //std::cout<<"Directoy My Money has been created and set as App directory"<<'\n';
+        std::cout<<"Directoy My Money has been created and set as App directory"<<'\n';
         //A new account must be created. Account Dialog must be opened.
     }
 
@@ -1816,11 +1923,11 @@ void Gui_KeiboMoneyTracker::addOutcome()
         std::string tname; double tprice; int tcategory; int tmonth; int tday; RepetitionOption trepeat = DO_NOT_REPEAT;  //Temporary variables
         TransactionDialog newArticleWindow;                                    //Open QDialog
         if (currentAccount.getAccountLanguage() == ENGLISH) {
-            newArticleWindow.setWindowTitle("Add outcome");
+            newArticleWindow.setWindowTitle(" Add expense");
         } else if (currentAccount.getAccountLanguage() == GERMAN) {
-            newArticleWindow.setWindowTitle("Ausgabe hinzufügen");
+            newArticleWindow.setWindowTitle(" Ausgabe hinzufügen");
         } else if (currentAccount.getAccountLanguage() == SPANISH) {
-            newArticleWindow.setWindowTitle("Añadir egreso");
+            newArticleWindow.setWindowTitle(" Añadir egreso");
         }
         newArticleWindow.setLanguage(currentAccount.getAccountLanguage());
         newArticleWindow.setCategoryList(currentAccount.ExpensesGroupsNames);
@@ -1829,7 +1936,7 @@ void Gui_KeiboMoneyTracker::addOutcome()
         time_t T = time(0);
         struct tm * currentTime = localtime(&T);
         newArticleWindow.displayItemInfo("", 0.0, 0, currentTime->tm_mon, currentTime->tm_mday-1, DO_NOT_REPEAT, currentYear);
-        newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
 
         newArticleWindow.exec();
         newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat);  //Assign values fetching temp variables
@@ -1844,7 +1951,7 @@ void Gui_KeiboMoneyTracker::addOutcome()
             displayMonthOnLabel();
             currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
             currentAccount.save_Data();
-            //std::cout<<"Data saved"<<'\n';
+            std::cout<<"Data saved"<<'\n';
             displayArticlesOnTable();
             updateGraph();
             updateGroups();
@@ -1860,7 +1967,7 @@ void Gui_KeiboMoneyTracker::addOutcome()
                                                                 currentAccount.ExpensesGroupsNames,
                                                                 colorOfIncomeAmount,
                                                                 currentAccount.getAccountLanguage());
-                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
                 iNewElementsAddedAutomatically.exec();
             }
         }
@@ -1879,11 +1986,11 @@ void Gui_KeiboMoneyTracker::addIncome()
         TransactionDialog newIncomeWindow;
         newIncomeWindow.setCategoryList(currentAccount.IncomeGroupsNames);
         if (currentAccount.getAccountLanguage() == ENGLISH) {
-            newIncomeWindow.setWindowTitle("Add income");
+            newIncomeWindow.setWindowTitle(" Add income");
         } else if (currentAccount.getAccountLanguage() == GERMAN) {
-            newIncomeWindow.setWindowTitle("Einkommen hinzufügen");
+            newIncomeWindow.setWindowTitle(" Einkommen hinzufügen");
         } else if (currentAccount.getAccountLanguage() == SPANISH) {
-            newIncomeWindow.setWindowTitle("Añadir ingreso");
+            newIncomeWindow.setWindowTitle(" Añadir ingreso");
         }
         newIncomeWindow.setLanguage(currentAccount.getAccountLanguage());
         newIncomeWindow.setModal(true);
@@ -1891,7 +1998,7 @@ void Gui_KeiboMoneyTracker::addIncome()
         time_t T = time(0);
         struct tm * currentTime = localtime(&T);
         newIncomeWindow.displayItemInfo("", 0.0, 0, currentTime->tm_mon, currentTime->tm_mday-1, DO_NOT_REPEAT, currentYear);
-        newIncomeWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        newIncomeWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
 
         newIncomeWindow.exec();
         std::string tname; double tprice; int tcategory; int tmonth; int tday; RepetitionOption trepeat = DO_NOT_REPEAT;  //Temporary variables
@@ -1920,7 +2027,7 @@ void Gui_KeiboMoneyTracker::addIncome()
                                                                 currentAccount.ExpensesGroupsNames,
                                                                 colorOfIncomeAmount,
                                                                 currentAccount.getAccountLanguage());
-                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
                 iNewElementsAddedAutomatically.exec();
             }
         }
@@ -1952,15 +2059,15 @@ void Gui_KeiboMoneyTracker::deleteSelectedTransaction()
        {
        eraseConfirmation_dialog eraseConfirmationWindow; //Are you sure you want to delete the selected items?
        eraseConfirmationWindow.setModal(true);
-       eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+       eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
        if (currentAccount.getAccountLanguage() == ENGLISH){
-           eraseConfirmationWindow.setWindowTitle("Confirmation");
+           eraseConfirmationWindow.setWindowTitle(" Confirmation");
            eraseConfirmationWindow.setInfoText("Are you sure you want to delete the selected items?");
        } else if (currentAccount.getAccountLanguage() == GERMAN){
-           eraseConfirmationWindow.setWindowTitle("Bestätigung");
+           eraseConfirmationWindow.setWindowTitle(" Bestätigung");
            eraseConfirmationWindow.setInfoText("Möchten Sie die gewählten Transaktionen löschen?");
        } else if (currentAccount.getAccountLanguage() == SPANISH){
-           eraseConfirmationWindow.setWindowTitle("Confirmación");
+           eraseConfirmationWindow.setWindowTitle(" Confirmación");
            eraseConfirmationWindow.setInfoText("¿Desea eliminar las transacciones seleccionadas?");
        }
        eraseConfirmationWindow.exec();
@@ -1973,6 +2080,7 @@ void Gui_KeiboMoneyTracker::deleteSelectedTransaction()
            {
                QModelIndex index = highlightedRows.at(i);
                int row = index.row();
+               //std::cout<<"Element Row to delete: "<<row<<'\n';
                listOfItemsToDelete.push_back( row);
            }
            currentAccount.deleteMultipleTransactionsInMonth(currentMonth, listOfItemsToDelete); //THIS FUNCTION ARRANGES ELEMENTS BY ITS OWN, IN CASE LIST IDs PROVIDED BY QT DOES NOT MATCH THE DATA IN BUY_DATA CLASS
@@ -2002,11 +2110,11 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
         {
             TransactionDialog newArticleWindow;
             if (currentAccount.getAccountLanguage() == ENGLISH) {
-                newArticleWindow.setWindowTitle("Edit transaction");
+                newArticleWindow.setWindowTitle(" Edit transaction");
             } else if (currentAccount.getAccountLanguage() == GERMAN) {
-                newArticleWindow.setWindowTitle("Transaktion ändern");
+                newArticleWindow.setWindowTitle(" Transaktion ändern");
             } else if (currentAccount.getAccountLanguage() == SPANISH) {
-                newArticleWindow.setWindowTitle("Editar transacción");
+                newArticleWindow.setWindowTitle(" Editar transacción");
             }
             newArticleWindow.setLanguage(currentAccount.getAccountLanguage());
 
@@ -2038,7 +2146,7 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
                                              currentYear);
 
             newArticleWindow.setModal(true);
-            newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             newArticleWindow.exec();
 
             newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat);
@@ -2090,7 +2198,7 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
                                                                     currentAccount.ExpensesGroupsNames,
                                                                     colorOfIncomeAmount,
                                                                     currentAccount.getAccountLanguage());
-                    iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+                    iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
                     iNewElementsAddedAutomatically.exec();
                 }
             }
@@ -2101,16 +2209,16 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
             eraseConfirmation_dialog eraseConfirmationWindow;
             eraseConfirmationWindow.setModal(true);
             if (currentAccount.getAccountLanguage() == ENGLISH) {
-                eraseConfirmationWindow.setWindowTitle("Information");
-                eraseConfirmationWindow.setInfoText("Only one Item can be edited at a time.");
+                eraseConfirmationWindow.setWindowTitle(" Information");
+                eraseConfirmationWindow.setInfoText(" Only one Item can be edited at a time.");
             } else if (currentAccount.getAccountLanguage() == GERMAN) {
-                eraseConfirmationWindow.setWindowTitle("Information");
-                eraseConfirmationWindow.setInfoText("Nur eine Transaktion kann gleichzeitig geändert werden.");
+                eraseConfirmationWindow.setWindowTitle(" Information");
+                eraseConfirmationWindow.setInfoText(" Nur eine Transaktion kann gleichzeitig geändert werden.");
             } else if (currentAccount.getAccountLanguage() == SPANISH) {
-                eraseConfirmationWindow.setWindowTitle("Información");
+                eraseConfirmationWindow.setWindowTitle(" Información");
                 eraseConfirmationWindow.setInfoText("Solo una transacción puede ser editada a la vez.");
             }
-            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             eraseConfirmationWindow.exec();
         }
     }
@@ -2621,8 +2729,9 @@ void Gui_KeiboMoneyTracker::on_actionManage_Groups_triggered()
 
         manageGroupDialog.setYearData(currentAccount, false);
 
+        std::cout<<"All groups size: "<<currentAccount.ExpensesGroupsNames.size()<<'\n';
         manageGroupDialog.setModal(true);
-        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesHeaderStyleSheet);
+        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesHeaderStyleSheet, usingDarkTheme);
         manageGroupDialog.exec();
 
         currentAccount.clear_Year();
@@ -2633,15 +2742,15 @@ void Gui_KeiboMoneyTracker::on_actionManage_Groups_triggered()
         if (yearDataExists && (currentAccount.allTransactionsOk == false)){
             eraseConfirmation_dialog eraseConfirmationWindow;
             eraseConfirmationWindow.setModal(true);
-            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             if (currentAccount.getAccountLanguage() == ENGLISH)            {
-                eraseConfirmationWindow.setWindowTitle("Information");
+                eraseConfirmationWindow.setWindowTitle(" Information");
                 eraseConfirmationWindow.setInfoText("The data file for the current year has been externally modified. Please verify the following transactions.");
             } else if (currentAccount.getAccountLanguage() == GERMAN) {
-                eraseConfirmationWindow.setWindowTitle("Information");
+                eraseConfirmationWindow.setWindowTitle(" Information");
                 eraseConfirmationWindow.setInfoText("Die Datei für das gewählte Jahr wurde gerändert. Bitte prüfen Sie die folgenden Transaktionen.");
             } else if (currentAccount.getAccountLanguage() == SPANISH) {
-                eraseConfirmationWindow.setWindowTitle("Información");
+                eraseConfirmationWindow.setWindowTitle(" Información");
                 eraseConfirmationWindow.setInfoText("El archivo de datos del año seleccionado ha sido externamente modificado. Por favor verifique las siguientes transacciones.");
             }
             eraseConfirmationWindow.exec();
@@ -2675,7 +2784,7 @@ void Gui_KeiboMoneyTracker::on_actionManage_Groups_triggered()
             checkTransactionsDialog.getFaultyTransactionsData(listOfFaultyTransactions, currentAccount.getYear());
             checkTransactionsDialog.getGroups(currentAccount.IncomeGroupsNames, currentAccount.ExpensesGroupsNames);
             checkTransactionsDialog.updateInfo();
-            checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             checkTransactionsDialog.exec();
 
             //Get updated data
@@ -2715,15 +2824,15 @@ void Gui_KeiboMoneyTracker::on_actionManage_Groups_triggered()
     }   else {
         eraseConfirmation_dialog iAccountCreationConfirmedDialog;
         iAccountCreationConfirmedDialog.setModal(true);
-        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
         if (initialLanguage == ENGLISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Please create or select an account first.");
         } else if (initialLanguage == GERMAN) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Bitte erstellen/wählen Sie zuerst ein Konto.");
         } else if (initialLanguage == SPANISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Información");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Información");
             iAccountCreationConfirmedDialog.setInfoText("Por favor cree o seleccione una cuenta primero.");
         }
 
@@ -2739,8 +2848,9 @@ void Gui_KeiboMoneyTracker::on_actionManage_Income_Groups_triggered()
 
         manageGroupDialog.setYearData(currentAccount, true);
 
+        std::cout<<"All groups size: "<<currentAccount.IncomeGroupsNames.size()<<'\n';
         manageGroupDialog.setModal(true);
-        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesHeaderStyleSheet);
+        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesHeaderStyleSheet, usingDarkTheme);
         manageGroupDialog.exec();
 
         currentAccount.clear_Year();
@@ -2751,15 +2861,15 @@ void Gui_KeiboMoneyTracker::on_actionManage_Income_Groups_triggered()
         if (yearDataExists && (currentAccount.allTransactionsOk == false)){
             eraseConfirmation_dialog eraseConfirmationWindow;
             eraseConfirmationWindow.setModal(true);
-            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             if (currentAccount.getAccountLanguage() == ENGLISH)            {
-                eraseConfirmationWindow.setWindowTitle("Information");
+                eraseConfirmationWindow.setWindowTitle(" Information");
                 eraseConfirmationWindow.setInfoText("The data file for the current year has been externally modified. Please verify the following transactions.");
             } else if (currentAccount.getAccountLanguage() == GERMAN) {
-                eraseConfirmationWindow.setWindowTitle("Information");
+                eraseConfirmationWindow.setWindowTitle(" Information");
                 eraseConfirmationWindow.setInfoText("Die Datei für das gewählte Jahr wurde gerändert. Bitte prüfen Sie die folgenden Transaktionen.");
             } else if (currentAccount.getAccountLanguage() == SPANISH) {
-                eraseConfirmationWindow.setWindowTitle("Información");
+                eraseConfirmationWindow.setWindowTitle(" Información");
                 eraseConfirmationWindow.setInfoText("El archivo de datos del año seleccionado ha sido externamente modificado. Por favor verifique las siguientes transacciones.");
             }
             eraseConfirmationWindow.exec();
@@ -2793,7 +2903,7 @@ void Gui_KeiboMoneyTracker::on_actionManage_Income_Groups_triggered()
             checkTransactionsDialog.getFaultyTransactionsData(listOfFaultyTransactions, currentAccount.getYear());
             checkTransactionsDialog.getGroups(currentAccount.IncomeGroupsNames, currentAccount.ExpensesGroupsNames);
             checkTransactionsDialog.updateInfo();
-            checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+            checkTransactionsDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             checkTransactionsDialog.exec();
 
             //Get updated data
@@ -2832,15 +2942,15 @@ void Gui_KeiboMoneyTracker::on_actionManage_Income_Groups_triggered()
     } else {
         eraseConfirmation_dialog iAccountCreationConfirmedDialog;
         iAccountCreationConfirmedDialog.setModal(true);
-        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet);
+        iAccountCreationConfirmedDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
         if (initialLanguage == ENGLISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Please create or select an account first.");
         } else if (initialLanguage == GERMAN) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Information");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Information");
             iAccountCreationConfirmedDialog.setInfoText("Bitte erstellen/wählen Sie zuerst ein Konto.");
         } else if (initialLanguage == SPANISH) {
-            iAccountCreationConfirmedDialog.setWindowTitle("Información");
+            iAccountCreationConfirmedDialog.setWindowTitle(" Información");
             iAccountCreationConfirmedDialog.setInfoText("Por favor cree o seleccione una cuenta primero.");
         }
         iAccountCreationConfirmedDialog.exec();
@@ -2849,12 +2959,14 @@ void Gui_KeiboMoneyTracker::on_actionManage_Income_Groups_triggered()
 
 void Gui_KeiboMoneyTracker::updateToClickedMonth()
 {
+    //std::cout<<"START updateToClickedMonth"<<'\n';
     this->ui->widget1->processMouseClick();
     int x = this->ui->widget1->getSelectedMonthByClick(); //If click was done on any Area belonging to a month returns the month number, otherwise it returns -1
     if (x >= 0){
         this->currentMonth = x;
         this->updateToCurrentMonth();
     }
+    //std::cout<<"END updateToClickedMonth"<<'\n';
 }
 
 void Gui_KeiboMoneyTracker::on_actionExit_triggered()
@@ -3410,7 +3522,7 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsNames.push_back("* Additional information.");
             statsValues.push_back("*Only classified transactions with amounts other than zero are considered.");
             iAccountStatsDialog.getAccountStats(statsNames, statsValues);
-            iAccountStatsDialog.setWindowTitle("Account");
+            iAccountStatsDialog.setWindowTitle(" Account");
         }
 
 
@@ -3618,7 +3730,7 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsNames.push_back("* Zusätzliche Information.");
             statsValues.push_back("*Es werden nur klassifizierte Transaktionen mit Beträgen größer als Null betrachtet.");
             iAccountStatsDialog.getAccountStats(statsNames, statsValues);
-            iAccountStatsDialog.setWindowTitle("Konto");
+            iAccountStatsDialog.setWindowTitle(" Konto");
         }
 
 
@@ -3827,7 +3939,7 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsNames.push_back("* Información adicional.");
             statsValues.push_back("*Solo transacciones clasificadas con montos mayores a cero son consideradas.");
             iAccountStatsDialog.getAccountStats(statsNames, statsValues);
-            iAccountStatsDialog.setWindowTitle("Cuenta");
+            iAccountStatsDialog.setWindowTitle(" Cuenta");
         }
 
         iAccountStatsDialog.exec();
@@ -3839,7 +3951,7 @@ void Gui_KeiboMoneyTracker::on_actionDonate_triggered()
     if (ACCOUNT_SET)
     {
         DonateDialog iDonateDialog;
-        iDonateDialog.setLanguageAndStyleSheet(currentAccount.getAccountLanguage(), currentOverallThemeStyleSheet);
+        iDonateDialog.setLanguageAndStyleSheet(currentAccount.getAccountLanguage(), currentOverallThemeStyleSheet, usingDarkTheme);
         iDonateDialog.exec();
     }
 }

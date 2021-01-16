@@ -267,7 +267,7 @@ void MyOpenGLWidget::updateSpace()
 
 inline float MyOpenGLWidget::dampedSpring(GLfloat targetPosition, GLfloat &currentPosition)
 {
-    double SPRING_CONST              = 150.0;
+    double SPRING_CONST             = 150.0;
     float timeStep                  = 0.031f;
     float currentVelocity           = 2.5f;
     float currentDistanceToTarget   = targetPosition-currentPosition;

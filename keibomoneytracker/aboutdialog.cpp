@@ -28,7 +28,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setWindowTitle("About");
+    this->setWindowTitle(" About");
     this->setFixedSize(this->width(), this->height());
 
      ui->textAbout->setReadOnly(true);
@@ -42,6 +42,8 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
      ui->graphicsViewIcon->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
      ui->graphicsViewIcon->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+     ui->textAppVersion->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
 }
 
 AboutDialog::~AboutDialog()

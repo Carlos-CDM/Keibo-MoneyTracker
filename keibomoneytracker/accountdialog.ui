@@ -12,7 +12,7 @@
   </property>
   <property name="font">
    <font>
-    <family>Manjari</family>
+    <family>MS Shell Dlg 2</family>
     <pointsize>12</pointsize>
    </font>
   </property>
@@ -30,8 +30,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -44,20 +44,20 @@
      <x>40</x>
      <y>110</y>
      <width>101</width>
-     <height>17</height>
+     <height>19</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
     <string>Currency:</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEditAccountName">
+  <widget class="CustomTextEdit" name="textEditAccountName">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -68,9 +68,12 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="tabChangesFocus">
     <bool>true</bool>
@@ -79,23 +82,23 @@
     <enum>QTextEdit::NoWrap</enum>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBoxCurrency">
+  <widget class="CustomComboBox" name="comboBoxCurrency">
    <property name="geometry">
     <rect>
      <x>190</x>
      <y>110</y>
      <width>151</width>
-     <height>25</height>
+     <height>28</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
   </widget>
-  <widget class="QPushButton" name="selectImageButton">
+  <widget class="CustomPushButton" name="selectImageButton">
    <property name="geometry">
     <rect>
      <x>80</x>
@@ -106,8 +109,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>9</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
     </font>
    </property>
    <property name="text">
@@ -118,38 +121,38 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>80</y>
+     <y>78</y>
      <width>101</width>
-     <height>17</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
     <string>Language:</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBoxLanguage">
+  <widget class="CustomComboBox" name="comboBoxLanguage">
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>80</y>
+     <y>77</y>
      <width>151</width>
-     <height>25</height>
+     <height>28</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
   </widget>
-  <widget class="QPushButton" name="buttonCreateAccount">
+  <widget class="CustomPushButton" name="buttonCreateAccount">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -160,8 +163,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>10</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>9</pointsize>
     </font>
    </property>
    <property name="text">
@@ -179,6 +182,7 @@
    </property>
    <property name="font">
     <font>
+     <family>MS Shell Dlg 2</family>
      <pointsize>9</pointsize>
     </font>
    </property>
@@ -193,15 +197,15 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>161</y>
+     <y>160</y>
      <width>131</width>
-     <height>17</height>
+     <height>19</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -219,7 +223,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="text">
@@ -237,7 +242,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="text">
@@ -695,6 +701,12 @@
      </disabled>
     </palette>
    </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -708,6 +720,12 @@
      <height>191</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
   </widget>
   <widget class="QPushButton" name="changeFormatButton">
    <property name="geometry">
@@ -720,6 +738,7 @@
    </property>
    <property name="font">
     <font>
+     <family>MS Shell Dlg 2</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -1178,12 +1197,33 @@
      </disabled>
     </palette>
    </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <property name="text">
     <string/>
    </property>
   </widget>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>CustomPushButton</class>
+   <extends>QPushButton</extends>
+   <header>custompushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomComboBox</class>
+   <extends>QComboBox</extends>
+   <header>customcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">customtextedit.h</header>
+  </customwidget>
   <customwidget>
    <class>AccountImageView</class>
    <extends>QGraphicsView</extends>

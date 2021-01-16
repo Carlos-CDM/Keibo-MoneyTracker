@@ -592,7 +592,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="Transparent">
+  <widget class="CustomPushButton" name="Transparent">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -609,6 +609,13 @@
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">custompushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

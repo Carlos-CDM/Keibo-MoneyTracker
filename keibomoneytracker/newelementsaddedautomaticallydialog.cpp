@@ -29,6 +29,7 @@ newElementsAddedAutomaticallyDialog::newElementsAddedAutomaticallyDialog(QWidget
 {
     ui->setupUi(this);
     ui->tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ui->pushButtonClose->installEventFilter(this);
 }
 
 newElementsAddedAutomaticallyDialog::~newElementsAddedAutomaticallyDialog()
@@ -42,27 +43,60 @@ void newElementsAddedAutomaticallyDialog::setLanguage(const Language &currentLan
 
     if (iLanguage == ENGLISH)
     {
-        this->setWindowTitle("Information");
+        this->setWindowTitle(" Information");
         this->ui->labelInfo->setText("The following transactions were added automatically:");
         this->ui->pushButtonClose->setText("Close");
     }
     else if (iLanguage == GERMAN)
     {
-        this->setWindowTitle("Information");
+        this->setWindowTitle(" Information");
         this->ui->labelInfo->setText("Folgende Transaktionen wurden bereits hinzugefügt:");
         this->ui->pushButtonClose->setText("Schlißen");
     }
     else if (iLanguage == SPANISH)
     {
-        this->setWindowTitle("Información");
+        this->setWindowTitle(" Información");
         this->ui->labelInfo->setText("Las siguientes transacciones se añadieron automaticamente:");
         this->ui->pushButtonClose->setText("Cerrar");
     }
 }
 
-void newElementsAddedAutomaticallyDialog::setOverallThemeStyleSheet(QString styleSheetString)
+void newElementsAddedAutomaticallyDialog::setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme, QString tTableHeaderStyleSheet)
 {
+    this->ui->tableWidget->setStyleSheet(tTableHeaderStyleSheet); //First set the color of the table header!!
+    this->ui->tableWidget->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
     this->setStyleSheet(styleSheetString);
+    this->ui->pushButtonClose->updateColorTheme(tUsingDarkTheme);
+    usingDarkTheme = tUsingDarkTheme;
+}
+
+bool newElementsAddedAutomaticallyDialog::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->pushButtonClose) {
+            this->ui->pushButtonClose->setColorForMouseButtonPressEvent();
+        }
+    }
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->pushButtonClose) {
+            this->ui->pushButtonClose->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::Enter)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->pushButtonClose)  {
+             this->ui->pushButtonClose->setColorForEnterEvent();
+         }
+    }
+    else if (event->type() == QEvent::Leave)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->pushButtonClose)  {
+             this->ui->pushButtonClose->setColorForLeaveEvent();
+         }
+    }
+    return false;
 }
 
 void newElementsAddedAutomaticallyDialog::getInfoToDisplay(std::vector<Transaction> &newElementsAdded,
@@ -128,20 +162,17 @@ void newElementsAddedAutomaticallyDialog::getInfoToDisplay(std::vector<Transacti
                 ui->tableWidget->setItem(item_Id,1, new QTableWidgetItem (QString("-")+ QString::number(it->Amount, 0, 2)));
             }
         }
-        ui->tableWidget->item(item_Id,1)->setTextAlignment(Qt::AlignRight);
-        ui->tableWidget->item(item_Id,1)->setTextAlignment(Qt::AlignBottom);
+        ui->tableWidget->item(item_Id,1)->setTextAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignBottom);
 
         /////////////////////////////////THIRD COLUMN///////////////////////////////////
         ///--------------------------------------------------------------------------///
         ui->tableWidget->setItem(item_Id,2, new QTableWidgetItem (QString::number(it->Day)));
-        //ui->tableWidget->item(item_Id,2)->setTextAlignment(Qt::AlignHCenter);
-        ui->tableWidget->item(item_Id,2)->setTextAlignment(Qt::AlignBottom);
+        ui->tableWidget->item(item_Id,2)->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
 
         /////////////////////////////////FOURTH COLUMN///////////////////////////////////
         ///--------------------------------------------------------------------------///
         ui->tableWidget->setItem(item_Id,3, new QTableWidgetItem (QString::fromStdString(getMonthInLanguage(it->Month, currentLanguage))) );
-        //ui->tableWidget->item(item_Id,3)->setTextAlignment(Qt::AlignHCenter);
-        ui->tableWidget->item(item_Id,3)->setTextAlignment(Qt::AlignBottom);
+        ui->tableWidget->item(item_Id,3)->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
 
         /////////////////////////////////FIFTH COLUMN//////////////////////////////////
         ///--------------------------------------------------------------------------///
@@ -151,7 +182,7 @@ void newElementsAddedAutomaticallyDialog::getInfoToDisplay(std::vector<Transacti
         else if (!(it->IsIncome)){
             ui->tableWidget->setItem(item_Id,4, new QTableWidgetItem (QString::fromStdString(*(groupIterator+(it->Group)))));
         }
-        ui->tableWidget->item(item_Id,4)->setTextAlignment(Qt::AlignBottom);
+        ui->tableWidget->item(item_Id,4)->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignBottom);
         ui->tableWidget->setRowHeight(item_Id, 22);
         ++item_Id;
     }

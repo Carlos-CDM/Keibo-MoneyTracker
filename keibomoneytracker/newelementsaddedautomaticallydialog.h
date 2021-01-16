@@ -43,7 +43,7 @@ public:
                           const int & colorOfIncomeAmount,
                           const Language & currentLanguage);
 
-    void setOverallThemeStyleSheet(QString styleSheetString);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme, QString tTableHeaderStyleSheet);
     void setLanguage(const Language & currentLanguage);
 
 private slots:
@@ -52,6 +52,9 @@ private slots:
 private:
     Ui::newElementsAddedAutomaticallyDialog *ui;
     Language iLanguage;
+    bool eventFilter(QObject *obj, QEvent *event);
+
+    bool usingDarkTheme = false;
 };
 
 #endif // NEWELEMENTSADDEDAUTOMATICALLYDIALOG_H

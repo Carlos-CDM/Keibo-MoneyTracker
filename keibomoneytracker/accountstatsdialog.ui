@@ -37,8 +37,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>9</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
     </font>
    </property>
    <property name="styleSheet">
@@ -56,7 +56,16 @@
    <property name="gridStyle">
     <enum>Qt::NoPen</enum>
    </property>
+   <property name="cornerButtonEnabled">
+    <bool>false</bool>
+   </property>
    <attribute name="horizontalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderHighlightSections">
     <bool>false</bool>
    </attribute>
   </widget>
@@ -83,8 +92,8 @@
     </property>
     <property name="font">
      <font>
-      <family>URW Gothic</family>
-      <pointsize>10</pointsize>
+      <family>MS Shell Dlg 2</family>
+      <pointsize>9</pointsize>
      </font>
     </property>
     <property name="text">
@@ -102,8 +111,8 @@
     </property>
     <property name="font">
      <font>
-      <family>URW Gothic</family>
-      <pointsize>9</pointsize>
+      <family>MS Shell Dlg 2</family>
+      <pointsize>8</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -123,8 +132,8 @@
     </property>
     <property name="font">
      <font>
-      <family>URW Gothic</family>
-      <pointsize>10</pointsize>
+      <family>MS Shell Dlg 2</family>
+      <pointsize>8</pointsize>
      </font>
     </property>
     <property name="text">
@@ -142,7 +151,7 @@
     </property>
     <property name="font">
      <font>
-      <family>URW Gothic</family>
+      <family>MS Shell Dlg 2</family>
      </font>
     </property>
     <property name="text">
@@ -160,7 +169,7 @@
     </property>
     <property name="font">
      <font>
-      <family>URW Gothic</family>
+      <family>MS Shell Dlg 2</family>
      </font>
     </property>
     <property name="text">
@@ -178,7 +187,7 @@
     </property>
     <property name="font">
      <font>
-      <family>URW Gothic</family>
+      <family>MS Shell Dlg 2</family>
      </font>
     </property>
     <property name="text">
@@ -196,7 +205,7 @@
     </property>
     <property name="font">
      <font>
-      <family>URW Gothic</family>
+      <family>MS Shell Dlg 2</family>
      </font>
     </property>
     <property name="text">
@@ -215,7 +224,7 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
      <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>

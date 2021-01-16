@@ -85,15 +85,15 @@ AccountDialog::AccountDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->buttonRotate->setIcon(QIcon(":/images/RotationIcon.png"));
-    QString buttonStyle = "QPushButton{border: 1px solid white; background-color:rgba(0, 0, 0, 0);}";
+    QString buttonStyle = "QPushButton{border: 1px solid white; border-color: rgba(186, 189, 182, 127); background-color:rgba(0, 0, 0, 0);}";
     ui->buttonRotate->setStyleSheet(buttonStyle);
 
     ui->buttonDeleteImage->setIcon(QIcon(":/images/ResetImageIcon.png"));
-    QString buttonDeleteStyle = "QPushButton{border: 1px solid white; background-color:rgba(0, 0, 0, 0);}";
+    QString buttonDeleteStyle = "QPushButton{border: 1px solid white; border-color: rgba(186, 189, 182, 127); background-color:rgba(0, 0, 0, 0);}";
     ui->buttonDeleteImage->setStyleSheet(buttonDeleteStyle);
 
     ui->changeFormatButton->setIcon(QIcon(":/images/FormatIcon.png"));
-    QString buttonFormatStyle = "QPushButton{border: 1px solid white; background-color:rgba(0, 0, 0, 0);}";
+    QString buttonFormatStyle = "QPushButton{border: 1px solid white; border-color: rgba(186, 189, 182, 127); background-color:rgba(0, 0, 0, 0);}";
     ui->changeFormatButton->setStyleSheet(buttonFormatStyle);
 
     ui->buttonIconLeft->setIcon(QIcon(":/images/ArrowLeft.png"));
@@ -115,6 +115,11 @@ AccountDialog::AccountDialog(QWidget *parent) :
     this->ui->textEditAccountName->installEventFilter(this);
     this->ui->buttonIconLeft->installEventFilter(this);
     this->ui->buttonIconRight->installEventFilter(this);
+    this->ui->buttonCreateAccount->installEventFilter(this);
+    this->ui->selectImageButton->installEventFilter(this);
+    this->ui->comboBoxCurrency->installEventFilter(this);
+    this->ui->comboBoxLanguage->installEventFilter(this);
+
 
     this->setFixedSize(this->width(), this->height());
 
@@ -124,6 +129,7 @@ AccountDialog::AccountDialog(QWidget *parent) :
 
     this->ui->accountGraphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->ui->accountGraphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->ui->textEditAccountName->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 AccountDialog::~AccountDialog()
@@ -133,9 +139,14 @@ AccountDialog::~AccountDialog()
     delete scene;
 }
 
-void AccountDialog::setOverallThemeStyleSheet(QString styleSheetString)
+void AccountDialog::setOverallThemeStyleSheet(QString styleSheetString, bool usingDarkTheme)
 {
     this->setStyleSheet(styleSheetString);
+    this->ui->buttonCreateAccount->updateColorTheme(usingDarkTheme);
+    this->ui->selectImageButton->updateColorTheme(usingDarkTheme);
+    this->ui->textEditAccountName->updateColorTheme(usingDarkTheme);
+    this->ui->comboBoxCurrency->updateColorTheme(usingDarkTheme);
+    this->ui->comboBoxLanguage->updateColorTheme(usingDarkTheme);
 }
 
 bool AccountDialog::eventFilter(QObject *obj, QEvent *event)
@@ -203,6 +214,21 @@ bool AccountDialog::eventFilter(QObject *obj, QEvent *event)
             ui->buttonIconRight->setStyleSheet(IconRightStyle);
             return true;
         }
+        else if (qobject_cast<QWidget*>(obj) == ui->buttonCreateAccount) {
+            this->ui->buttonCreateAccount->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->selectImageButton) {
+            this->ui->selectImageButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->textEditAccountName) {
+            this->ui->textEditAccountName->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCurrency) {
+            this->ui->comboBoxCurrency->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxLanguage) {
+            this->ui->comboBoxLanguage->setColorForEnterEvent();
+        }
     }
     else if (event->type() == QEvent::Leave)
     {
@@ -218,6 +244,57 @@ bool AccountDialog::eventFilter(QObject *obj, QEvent *event)
             ui->buttonIconRight->setStyleSheet(IconRightStyle);
             return true;
         }
+        else if (qobject_cast<QWidget*>(obj) == ui->buttonCreateAccount) {
+            this->ui->buttonCreateAccount->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->selectImageButton) {
+            this->ui->selectImageButton->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->textEditAccountName) {
+            this->ui->textEditAccountName->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCurrency) {
+            this->ui->comboBoxCurrency->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxLanguage) {
+            this->ui->comboBoxLanguage->setColorForLeaveEvent();
+        }
+    }
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->buttonCreateAccount) {
+            this->ui->buttonCreateAccount->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->selectImageButton) {
+            this->ui->selectImageButton->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->textEditAccountName) {
+            this->ui->textEditAccountName->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCurrency) {
+            this->ui->comboBoxCurrency->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxLanguage) {
+            this->ui->comboBoxLanguage->setColorForMouseButtonPressEvent();
+        }
+    }
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->buttonCreateAccount) {
+            this->ui->buttonCreateAccount->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->selectImageButton) {
+            this->ui->selectImageButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->textEditAccountName) {
+            this->ui->textEditAccountName->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCurrency) {
+            this->ui->comboBoxCurrency->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->comboBoxLanguage) {
+            this->ui->comboBoxLanguage->setColorForEnterEvent();
+        }
     }
     return false;
 }
@@ -225,12 +302,12 @@ bool AccountDialog::eventFilter(QObject *obj, QEvent *event)
 void AccountDialog::getExistingAccounts(std::vector<std::string> &existingAccounts)
 {
     if (ACCOUNT_BEING_EDITED){
-        std::cout<<"SET TO EDIT ACCOUNT"<<'\n';
+        //std::cout<<"SET TO EDIT ACCOUNT"<<'\n';
         std::vector<std::string>::iterator itAccountsNames;
         for (itAccountsNames = existingAccounts.begin(); itAccountsNames != existingAccounts.end(); ++itAccountsNames)
         {
             if (*itAccountsNames == dialogAccountName) {continue;}
-            std::cout<<"NAME IS FORBIDDEN: "<<*itAccountsNames<<'\n';
+            //std::cout<<"NAME IS FORBIDDEN: "<<*itAccountsNames<<'\n';
             listOfForbiddenAccountNames.push_back(*itAccountsNames);
         }
     }
@@ -268,13 +345,13 @@ void AccountDialog::updateUiToCurrentLanguage()
         this->ui->selectImageButton->setText("Select file");
         this->ui->labelInfo->setText("");
         if (ACCOUNT_BEING_EDITED){
-            this->setWindowTitle("Edit Account");
+            this->setWindowTitle(" Edit Account");
             this->ui->buttonCreateAccount->setText("Apply");
         } else if (ACCOUNT_BEING_CREATED){
-            this->setWindowTitle("New Account");
+            this->setWindowTitle(" New Account");
             this->ui->buttonCreateAccount->setText("Create Account");
         } else if (ACCOUNT_BEING_VERIFIED){
-            this->setWindowTitle("Verify Account");
+            this->setWindowTitle(" Verify Account");
             this->ui->buttonCreateAccount->setText("Apply");
         }
     }
@@ -287,13 +364,13 @@ void AccountDialog::updateUiToCurrentLanguage()
         this->ui->selectImageButton->setText("Bild laden");
         this->ui->labelInfo->setText("");
         if (ACCOUNT_BEING_EDITED){
-            this->setWindowTitle("Konto Ändern");
+            this->setWindowTitle(" Konto Ändern");
             this->ui->buttonCreateAccount->setText("Übernehmen");
         } else if (ACCOUNT_BEING_CREATED){
-            this->setWindowTitle("Neues Konto");
+            this->setWindowTitle(" Neues Konto");
             this->ui->buttonCreateAccount->setText("Konto erstellen");
         } else if (ACCOUNT_BEING_VERIFIED){
-            this->setWindowTitle("Konto Prüfen");
+            this->setWindowTitle(" Konto Prüfen");
             this->ui->buttonCreateAccount->setText("Übernehmen");
         }
     }
@@ -306,13 +383,13 @@ void AccountDialog::updateUiToCurrentLanguage()
         this->ui->selectImageButton->setText("Seleccionar");
         this->ui->labelInfo->setText("");
         if (ACCOUNT_BEING_EDITED){
-            this->setWindowTitle("Editar cuenta");
+            this->setWindowTitle(" Editar cuenta");
             this->ui->buttonCreateAccount->setText("Aplicar");
         } else if (ACCOUNT_BEING_CREATED){
-            this->setWindowTitle("Cuenta nueva");
+            this->setWindowTitle(" Cuenta nueva");
             this->ui->buttonCreateAccount->setText("Crear Cuenta");
         } else if (ACCOUNT_BEING_VERIFIED){
-            this->setWindowTitle("Verificar cuenta");
+            this->setWindowTitle(" Verificar cuenta");
             this->ui->buttonCreateAccount->setText("Aplicar");
         }
     }

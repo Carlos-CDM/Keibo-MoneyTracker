@@ -12,13 +12,13 @@
   </property>
   <property name="font">
    <font>
-    <family>Manjari</family>
+    <family>MS Shell Dlg 2</family>
    </font>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QComboBox" name="comboBoxCategory">
+  <widget class="CustomComboBox" name="comboBoxCategory">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -29,44 +29,44 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
    <property name="mouseTracking">
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBoxDay">
+  <widget class="CustomComboBox" name="comboBoxDay">
    <property name="geometry">
     <rect>
      <x>290</x>
      <y>70</y>
      <width>51</width>
-     <height>27</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBoxMonth">
+  <widget class="CustomComboBox" name="comboBoxMonth">
    <property name="geometry">
     <rect>
      <x>350</x>
      <y>70</y>
      <width>111</width>
-     <height>27</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textName">
+  <widget class="CustomTextEdit" name="textName">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -77,11 +77,14 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
    <property name="focusPolicy">
     <enum>Qt::StrongFocus</enum>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="tabChangesFocus">
     <bool>true</bool>
@@ -90,7 +93,7 @@
     <enum>QTextEdit::NoWrap</enum>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textPrice">
+  <widget class="CustomTextEdit" name="textPrice">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -101,8 +104,11 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
     </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="tabChangesFocus">
     <bool>true</bool>
@@ -122,8 +128,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -141,33 +147,33 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
     <string>Amount</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonOk">
+  <widget class="CustomPushButton" name="pushButtonOk">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>130</y>
-     <width>80</width>
-     <height>24</height>
+     <x>375</x>
+     <y>125</y>
+     <width>85</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
    <property name="text">
     <string>OK</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBoxRepeat">
+  <widget class="CustomComboBox" name="comboBoxRepeat">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -178,7 +184,7 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
    <property name="mouseTracking">
@@ -196,8 +202,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>11</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -205,6 +211,23 @@
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomPushButton</class>
+   <extends>QPushButton</extends>
+   <header>custompushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomComboBox</class>
+   <extends>QComboBox</extends>
+   <header>customcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">customtextedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

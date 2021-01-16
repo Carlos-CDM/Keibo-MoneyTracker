@@ -41,7 +41,7 @@ public:
 
     void provideGroupName(std::string &groupName);
     void setGroupName(std::string &groupName);
-    void setOverallThemeStyleSheet(QString styleSheetString);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool usingDarkTheme);
 
 private slots:
     void on_acceptButton_clicked();

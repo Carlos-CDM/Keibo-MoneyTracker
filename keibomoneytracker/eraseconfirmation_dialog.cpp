@@ -31,6 +31,8 @@ eraseConfirmation_dialog::eraseConfirmation_dialog(QWidget *parent) :
     ui->label->setWordWrap(true);
     ui->tableWidget->setFrameStyle(QFrame::NoFrame);
     ui->groupBoxButtons->setStyleSheet("QGroupBox#groupBoxButtons{border:1px solid gray; border-color:rgba(255, 255, 255, 0); }");
+    ui->pushButtonOk->installEventFilter(this);
+    ui->pushButtonCancel->installEventFilter(this);
 }
 
 eraseConfirmation_dialog::~eraseConfirmation_dialog()
@@ -38,9 +40,60 @@ eraseConfirmation_dialog::~eraseConfirmation_dialog()
     delete ui;
 }
 
-void eraseConfirmation_dialog::setOverallThemeStyleSheet(QString styleSheetString)
+bool eraseConfirmation_dialog::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->pushButtonOk) {
+            this->ui->pushButtonOk->setColorForMouseButtonPressEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->pushButtonCancel) {
+            this->ui->pushButtonCancel->setColorForMouseButtonPressEvent();
+        }
+    }
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->pushButtonOk) {
+            this->ui->pushButtonOk->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->pushButtonCancel) {
+            this->ui->pushButtonCancel->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::Enter)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->pushButtonOk)
+         {
+             this->ui->pushButtonOk->setColorForEnterEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->pushButtonCancel) {
+             this->ui->pushButtonCancel->setColorForEnterEvent();
+         }
+    }
+    else if (event->type() == QEvent::Leave)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->pushButtonOk)
+         {
+             this->ui->pushButtonOk->setColorForLeaveEvent();
+         }
+         else if (qobject_cast<QWidget*>(obj) == ui->pushButtonCancel) {
+             this->ui->pushButtonCancel->setColorForLeaveEvent();
+         }
+    }
+    return false;
+}
+
+void eraseConfirmation_dialog::setOverallThemeStyleSheet(QString styleSheetString, bool usingDarkTheme)
 {
     this->setStyleSheet(styleSheetString);
+    //this->ui->tableWidget->setStyleSheet(styleSheetString);
+    this->ui->pushButtonOk->updateColorTheme(usingDarkTheme);
+    this->ui->pushButtonCancel->updateColorTheme(usingDarkTheme);
+}
+
+void eraseConfirmation_dialog::setTableHeaderStyleSheet(QString tTableHeaderStyleSheet)
+{
+    this->ui->tableWidget->setStyleSheet(tTableHeaderStyleSheet);
 }
 
 void eraseConfirmation_dialog::setInfoText(const std::string &text)

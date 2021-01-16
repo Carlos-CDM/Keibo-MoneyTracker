@@ -22,6 +22,7 @@
 #include "accountstatsdialog.h"
 #include "ui_accountstatsdialog.h"
 #include <iostream>
+#include <QScrollBar>
 
 AccountStatsDialog::AccountStatsDialog(QWidget *parent) :
     QDialog(parent),
@@ -42,16 +43,16 @@ void AccountStatsDialog::setThemeStyleSheet(QString styleSheetString)
 {
     this->setStyleSheet(styleSheetString);
 
-    QString styleSheetStringScrollBar =   QString ("QTableWidget#tableStats")+
-                                 QString ("QScrollBar:vertical  {   width: 10px;  margin: 15px 0px 15px 0px;  border-radius: 4px;  }")+
-                                 QString ("QScrollBar::handle:vertical {    background-color: #555555;        min-height: 0px;   border-radius: 4px; }")+
-                                 QString ("QScrollBar::up-button:vertical { width: 3px; height: 3px;background: none;}")+
-                                 QString ("QScrollBar::down-button:vertical { width: 3px; height: 3px;background: none;}")+
-                                 QString ("QScrollBar::add-line:vertical  {  margin: 3px 0px 3px 0px; height: 8px;  width: 10px; subcontrol-position: bottom; subcontrol-origin: margin;  }");
+    this->ui->tableStats->verticalScrollBar()->setStyleSheet(
+                "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px; }"
+                "QScrollBar::add-line:vertical { border: none; background: none;}"
+                "QScrollBar::sub-line:vertical { border: none; background: none;}");
+    this->ui->tableStats->horizontalScrollBar()->setStyleSheet(
+                "QScrollBar:horizontal { width: 15px; margin: 0px 0px 0px 0px; }"
+                "QScrollBar::add-line:horizontal { border: none; background: none;}"
+                "QScrollBar::sub-line:horizontal { border: none; background: none;}" );
 
 
-
-    this->ui->tableStats->setStyleSheet(styleSheetStringScrollBar);
     this->ui->groupBox->setStyleSheet("QGroupBox#groupBox{border: 1px solid gray; border-color:rgba(186, 189, 182, 130); border-radius:5px;}");
     this->ui->labelAccountImage->setStyleSheet("QLabel#labelAccountImage{border: 1px solid gray; border-color:rgba(186, 189, 182, 130); border-radius:5px;}");
     this->ui->labelAdditionalInformation->setStyleSheet("QLabel#labelAdditionalInformation{border: 1px solid gray; border-color:rgba(186, 189, 182, 130); border-left-style: rgba(255, 255, 255, 0); border-right-style: rgba(255, 255, 255, 0); border-bottom-style: rgba(255, 255, 255, 0);}");

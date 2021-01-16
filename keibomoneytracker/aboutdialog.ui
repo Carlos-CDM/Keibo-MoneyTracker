@@ -820,7 +820,14 @@ Public License instead of this License.  But first, please read
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
+    <string notr="true">border-color: rgba(0, 0, 0, 0);
+background-color: rgba(0, 0, 0, 0);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
    </property>
    <property name="plainText">
     <string>Keibo-MoneyTracker</string>
@@ -841,10 +848,17 @@ Public License instead of this License.  But first, please read
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
+    <string notr="true">background-color: rgba(0, 0, 0, 0);
+border-color: rgba(0, 0, 0, 0);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
    </property>
    <property name="plainText">
-    <string>Version 1.0</string>
+    <string>Version 1.0.0</string>
    </property>
   </widget>
   <widget class="QGraphicsView" name="graphicsViewIcon">
@@ -858,6 +872,9 @@ Public License instead of this License.  But first, please read
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
    </property>
   </widget>
  </widget>

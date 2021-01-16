@@ -42,7 +42,8 @@ public:
     void setInfoList (const Language &iLanguage, const std::string &info,
                       const std::vector<int> &listOfYears, const std::vector<int> &listOfNumberOfTransactions,
                       bool showTable);
-    void setOverallThemeStyleSheet(QString styleSheetString);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool usingDarkTheme);
+    void setTableHeaderStyleSheet(QString tTableHeaderStyleSheet);
     void disableCancelButton();
 
 private slots:
@@ -53,6 +54,8 @@ private slots:
 private:
     Ui::eraseConfirmation_dialog *ui;
     bool Accepted = false;
+
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // ERASECONFIRMATION_DIALOG_H

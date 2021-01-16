@@ -24,6 +24,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 
+
 DonateDialog::DonateDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DonateDialog)
@@ -32,6 +33,13 @@ DonateDialog::DonateDialog(QWidget *parent) :
 
     this->setFixedSize(this->width(), this->height());
     this->setImageOnLabel(":/images/AppIcon.png");
+
+    try {
+        ui->pushButtonDonate->installEventFilter(this);
+    } catch (std::exception &e) {
+        qFatal("Error %s sending event to object",
+            e.what());
+    }
 }
 
 DonateDialog::~DonateDialog()
@@ -41,30 +49,31 @@ DonateDialog::~DonateDialog()
     delete scene;
 }
 
-void DonateDialog::setLanguageAndStyleSheet(const Language &iLanguage, const QString &iStyleSheet)
+void DonateDialog::setLanguageAndStyleSheet(const Language &iLanguage, const QString &iStyleSheet, bool usingDarkTheme)
 {
     this->setStyleSheet(iStyleSheet);
     if (iLanguage == GERMAN)
     {
         this->ui->labelThanks->setText("Hey Du! Vielen Dank, dass Du meine App Keibo-MoneyTracker benutzt. Ich hoffe, dass sie dir hilft mehr Ordnung in deine Finanzen zu bringen. "
                                        "Wenn Du möchtest, kannst Du mir etwas spenden.");
-        this->setWindowTitle("Spenden");
+        this->setWindowTitle(" Spenden");
         this->ui->pushButtonDonate->setText("Spenden");
     }
     else if (iLanguage == SPANISH)
     {
         this->ui->labelThanks->setText("Hola! Muchas gracias por usar Keibo-MoneyTracker. Espero que te sea de ayuda con las finanzas. "
                                        "Si piensas que ésta App es útil, por favor considera una donación. ");
-        this->setWindowTitle("Donar");
+        this->setWindowTitle(" Donar");
         this->ui->pushButtonDonate->setText("Donar");
     }
     else
     {
         this->ui->labelThanks->setText("Hey there! Thank you for using Keibo-MoneyTracker. I hope it helps you to have a clearer view about your finances. "
                                        "If you find this app useful please consider donating.");
-        this->setWindowTitle("Donate");
+        this->setWindowTitle(" Donate");
         this->ui->pushButtonDonate->setText("Donate");
     }
+    this->ui->pushButtonDonate->updateColorTheme(usingDarkTheme);
 }
 
 void DonateDialog::on_pushButtonDonate_clicked()
@@ -97,4 +106,35 @@ void DonateDialog::setImageOnLabel(const QString &imagePath)
 
         ui->graphicsViewIcon->setScene(scene);
     }
+}
+
+bool DonateDialog::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->pushButtonDonate) {
+            this->ui->pushButtonDonate->setColorForMouseButtonPressEvent();
+        }
+    }
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->pushButtonDonate) {
+            this->ui->pushButtonDonate->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::Enter)
+     {
+         if (qobject_cast<QWidget*>(obj) == ui->pushButtonDonate)
+         {
+             this->ui->pushButtonDonate->setColorForEnterEvent();
+         }
+    }
+    else if (event->type() == QEvent::Leave)
+     {
+         if (qobject_cast<QWidget*>(obj) == ui->pushButtonDonate)
+         {
+             this->ui->pushButtonDonate->setColorForLeaveEvent();
+         }
+    }
+    return false;
 }

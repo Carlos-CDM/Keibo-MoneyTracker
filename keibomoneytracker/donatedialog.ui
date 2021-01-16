@@ -32,7 +32,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonDonate">
+  <widget class="CustomPushButton" name="pushButtonDonate">
    <property name="geometry">
     <rect>
      <x>185</x>
@@ -57,8 +57,18 @@
    <property name="styleSheet">
     <string notr="true">background-color: rgba(0, 0, 0, 0);</string>
    </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">custompushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

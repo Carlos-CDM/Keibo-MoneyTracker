@@ -39,7 +39,7 @@ public:
     explicit DonateDialog(QWidget *parent = nullptr);
     ~DonateDialog();
 
-    void setLanguageAndStyleSheet(const Language &iLanguage, const QString &iStyleSheet);
+    void setLanguageAndStyleSheet(const Language &iLanguage, const QString &iStyleSheet, bool usingDarkTheme);
 
 private slots:
     void on_pushButtonDonate_clicked();
@@ -50,6 +50,8 @@ private:
     void setImageOnLabel(const QString &imagePath);
     QGraphicsPixmapItem *item;
     QGraphicsScene *scene;
+
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // DONATEDIALOG_H

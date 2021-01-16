@@ -32,7 +32,7 @@ requestLanguageDialog::requestLanguageDialog(QWidget *parent) :
     ui->comboBoxLanguage->addItem("Deutsch");
     ui->comboBoxLanguage->addItem("Español");
 
-    this->setWindowTitle("Language");
+    this->setWindowTitle(" Language");
     this->ui->pushButtonYes->setEnabled(false);
     this->ui->pushButtonYes->setVisible(false);
     allowTitleUpdate = true;
@@ -40,15 +40,6 @@ requestLanguageDialog::requestLanguageDialog(QWidget *parent) :
 
 requestLanguageDialog::~requestLanguageDialog()
 {
-    if (!buttonOkPressed)
-    {
-        eraseConfirmation_dialog languageConfirmationDialog;
-        std::string text = "Selected language is English";
-        languageConfirmationDialog.setInfoText(text);
-        languageConfirmationDialog.disableCancelButton();
-        languageConfirmationDialog.setWindowTitle("Information");
-        languageConfirmationDialog.exec();
-    }
     delete ui;
 }
 
@@ -68,17 +59,17 @@ void requestLanguageDialog::on_pushButtonOk_clicked()
                 this->setFixedWidth(this->width()+20);
                 this->ui->pushButtonOk->setText("No");
                 this->ui->pushButtonYes->setText("Yes");
-                this->setWindowTitle("Would you like to see the user guide?");
+                this->setWindowTitle(" Would you like to see the user guide?");
             } else if (selectedLanguage == GERMAN) {
                 this->setFixedWidth(this->width()+100);
                 this->ui->pushButtonOk->setGeometry(ui->pushButtonOk->x()+60, ui->pushButtonOk->y(), ui->pushButtonOk->width(), ui->pushButtonOk->height());
                 this->ui->pushButtonOk->setText("Nein");
                 this->ui->pushButtonYes->setText("Ja");
-                this->setWindowTitle("Möchten Sie die Benutzungserklärung ansehen?");
+                this->setWindowTitle(" Möchten Sie die Benutzungserklärung ansehen?");
             } else if (selectedLanguage == SPANISH) {
                 this->ui->pushButtonOk->setText("No");
                 this->ui->pushButtonYes->setText("Si");
-                this->setWindowTitle("Desea ver la guia de uso?");
+                this->setWindowTitle(" Desea ver la guia de uso?");
             }
 
             this->ui->comboBoxLanguage->setEnabled(false);
@@ -99,15 +90,15 @@ void requestLanguageDialog::on_comboBoxLanguage_currentIndexChanged(int index)
     if (allowTitleUpdate)
     {
         if      (index == 0) {
-            this->setWindowTitle("Language");
+            this->setWindowTitle(" Language");
             this->ui->pushButtonOk->setText("Continue");
         }
         else if (index == 1) {
-            this->setWindowTitle("Sprache");
+            this->setWindowTitle(" Sprache");
             this->ui->pushButtonOk->setText("Weiter");
         }
         else if (index == 2) {
-            this->setWindowTitle("Idioma");
+            this->setWindowTitle(" Idioma");
             this->ui->pushButtonOk->setText("Continuar");
         }
     }

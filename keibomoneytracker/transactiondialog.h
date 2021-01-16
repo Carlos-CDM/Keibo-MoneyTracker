@@ -43,8 +43,9 @@ public:
     void displayItemInfo(std::string Nam, double Pri, int Cat, int Mon, int Day, RepetitionOption Repeat, int year);
     bool transactionNameOK = false;
     bool transactionAmountOK = false;
+    bool usingDarkTheme = false;
 
-    void setOverallThemeStyleSheet(QString styleSheetString);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme);
     void setNumberOfDaysInSelectedMonth(int selectedMonth);
 
     void setLanguage(const Language & accountLanguage);

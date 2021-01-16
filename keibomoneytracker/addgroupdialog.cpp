@@ -59,9 +59,12 @@ void Addgroupdialog::setLanguage(const Language &iLanguage)
     }
 }
 
-void Addgroupdialog::setOverallThemeStyleSheet(QString styleSheetString)
+void Addgroupdialog::setOverallThemeStyleSheet(QString styleSheetString, bool usingDarkTheme)
 {
     this->setStyleSheet(styleSheetString);
+    this->ui->acceptButton->updateColorTheme(usingDarkTheme);
+    this->ui->cancelButton->updateColorTheme(usingDarkTheme);
+    this->ui->textEdit->updateColorTheme(usingDarkTheme);
 }
 
 void Addgroupdialog::provideGroupName(std::string &groupName) ///Provide name to external variable by reference
@@ -143,6 +146,46 @@ bool Addgroupdialog::eventFilter(QObject *obj, QEvent *event)
                 return true;
             }
         }
+    }
+    else if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->acceptButton) {
+            this->ui->acceptButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->cancelButton) {
+            this->ui->cancelButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textEdit) {
+            this->ui->textEdit->setColorForMouseButtonPressEvent();
+        }
+    }
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->acceptButton) {
+            this->ui->acceptButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->cancelButton) {
+            this->ui->cancelButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textEdit) {
+            this->ui->textEdit->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::Enter)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->acceptButton) {
+             this->ui->acceptButton->setColorForEnterEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->cancelButton) {
+             this->ui->cancelButton->setColorForEnterEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->textEdit) {
+             this->ui->textEdit->setColorForEnterEvent();
+         }
+    }
+    else if (event->type() == QEvent::Leave)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->acceptButton) {
+             this->ui->acceptButton->setColorForLeaveEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->cancelButton) {
+             this->ui->cancelButton->setColorForLeaveEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->textEdit) {
+             this->ui->textEdit->setColorForLeaveEvent();
+         }
     }
     return false;
 }

@@ -24,6 +24,7 @@
 #include "addgroupdialog.h"
 #include "eraseconfirmation_dialog.h"
 #include <QKeyEvent>
+#include <QScrollBar>
 
 ManageGroupsDialog::ManageGroupsDialog(QWidget *parent) :
     QDialog(parent),
@@ -85,11 +86,27 @@ void ManageGroupsDialog::setLanguage(const Language &accountLanguage)
     }
 }
 
-void ManageGroupsDialog::setOverallThemeStyleSheet(QString styleSheetString, QString tableHeaderStyleSheet)
+void ManageGroupsDialog::setOverallThemeStyleSheet(QString styleSheetString, QString tTableHeaderStyleSheet, bool tUsingDarkTheme)
 {
-    ui->tableWidgetGroups->setStyleSheet(tableHeaderStyleSheet);
+    tableHeaderStyleSheet = tTableHeaderStyleSheet;
+    this->ui->tableWidgetGroups->setStyleSheet(tTableHeaderStyleSheet);  //First set the color of the table header!!
+    this->ui->tableWidgetGroups->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
     this->setStyleSheet(styleSheetString);
-    overallThemeStyleSheetString = styleSheetString;    
+
+    this->ui->tableWidgetGroups->verticalScrollBar()->setStyleSheet(
+                "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px;}"
+                "QScrollBar::add-line:vertical { border: none; background: none;}"
+                "QScrollBar::sub-line:vertical { border: none; background: none;}"
+                "QScrollBar::handle:vertical {background: rgb(32, 47, 130), min-height: 0px;}");
+    overallThemeStyleSheetString = styleSheetString;
+
+
+
+    this->ui->acceptButton->updateColorTheme(tUsingDarkTheme);
+    this->ui->addGroupButton->updateColorTheme(tUsingDarkTheme);
+    this->ui->editGroupButton->updateColorTheme(tUsingDarkTheme);
+    this->ui->deleteGroupButton->updateColorTheme(tUsingDarkTheme);
+    usingDarkTheme = tUsingDarkTheme;
 }
 
 void ManageGroupsDialog::setYearData(Account tempYearData, bool showIncomeGroups)
@@ -158,30 +175,30 @@ void ManageGroupsDialog::setYearData(Account tempYearData, bool showIncomeGroups
     {
         if (iLanguage == ENGLISH)
         {
-            this->setWindowTitle("Manage income groups");
+            this->setWindowTitle(" Manage income groups");
         }
         else if (iLanguage == GERMAN)
         {
-            this->setWindowTitle("Einkommen Gruppen bearbeiten");
+            this->setWindowTitle(" Einkommen Gruppen bearbeiten");
         }
         else if (iLanguage == SPANISH)
         {
-            this->setWindowTitle("Administrar grupos de ingresos");
+            this->setWindowTitle(" Administrar grupos de ingresos");
         }
     }
     else if (!editingIncomeGroups)
     {
         if (iLanguage == ENGLISH)
         {
-            this->setWindowTitle("Manage expenses groups");
+            this->setWindowTitle(" Manage expenses groups");
         }
         else if (iLanguage == GERMAN)
         {
-            this->setWindowTitle("Ausgaben Gruppen bearbeiten");
+            this->setWindowTitle(" Ausgaben Gruppen bearbeiten");
         }
         else if (iLanguage == SPANISH)
         {
-            this->setWindowTitle("Administrar grupos de egresos");
+            this->setWindowTitle(" Administrar grupos de egresos");
         }
     }
 }
@@ -287,6 +304,82 @@ bool ManageGroupsDialog::eventFilter(QObject *obj, QEvent *event)
             }
         }
     }
+    else if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->acceptButton) {
+            this->ui->acceptButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->addGroupButton) {
+            this->ui->addGroupButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->editGroupButton) {
+            this->ui->editGroupButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->deleteGroupButton) {
+            this->ui->deleteGroupButton->setColorForMouseButtonPressEvent();
+        }
+    }
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->acceptButton) {
+            this->ui->acceptButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->addGroupButton) {
+            this->ui->addGroupButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->editGroupButton) {
+            this->ui->editGroupButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->deleteGroupButton) {
+            this->ui->deleteGroupButton->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::Enter)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->acceptButton)
+         {
+             this->ui->acceptButton->setColorForEnterEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->addGroupButton) {
+             this->ui->addGroupButton->setColorForEnterEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->editGroupButton) {
+             this->ui->editGroupButton->setColorForEnterEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->deleteGroupButton) {
+             this->ui->deleteGroupButton->setColorForEnterEvent();
+         }
+    }
+    else if (event->type() == QEvent::Leave)
+     {
+         if (qobject_cast<QPushButton*>(obj) == ui->acceptButton)
+         {
+             this->ui->acceptButton->setColorForLeaveEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->addGroupButton) {
+             this->ui->addGroupButton->setColorForLeaveEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->editGroupButton) {
+             this->ui->editGroupButton->setColorForLeaveEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->deleteGroupButton) {
+             this->ui->deleteGroupButton->setColorForLeaveEvent();
+         }
+    }
+    else if (event->type() == QEvent::FocusIn)
+     {
+        if (qobject_cast<QPushButton*>(obj) == ui->acceptButton)
+        {
+            this->ui->acceptButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->addGroupButton) {
+            this->ui->addGroupButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->editGroupButton) {
+            this->ui->editGroupButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->deleteGroupButton) {
+            this->ui->deleteGroupButton->setColorForEnterEvent();
+        }
+     }
+    else if (event->type() == QEvent::FocusIn)
+     {
+        if (qobject_cast<QPushButton*>(obj) == ui->acceptButton)
+        {
+            this->ui->acceptButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->addGroupButton) {
+            this->ui->addGroupButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->editGroupButton) {
+            this->ui->editGroupButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->deleteGroupButton) {
+            this->ui->deleteGroupButton->setColorForLeaveEvent();
+        }
+     }
     return false;
 }
 
@@ -297,23 +390,23 @@ void ManageGroupsDialog::createNewGroup()
     addGroupDialog.setLanguage(iLanguage);
     if (editingIncomeGroups == true){
         if (iLanguage == ENGLISH){
-            addGroupDialog.setWindowTitle("New Income Group");
+            addGroupDialog.setWindowTitle(" New Income Group");
         } else if (iLanguage == GERMAN) {
-            addGroupDialog.setWindowTitle("Neue Einkommen Gruppe");
+            addGroupDialog.setWindowTitle(" Neue Einkommen Gruppe");
         } else if (iLanguage == SPANISH){
-            addGroupDialog.setWindowTitle("Grupo nuevo de ingresos");
+            addGroupDialog.setWindowTitle(" Grupo nuevo de ingresos");
         }
     } else if (editingIncomeGroups == false) {
         if (iLanguage == ENGLISH){
-            addGroupDialog.setWindowTitle("New Expenses Group");
+            addGroupDialog.setWindowTitle(" New Expenses Group");
         } else if (iLanguage == GERMAN) {
-            addGroupDialog.setWindowTitle("Neue Ausgabe Gruppe");
+            addGroupDialog.setWindowTitle(" Neue Ausgabe Gruppe");
         } else if (iLanguage == SPANISH){
-            addGroupDialog.setWindowTitle("Grupo nuevo de egresos");
+            addGroupDialog.setWindowTitle(" Grupo nuevo de egresos");
         }
     }
     ui->labelInfo->setText("");
-    addGroupDialog.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+    addGroupDialog.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
     addGroupDialog.exec();
 
     addGroupDialog.provideGroupName(newGroupName);
@@ -371,14 +464,14 @@ void ManageGroupsDialog::editSelectedGroup()
             editGroupDialog.setModal(true);
             editGroupDialog.setLanguage(iLanguage);
             if (iLanguage == ENGLISH){
-                editGroupDialog.setWindowTitle("Edit group name");
+                editGroupDialog.setWindowTitle(" Edit group name");
             } else if (iLanguage == GERMAN) {
-                editGroupDialog.setWindowTitle("Gruppe Name ändern");
+                editGroupDialog.setWindowTitle(" Gruppe Name ändern");
             } else if (iLanguage == SPANISH){
-                editGroupDialog.setWindowTitle("Cambiar nombre de grupo");
+                editGroupDialog.setWindowTitle(" Cambiar nombre de grupo");
             }
             editGroupDialog.setGroupName(*it);
-            editGroupDialog.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+            editGroupDialog.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
             editGroupDialog.exec();
 
             editGroupDialog.provideGroupName(newGroupName);  ///Take new name from Dialog
@@ -409,14 +502,14 @@ void ManageGroupsDialog::editSelectedGroup()
             editGroupDialog.setModal(true);
             editGroupDialog.setLanguage(iLanguage);
             if (iLanguage == ENGLISH){
-                editGroupDialog.setWindowTitle("Edit group name");
+                editGroupDialog.setWindowTitle(" Edit group name");
             } else if (iLanguage == GERMAN) {
-                editGroupDialog.setWindowTitle("Gruppe Name ändern");
+                editGroupDialog.setWindowTitle(" Gruppe Name ändern");
             } else if (iLanguage == SPANISH){
-                editGroupDialog.setWindowTitle("Cambiar nombre de grupo");
+                editGroupDialog.setWindowTitle(" Cambiar nombre de grupo");
             }
             editGroupDialog.setGroupName(*it);
-            editGroupDialog.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+            editGroupDialog.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
             editGroupDialog.exec();
 
             editGroupDialog.provideGroupName(newGroupName);  ///Take new name from Dialog
@@ -510,7 +603,7 @@ void ManageGroupsDialog::deleteSelectedGroup() ///CHECK VALUES AFTER SECOND ITER
               showTable = true;
               if (iLanguage == ENGLISH)
               {
-                  eraseConfirmation.setWindowTitle("Confirmation");
+                  eraseConfirmation.setWindowTitle(" Confirmation");
                   confirmationText = "There is a total of "
                                          + QString::number(YearsIncludingTransactionOfGroupToDelete.size())
                                          +" year/s including transaction/s in this group. "
@@ -519,7 +612,7 @@ void ManageGroupsDialog::deleteSelectedGroup() ///CHECK VALUES AFTER SECOND ITER
               }
               else if (iLanguage == GERMAN)
               {
-                  eraseConfirmation.setWindowTitle("Bestätigung");
+                  eraseConfirmation.setWindowTitle(" Bestätigung");
                   confirmationText = "Es gibt insgesamt "
                                          + QString::number(YearsIncludingTransactionOfGroupToDelete.size())
                                          +" Jahr/e mit Transaktion/en in dieser Gruppe. "
@@ -528,7 +621,7 @@ void ManageGroupsDialog::deleteSelectedGroup() ///CHECK VALUES AFTER SECOND ITER
               }
               else if (iLanguage == SPANISH)
               {
-                  eraseConfirmation.setWindowTitle("Confirmación");
+                  eraseConfirmation.setWindowTitle(" Confirmación");
                   confirmationText = "Hay un total de "
                                          + QString::number(YearsIncludingTransactionOfGroupToDelete.size())
                                          +" año/s que incluyen transaccion/es en este grupo. "
@@ -539,13 +632,13 @@ void ManageGroupsDialog::deleteSelectedGroup() ///CHECK VALUES AFTER SECOND ITER
 
           else {
               if (iLanguage == ENGLISH) {
-                  eraseConfirmation.setWindowTitle("Confirmation");
+                  eraseConfirmation.setWindowTitle(" Confirmation");
                   confirmationText = "Group will be deleted.";
               }  else if (iLanguage == GERMAN) {
-                  eraseConfirmation.setWindowTitle("Bestätigung");
+                  eraseConfirmation.setWindowTitle(" Bestätigung");
                   confirmationText = "Gruppe wird gelöscht.";
               }  else if (iLanguage == SPANISH) {
-                  eraseConfirmation.setWindowTitle("Confirmación");
+                  eraseConfirmation.setWindowTitle(" Confirmación");
                   confirmationText = "El grupo será eliminado.";
               }
           }
@@ -554,7 +647,8 @@ void ManageGroupsDialog::deleteSelectedGroup() ///CHECK VALUES AFTER SECOND ITER
         /// PASS HERE THE VECTORS OF YEARS AND TRANSACTIONS INCLUDING/BELONGING TO THE GROUP TO DELETE TO DIALOG FOR THE LIST
         /// SET CORRECT DIMENSIONS TOO
         eraseConfirmation.setInfoList(iLanguage, confirmationText.toStdString() , YearsIncludingTransactionOfGroupToDelete, NumberOfTransactionPerYearOfGroupToDelete, showTable);
-        eraseConfirmation.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+        eraseConfirmation.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
+        eraseConfirmation.setTableHeaderStyleSheet(tableHeaderStyleSheet);
         eraseConfirmation.exec();
 
         if (eraseConfirmation.comfirmed())

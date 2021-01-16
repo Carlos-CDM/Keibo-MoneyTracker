@@ -22,8 +22,14 @@
      <height>151</height>
     </rect>
    </property>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
   </widget>
-  <widget class="QPushButton" name="pushButtonClose">
+  <widget class="CustomPushButton" name="pushButtonClose">
    <property name="geometry">
     <rect>
      <x>430</x>
@@ -50,6 +56,13 @@
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomPushButton</class>
+   <extends>QPushButton</extends>
+   <header>custompushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

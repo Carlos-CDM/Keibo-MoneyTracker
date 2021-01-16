@@ -83,17 +83,17 @@ void SelectColorDialog::setLanguage(const Language &currentLanguage)
    if (currentLanguage == ENGLISH)
    {
        this->ui->Transparent->setText("No color");
-       this->setWindowTitle("Pick a color");
+       this->setWindowTitle(" Pick a color");
    }
    else if (currentLanguage == GERMAN)
    {
        this->ui->Transparent->setText("Keine Farbe");
-       this->setWindowTitle("Wählen Sie eine Farbe");
+       this->setWindowTitle(" Wählen Sie eine Farbe");
    }
    else if (currentLanguage == SPANISH)
    {
        this->ui->Transparent->setText("Sin color");
-       this->setWindowTitle("Seleccione un color");
+       this->setWindowTitle(" Seleccione un color");
    }
 }
 

@@ -78,7 +78,7 @@ void checkFaultyTransactionsDialog::setLanguage(const Language &iLanguage)
 
     if (currentLanguage == ENGLISH)
     {
-        this->setWindowTitle("Verify transactions");
+        this->setWindowTitle(" Verify transactions");
         this->ui->labelName->setText("Name:");
         this->ui->labelAmount->setText("Amount:");
         this->ui->discardButton->setText("Discard");
@@ -92,7 +92,7 @@ void checkFaultyTransactionsDialog::setLanguage(const Language &iLanguage)
     }
     else if (currentLanguage == GERMAN)
     {
-        this->setWindowTitle("Transaktionen überprüfen");
+        this->setWindowTitle(" Transaktionen überprüfen");
         this->ui->labelName->setText("Name:");
         this->ui->labelAmount->setText("Betrag:");
         this->ui->discardButton->setText("Verwerfen");
@@ -106,7 +106,7 @@ void checkFaultyTransactionsDialog::setLanguage(const Language &iLanguage)
     }
     else if (currentLanguage == SPANISH)
     {
-        this->setWindowTitle("Verificar transacciones");
+        this->setWindowTitle(" Verificar transacciones");
         this->ui->labelName->setText("Nombre:");
         this->ui->labelAmount->setText("Monto:");
         this->ui->discardButton->setText("Descartar");
@@ -120,10 +120,22 @@ void checkFaultyTransactionsDialog::setLanguage(const Language &iLanguage)
     }
 }
 
-void checkFaultyTransactionsDialog::setOverallThemeStyleSheet(QString styleSheetString)
+void checkFaultyTransactionsDialog::setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme)
 {
     this->setStyleSheet(styleSheetString);
     overallThemeStyleSheetString = styleSheetString;
+    usingDarkTheme = tUsingDarkTheme;
+    this->ui->textName->updateColorTheme(usingDarkTheme);
+    this->ui->textPrice->updateColorTheme(usingDarkTheme);
+    this->ui->textName->updateColorTheme(usingDarkTheme);
+    this->ui->comboBoxDay->updateColorTheme(usingDarkTheme);
+    this->ui->comboBoxMonth->updateColorTheme(usingDarkTheme);
+    this->ui->comboBoxRepeat->updateColorTheme(usingDarkTheme);
+    this->ui->comboBoxCategory->updateColorTheme(usingDarkTheme);
+    this->ui->discardButton->updateColorTheme(usingDarkTheme);
+    this->ui->discardAllButton->updateColorTheme(usingDarkTheme);
+    this->ui->SetAndNextButton->updateColorTheme(usingDarkTheme);
+
 }
 
 void checkFaultyTransactionsDialog::checkAndSetTransaction() //Save/Set all variables/information and Verifies that a name and amount is given.
@@ -223,20 +235,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                 }
                 else if (!transactionNameOK && !transactionAmountOK) {
@@ -244,20 +256,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     }
                 return true;
@@ -281,20 +293,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                 }
@@ -303,20 +315,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                 }
                 else if (!transactionNameOK && !transactionAmountOK){
@@ -324,20 +336,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                 }
@@ -364,20 +376,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -387,20 +399,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->ui->textPrice->selectAll();   //Select all text in Price
@@ -410,20 +422,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -448,20 +460,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -472,20 +484,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -496,20 +508,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -535,20 +547,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -560,20 +572,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -585,20 +597,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -625,20 +637,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusNextChild();
                     this->focusNextChild();
@@ -650,20 +662,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -676,20 +688,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusNextChild();
                     this->focusNextChild();
@@ -744,20 +756,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusNextChild();
                 }
@@ -766,20 +778,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusNextChild();
                     this->focusNextChild();
@@ -790,20 +802,20 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.setModal(true);
                     if (currentLanguage == ENGLISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
                     }
                     else if (currentLanguage == GERMAN)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Information");
+                        eraseConfirmationWindow.setWindowTitle(" Information");
                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
                     }
                     else if (currentLanguage == SPANISH)
                     {
-                        eraseConfirmationWindow.setWindowTitle("Información");
+                        eraseConfirmationWindow.setWindowTitle(" Información");
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
-                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+                    eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
                     eraseConfirmationWindow.exec();
                     this->focusNextChild();
                 }
@@ -815,6 +827,139 @@ bool checkFaultyTransactionsDialog::eventFilter(QObject *obj, QEvent *event)
             }
           }
     }
+    else if (event->type() == QEvent::MouseButtonPress)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->SetAndNextButton) {
+            this->ui->SetAndNextButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardButton) {
+            this->ui->discardButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardAllButton) {
+            this->ui->discardAllButton->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxDay) {
+            this->ui->comboBoxDay->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
+            this->ui->comboBoxMonth->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
+            this->ui->comboBoxRepeat->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+            this->ui->comboBoxCategory->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textName) {
+            this->ui->textName->setColorForMouseButtonPressEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textPrice) {
+            this->ui->textPrice->setColorForMouseButtonPressEvent();
+        }
+
+    }
+    else if (event->type() == QEvent::MouseButtonRelease)
+    {
+        if (qobject_cast<QWidget*>(obj) == ui->SetAndNextButton) {
+            this->ui->SetAndNextButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardButton) {
+            this->ui->discardButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardAllButton) {
+            this->ui->discardAllButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxDay) {
+            this->ui->comboBoxDay->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
+            this->ui->comboBoxMonth->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
+            this->ui->comboBoxRepeat->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+            this->ui->comboBoxCategory->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textName) {
+            this->ui->textName->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textPrice) {
+            this->ui->textPrice->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::Enter)
+     {
+        if (qobject_cast<QWidget*>(obj) == ui->SetAndNextButton) {
+            this->ui->SetAndNextButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardButton) {
+            this->ui->discardButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardAllButton) {
+            this->ui->discardAllButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxDay) {
+            this->ui->comboBoxDay->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
+            this->ui->comboBoxMonth->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
+            this->ui->comboBoxRepeat->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+            this->ui->comboBoxCategory->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textName) {
+            this->ui->textName->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textPrice) {
+            this->ui->textPrice->setColorForEnterEvent();
+        }
+    }
+    else if (event->type() == QEvent::Leave)
+     {
+        if (qobject_cast<QWidget*>(obj) == ui->SetAndNextButton) {
+            this->ui->SetAndNextButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardButton) {
+            this->ui->discardButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardAllButton) {
+            this->ui->discardAllButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxDay) {
+            this->ui->comboBoxDay->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
+            this->ui->comboBoxMonth->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
+            this->ui->comboBoxRepeat->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+            this->ui->comboBoxCategory->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textName) {
+            this->ui->textName->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textPrice) {
+            this->ui->textPrice->setColorForLeaveEvent();
+        }
+     }
+    else if (event->type() == QEvent::FocusIn)
+     {
+        if (qobject_cast<QWidget*>(obj) == ui->SetAndNextButton) {
+            this->ui->SetAndNextButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardButton) {
+            this->ui->discardButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardAllButton) {
+            this->ui->discardAllButton->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxDay) {
+            this->ui->comboBoxDay->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
+            this->ui->comboBoxMonth->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
+            this->ui->comboBoxRepeat->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+            this->ui->comboBoxCategory->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textName) {
+            this->ui->textName->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textPrice) {
+            this->ui->textPrice->setColorForEnterEvent();
+        }
+     }
+    else if (event->type() == QEvent::FocusOut)
+     {
+        if (qobject_cast<QWidget*>(obj) == ui->SetAndNextButton) {
+            this->ui->SetAndNextButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardButton) {
+            this->ui->discardButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->discardAllButton) {
+            this->ui->discardAllButton->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxDay) {
+            this->ui->comboBoxDay->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
+            this->ui->comboBoxMonth->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
+            this->ui->comboBoxRepeat->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+            this->ui->comboBoxCategory->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textName) {
+            this->ui->textName->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->textPrice) {
+            this->ui->textPrice->setColorForLeaveEvent();
+        }
+     }
     return false;
 }
 
@@ -853,20 +998,20 @@ void checkFaultyTransactionsDialog::on_SetAndNextButton_clicked()
         eraseConfirmationWindow.setModal(true);
         if (currentLanguage == ENGLISH)
         {
-            eraseConfirmationWindow.setWindowTitle("Information");
+            eraseConfirmationWindow.setWindowTitle(" Information");
             eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
         }
         else if (currentLanguage == GERMAN)
         {
-            eraseConfirmationWindow.setWindowTitle("Information");
+            eraseConfirmationWindow.setWindowTitle(" Information");
             eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
         }
         else if (currentLanguage == SPANISH)
         {
-            eraseConfirmationWindow.setWindowTitle("Información");
+            eraseConfirmationWindow.setWindowTitle(" Información");
             eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
         }
-        eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+        eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
         eraseConfirmationWindow.exec();
         this->focusNextChild();
     }
@@ -875,20 +1020,20 @@ void checkFaultyTransactionsDialog::on_SetAndNextButton_clicked()
         eraseConfirmationWindow.setModal(true);
         if (currentLanguage == ENGLISH)
         {
-            eraseConfirmationWindow.setWindowTitle("Information");
+            eraseConfirmationWindow.setWindowTitle(" Information");
             eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
         }
         else if (currentLanguage == GERMAN)
         {
-            eraseConfirmationWindow.setWindowTitle("Information");
+            eraseConfirmationWindow.setWindowTitle(" Information");
             eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
         }
         else if (currentLanguage == SPANISH)
         {
-            eraseConfirmationWindow.setWindowTitle("Información");
+            eraseConfirmationWindow.setWindowTitle(" Información");
             eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
         }
-        eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+        eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
         eraseConfirmationWindow.exec();
         this->focusNextChild();
         this->focusNextChild();
@@ -898,20 +1043,20 @@ void checkFaultyTransactionsDialog::on_SetAndNextButton_clicked()
         eraseConfirmationWindow.setModal(true);
         if (currentLanguage == ENGLISH)
         {
-            eraseConfirmationWindow.setWindowTitle("Information");
+            eraseConfirmationWindow.setWindowTitle(" Information");
             eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
         }
         else if (currentLanguage == GERMAN)
         {
-            eraseConfirmationWindow.setWindowTitle("Information");
+            eraseConfirmationWindow.setWindowTitle(" Information");
             eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
         }
         else if (currentLanguage == SPANISH)
         {
-            eraseConfirmationWindow.setWindowTitle("Información");
+            eraseConfirmationWindow.setWindowTitle(" Información");
             eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
         }
-        eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString);
+        eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
         eraseConfirmationWindow.exec();
         this->focusNextChild();
     }

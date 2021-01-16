@@ -24,8 +24,8 @@
    </property>
    <property name="font">
     <font>
-     <family>URW Gothic</family>
-     <pointsize>10</pointsize>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>9</pointsize>
     </font>
    </property>
    <property name="text">
@@ -46,9 +46,15 @@
    </property>
    <property name="font">
     <font>
-     <family>Inconsolata</family>
+     <family>MS Shell Dlg 2</family>
     </font>
    </property>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
   </widget>
   <widget class="QGroupBox" name="groupBoxButtons">
    <property name="geometry">
@@ -60,31 +66,31 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">border-color: rgba(255, 255, 255, 0);</string>
+    <string notr="true">border-color: rgba(0, 0, 0, 0);</string>
    </property>
    <property name="title">
     <string/>
    </property>
-   <widget class="QPushButton" name="pushButtonOk">
+   <widget class="CustomPushButton" name="pushButtonOk">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>80</width>
-      <height>26</height>
+      <x>5</x>
+      <y>9</y>
+      <width>85</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>OK</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonCancel">
+   <widget class="CustomPushButton" name="pushButtonCancel">
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>10</y>
-      <width>80</width>
-      <height>26</height>
+      <y>9</y>
+      <width>85</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -93,6 +99,13 @@
    </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomPushButton</class>
+   <extends>QPushButton</extends>
+   <header>custompushbutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

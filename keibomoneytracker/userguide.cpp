@@ -71,8 +71,10 @@ UserGuide::~UserGuide()
 
 bool UserGuide::eventFilter(QObject *obj, QEvent *event)
 {
-    QString buttonUnselectedStyle = "QPushButton{  background-color:rgba(0, 0, 0, 0); border-radius: 5px; }"; //border: 1px solid gray; border-color: rgba(186, 189, 182, 127);
-    QString buttonSelectedStyle = "QPushButton{  background-color:rgba(128, 128, 128, 60); border-radius: 5px; }";
+    QString buttonUnselectedStyle = "QPushButton{ border: 1px solid gray; border-color: rgba(186, 189, 182, 127); background-color:rgba(0, 0, 0, 0); border-radius: 5px; }"; //border: 1px solid gray; border-color: rgba(186, 189, 182, 127);
+    QString buttonSelectedStyle = "QPushButton{ border: 1px solid gray; border-color: rgba(186, 189, 182, 127); background-color:rgba(128, 128, 128, 60); border-radius: 5px; }";
+    QString buttonUnselectedStyleArrow = "QPushButton{  background-color:rgba(0, 0, 0, 0); border-radius: 5px; }";
+    QString buttonSelectedStyleArrow = "QPushButton{  background-color:rgba(128, 128, 128, 60); border-radius: 5px; }";
 
     if (event->type() == QEvent::Enter)
     {
@@ -82,12 +84,12 @@ bool UserGuide::eventFilter(QObject *obj, QEvent *event)
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->pushButtonPrevious)
         {
-            ui->pushButtonPrevious->setStyleSheet(buttonSelectedStyle);
+            ui->pushButtonPrevious->setStyleSheet(buttonSelectedStyleArrow);
             return true;
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->pushButtonNext)
         {
-            ui->pushButtonNext->setStyleSheet(buttonSelectedStyle);
+            ui->pushButtonNext->setStyleSheet(buttonSelectedStyleArrow);
             return true;
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->pushButtonAccounts)
@@ -129,12 +131,12 @@ bool UserGuide::eventFilter(QObject *obj, QEvent *event)
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->pushButtonPrevious)
         {
-            ui->pushButtonPrevious->setStyleSheet(buttonUnselectedStyle);
+            ui->pushButtonPrevious->setStyleSheet(buttonUnselectedStyleArrow);
             return true;
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->pushButtonNext)
         {
-            ui->pushButtonNext->setStyleSheet(buttonUnselectedStyle);
+            ui->pushButtonNext->setStyleSheet(buttonUnselectedStyleArrow);
             return true;
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->pushButtonAccounts)
@@ -431,7 +433,7 @@ void UserGuide::setCurrentLanguage(Language iLanguage)
     currentLanguage = iLanguage;
     if (currentLanguage == ENGLISH)
     {
-        this->setWindowTitle("User Guide");
+        this->setWindowTitle(" User Guide");
 //----------------------------------------------------------//  Tutorial 1
         //Accounts Part One
         AccountTutorialParts.push_back("1 of 2 - Creating an account");
@@ -551,7 +553,7 @@ void UserGuide::setCurrentLanguage(Language iLanguage)
 
     else if (currentLanguage == SPANISH)
     {
-        this->setWindowTitle("Guia de usuario");
+        this->setWindowTitle(" Guia de usuario");
         ui->pushButtonAccounts->setText("Cuentas");
         ui->pushButtonMainWindow->setText("Ventana principal");
         ui->pushButtonTransactions->setText("Transacciones");
@@ -680,7 +682,7 @@ void UserGuide::setCurrentLanguage(Language iLanguage)
 
     else if (currentLanguage == GERMAN)
     {
-        this->setWindowTitle("Benutzererklärung");
+        this->setWindowTitle(" Benutzererklärung");
         ui->pushButtonAccounts->setText("Konten");
         ui->pushButtonMainWindow->setText("Hauptfenster");
         ui->pushButtonTransactions->setText("Transaktionen");

@@ -9,13 +9,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1134</width>
-    <height>719</height>
+    <width>1280</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="font">
    <font>
-    <family>URW Gothic</family>
+    <family>MS Shell Dlg 2</family>
    </font>
   </property>
   <property name="windowTitle">
@@ -57,8 +57,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1132</width>
-         <height>672</height>
+         <width>1278</width>
+         <height>670</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -154,9 +154,9 @@
                </property>
                <property name="font">
                 <font>
-                 <family>URW Palladio L</family>
+                 <family>Malgun Gothic</family>
                  <pointsize>10</pointsize>
-                 <italic>true</italic>
+                 <italic>false</italic>
                 </font>
                </property>
                <property name="text">
@@ -267,8 +267,8 @@
           </property>
           <property name="font">
            <font>
-            <family>URW Gothic</family>
-            <pointsize>11</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>10</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -318,11 +318,14 @@ QGroupBox::title {
                </property>
                <property name="font">
                 <font>
-                 <family>URW Gothic</family>
-                 <pointsize>9</pointsize>
+                 <family>MS Shell Dlg 2</family>
+                 <pointsize>8</pointsize>
                 </font>
                </property>
                <property name="tabKeyNavigation">
+                <bool>false</bool>
+               </property>
+               <property name="cornerButtonEnabled">
                 <bool>false</bool>
                </property>
                <attribute name="horizontalHeaderMinimumSectionSize">
@@ -337,6 +340,9 @@ QGroupBox::title {
                <attribute name="verticalHeaderMinimumSectionSize">
                 <number>20</number>
                </attribute>
+               <attribute name="verticalHeaderHighlightSections">
+                <bool>false</bool>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -345,7 +351,7 @@ QGroupBox::title {
                 <enum>QLayout::SetMinAndMaxSize</enum>
                </property>
                <item>
-                <widget class="QPushButton" name="pushButtonToggleGroups">
+                <widget class="CustomPushButton" name="pushButtonToggleGroups">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -366,8 +372,9 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic</family>
+                   <family>MS Shell Dlg 2</family>
                    <pointsize>8</pointsize>
+                   <kerning>true</kerning>
                   </font>
                  </property>
                  <property name="text">
@@ -409,7 +416,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic</family>
+                   <family>MS Shell Dlg 2</family>
                   </font>
                  </property>
                  <property name="text">
@@ -537,11 +544,17 @@ QGroupBox::title {
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
            <property name="topMargin">
             <number>2</number>
            </property>
            <property name="bottomMargin">
             <number>2</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>0</number>
            </property>
            <item row="1" column="1">
             <layout class="QVBoxLayout" name="verticalLayout">
@@ -599,7 +612,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic</family>
+                   <family>MS Shell Dlg 2</family>
                    <pointsize>14</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -711,7 +724,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic</family>
+                   <family>MS Shell Dlg 2</family>
                    <pointsize>15</pointsize>
                   </font>
                  </property>
@@ -777,8 +790,8 @@ QGroupBox::title {
                </property>
                <property name="font">
                 <font>
-                 <family>URW Gothic</family>
-                 <pointsize>10</pointsize>
+                 <family>MS Shell Dlg 2</family>
+                 <pointsize>9</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -788,6 +801,9 @@ QGroupBox::title {
                 <number>17</number>
                </property>
                <property name="tabKeyNavigation">
+                <bool>false</bool>
+               </property>
+               <property name="cornerButtonEnabled">
                 <bool>false</bool>
                </property>
                <property name="rowCount">
@@ -826,6 +842,9 @@ QGroupBox::title {
                <attribute name="verticalHeaderDefaultSectionSize">
                 <number>20</number>
                </attribute>
+               <attribute name="verticalHeaderHighlightSections">
+                <bool>false</bool>
+               </attribute>
                <attribute name="verticalHeaderShowSortIndicator" stdset="0">
                 <bool>false</bool>
                </attribute>
@@ -861,7 +880,7 @@ QGroupBox::title {
                 <number>20</number>
                </property>
                <item>
-                <widget class="QPushButton" name="addIncomeButton">
+                <widget class="CustomPushButton" name="addIncomeButton">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -870,7 +889,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic L</family>
+                   <family>MS Shell Dlg 2</family>
                    <pointsize>10</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -882,7 +901,7 @@ QGroupBox::title {
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="addExpenseButton">
+                <widget class="CustomPushButton" name="addExpenseButton">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -891,7 +910,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic L</family>
+                   <family>MS Shell Dlg 2</family>
                    <pointsize>10</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -903,7 +922,7 @@ QGroupBox::title {
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="editItemButton">
+                <widget class="CustomPushButton" name="editItemButton">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -912,7 +931,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic L</family>
+                   <family>MS Shell Dlg 2</family>
                    <pointsize>10</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -924,7 +943,7 @@ QGroupBox::title {
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="deleteItemButton">
+                <widget class="CustomPushButton" name="deleteItemButton">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -933,7 +952,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>URW Gothic L</family>
+                   <family>MS Shell Dlg 2</family>
                    <pointsize>10</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -958,7 +977,7 @@ QGroupBox::title {
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>3</width>
+               <width>0</width>
                <height>20</height>
               </size>
              </property>
@@ -1078,7 +1097,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1100,7 +1119,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1164,7 +1183,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1192,7 +1211,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1267,7 +1286,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1347,7 +1366,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
@@ -1368,7 +1387,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1432,7 +1451,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1460,7 +1479,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1523,7 +1542,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>URW Gothic</family>
+                    <family>MS Shell Dlg 2</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1579,8 +1598,8 @@ QGroupBox::title {
           </property>
           <property name="font">
            <font>
-            <family>URW Gothic</family>
-            <pointsize>12</pointsize>
+            <family>MS Shell Dlg 2</family>
+            <pointsize>11</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -1661,8 +1680,8 @@ QGroupBox::title {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1134</width>
-     <height>23</height>
+     <width>1280</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1772,6 +1791,11 @@ QGroupBox::title {
  </widget>
  <customwidgets>
   <customwidget>
+   <class>CustomPushButton</class>
+   <extends>QPushButton</extends>
+   <header>custompushbutton.h</header>
+  </customwidget>
+  <customwidget>
    <class>GroupPieChartWidget</class>
    <extends>QWidget</extends>
    <header>grouppiechartwidget.h</header>
@@ -1785,7 +1809,7 @@ QGroupBox::title {
   <customwidget>
    <class>MyOpenGLWidget</class>
    <extends>QWidget</extends>
-   <header location="global">myopenglwidget.h</header>
+   <header>myopenglwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

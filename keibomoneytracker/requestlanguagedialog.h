@@ -44,7 +44,6 @@ public:
 private slots:
     void on_pushButtonOk_clicked();
     void on_comboBoxLanguage_currentIndexChanged(int index);
-
     void on_pushButtonYes_clicked();
 
 private:
