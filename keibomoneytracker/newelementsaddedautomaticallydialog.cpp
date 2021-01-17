@@ -61,10 +61,22 @@ void newElementsAddedAutomaticallyDialog::setLanguage(const Language &currentLan
     }
 }
 
-void newElementsAddedAutomaticallyDialog::setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme, QString tTableHeaderStyleSheet)
+void newElementsAddedAutomaticallyDialog::setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme)
 {
-    this->ui->tableWidget->setStyleSheet(tTableHeaderStyleSheet); //First set the color of the table header!!
-    this->ui->tableWidget->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
+    QString tablesStyleSheet = "QTableCornerButton::section {"+styleSheetString + "border-radius : 6px; }"
+                       "QTableWidget{border: 1px solid gray; "+styleSheetString + "border-radius : 3px;}";
+
+    ui->tableWidget->setStyleSheet(tablesStyleSheet);
+
+    QString horizontalHeaderStyleSheet = "QHeaderView::section { "+styleSheetString+" border-radius : 0px; border-bottom: 1px solid gray; }";
+    ui->tableWidget->horizontalHeader()->setStyleSheet(horizontalHeaderStyleSheet);
+
+    QString verticalHeaderStyleSheet = "QHeaderView::section {"+styleSheetString+" border-radius : 6px;}";
+    ui->tableWidget->verticalHeader()->setStyleSheet(verticalHeaderStyleSheet);
+
+    ui->tableWidget->verticalHeader()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignmentFlag::AlignHCenter);
+    this->setStyleSheet(styleSheetString);
+
     this->setStyleSheet(styleSheetString);
     this->ui->pushButtonClose->updateColorTheme(tUsingDarkTheme);
     usingDarkTheme = tUsingDarkTheme;

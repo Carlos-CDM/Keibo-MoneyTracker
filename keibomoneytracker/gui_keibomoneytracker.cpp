@@ -958,7 +958,7 @@ void Gui_KeiboMoneyTracker::updateColorsOnScreen(std::vector<ColorConfiguration>
     //Set color for Overall background, text, buttons and borders depending on theme's value (Light/Dark).
     int r_OB= 0, g_OB = 0, b_OB= 0;
     getColorCode(currentColorConfigIt->colorOverallBackground, r_OB, g_OB, b_OB);
-    QString overallBackgroundColor = "background-color: rgb("+   //Overall background
+    QString overallBackgroundColor = "rgb("+   //Overall background
                                      QString::number(r_OB)+
                                      ","+
                                      QString::number(g_OB)+
@@ -974,28 +974,36 @@ void Gui_KeiboMoneyTracker::updateColorsOnScreen(std::vector<ColorConfiguration>
             ","+
             QString::number(b_OB)+
             ");";
-    this->currentOverallThemeStyleSheet = overallBackgroundColor+overallTextColor;
-    this->usingDarkTheme = currentColorConfigIt->useDarkOverallTheme;
-    this->tablesHeaderStyleSheet = "QTableCornerButton::section {" + overallBackgroundColor + "border-radius : 6px; }"
-                                   "QHeaderView::section { background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 255); border-right-style:rgba(255, 255, 255, 0);}"
-                                   "QTableWidget{border: 1px solid gray; border-color: rgb(186, 189, 182); border-radius : 3px;}"
-                                   "QHeaderView{border-bottom: 1px solid gray;}";
-    this->ui->tableWidget->setStyleSheet(tablesHeaderStyleSheet);    
-    this->ui->tableOfGroups->setStyleSheet(tablesHeaderStyleSheet);
-    this->ui->tableWidget->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
-    this->ui->tableOfGroups->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
+    currentOverallThemeStyleSheet = "background-color:"+overallBackgroundColor+overallTextColor;
+    usingDarkTheme = currentColorConfigIt->useDarkOverallTheme;
+    tablesStyleSheet = "QTableCornerButton::section {background-color:"+overallBackgroundColor + "border-radius : 6px; }"
+                       "QTableWidget{border: 1px solid gray; background-color: "+ overallBackgroundColor+" border-radius : 3px;}";
+
+    ui->tableWidget->setStyleSheet(tablesStyleSheet);
+    ui->tableOfGroups->setStyleSheet(tablesStyleSheet);
+
+    horizontalHeaderStyleSheet = "QHeaderView::section { background-color:"+ overallBackgroundColor+" border-radius : 0px; border-bottom: 1px solid gray; }";
+    ui->tableWidget->horizontalHeader()->setStyleSheet(horizontalHeaderStyleSheet);
+    ui->tableOfGroups->horizontalHeader()->setStyleSheet(horizontalHeaderStyleSheet);
+
+    verticalHeaderStyleSheet = "QHeaderView::section {background-color:"+ overallBackgroundColor+" border-radius : 6px;}";
+    ui->tableWidget->verticalHeader()->setStyleSheet(verticalHeaderStyleSheet);
+    ui->tableOfGroups->verticalHeader()->setStyleSheet(verticalHeaderStyleSheet);
+
+    ui->tableWidget->verticalHeader()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignmentFlag::AlignHCenter);
+    ui->tableOfGroups->verticalHeader()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignmentFlag::AlignHCenter);
 
 
-    this->ui->tableWidget->verticalScrollBar()->setStyleSheet(
+    ui->tableWidget->verticalScrollBar()->setStyleSheet(
                 "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px;}"
                 "QScrollBar::add-line:vertical { border: none; background: none;}"
                 "QScrollBar::sub-line:vertical { border: none; background: none;}"
                 "QScrollBar::handle:vertical {background: rgb(32, 47, 130), min-height: 0px;}");
-    this->ui->tableOfGroups->verticalScrollBar()->setStyleSheet(
+    ui->tableOfGroups->verticalScrollBar()->setStyleSheet(
                 "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px;}"
                 "QScrollBar::add-line:vertical { border: none; background: none;}"
                 "QScrollBar::sub-line:vertical { border: none; background: none;}");
-    this->ui->tableOfGroups->horizontalScrollBar()->setStyleSheet(
+    ui->tableOfGroups->horizontalScrollBar()->setStyleSheet(
                 "QScrollBar:horizontal { width: 15px; margin: 0px 0px 0px 0px;}"
                 "QScrollBar::add-line:horizontal { border: none; background: none;}"
                 "QScrollBar::sub-line:horizontal { border: none; background: none;}");
@@ -1209,7 +1217,7 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
                                                            currentAccount.ExpensesGroupsNames,
                                                            colorOfIncomeAmount,
                                                            currentAccount.getAccountLanguage());
-           iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
+           iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
            iNewElementsAddedAutomatically.exec();
        }
 
@@ -1970,7 +1978,7 @@ void Gui_KeiboMoneyTracker::addOutcome()
                                                                 currentAccount.ExpensesGroupsNames,
                                                                 colorOfIncomeAmount,
                                                                 currentAccount.getAccountLanguage());
-                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
+                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
                 iNewElementsAddedAutomatically.exec();
             }
         }
@@ -2030,7 +2038,7 @@ void Gui_KeiboMoneyTracker::addIncome()
                                                                 currentAccount.ExpensesGroupsNames,
                                                                 colorOfIncomeAmount,
                                                                 currentAccount.getAccountLanguage());
-                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
+                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
                 iNewElementsAddedAutomatically.exec();
             }
         }
@@ -2201,7 +2209,7 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
                                                                     currentAccount.ExpensesGroupsNames,
                                                                     colorOfIncomeAmount,
                                                                     currentAccount.getAccountLanguage());
-                    iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme, tablesHeaderStyleSheet);
+                    iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
                     iNewElementsAddedAutomatically.exec();
                 }
             }
@@ -2751,7 +2759,7 @@ void Gui_KeiboMoneyTracker::on_actionManage_Groups_triggered()
 
         std::cout<<"All groups size: "<<currentAccount.ExpensesGroupsNames.size()<<'\n';
         manageGroupDialog.setModal(true);
-        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesHeaderStyleSheet, usingDarkTheme);
+        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesStyleSheet, usingDarkTheme);
         manageGroupDialog.exec();
 
         currentAccount.clear_Year();
@@ -2870,7 +2878,7 @@ void Gui_KeiboMoneyTracker::on_actionManage_Income_Groups_triggered()
 
         std::cout<<"All groups size: "<<currentAccount.IncomeGroupsNames.size()<<'\n';
         manageGroupDialog.setModal(true);
-        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesHeaderStyleSheet, usingDarkTheme);
+        manageGroupDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, tablesStyleSheet, usingDarkTheme);
         manageGroupDialog.exec();
 
         currentAccount.clear_Year();

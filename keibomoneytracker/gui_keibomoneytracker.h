@@ -165,7 +165,9 @@ private:
     bool ACCOUNT_SET = false;
 
     QString currentOverallThemeStyleSheet = "color: rgb();";
-    QString tablesHeaderStyleSheet;
+    QString tablesStyleSheet;
+    QString horizontalHeaderStyleSheet;
+    QString verticalHeaderStyleSheet;
 
     void updateToCurrentYear();
     void updateToCurrentMonth();

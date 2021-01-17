@@ -43,7 +43,7 @@ public:
                           const int & colorOfIncomeAmount,
                           const Language & currentLanguage);
 
-    void setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme, QString tTableHeaderStyleSheet);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme);
     void setLanguage(const Language & currentLanguage);
 
 private slots:

@@ -89,23 +89,31 @@ void ManageGroupsDialog::setLanguage(const Language &accountLanguage)
 void ManageGroupsDialog::setOverallThemeStyleSheet(QString styleSheetString, QString tTableHeaderStyleSheet, bool tUsingDarkTheme)
 {
     tableHeaderStyleSheet = tTableHeaderStyleSheet;
-    this->ui->tableWidgetGroups->setStyleSheet(tTableHeaderStyleSheet);  //First set the color of the table header!!
-    this->ui->tableWidgetGroups->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
+    QString tablesStyleSheet = "QTableCornerButton::section {"+styleSheetString + "border-radius : 6px; }"
+                       "QTableWidget{border: 1px solid gray; "+styleSheetString + "border-radius : 3px;}";
+
+    ui->tableWidgetGroups->setStyleSheet(tablesStyleSheet);
+
+    QString horizontalHeaderStyleSheet = "QHeaderView::section { "+styleSheetString+" border-radius : 0px; border-bottom: 1px solid gray; }";
+    ui->tableWidgetGroups->horizontalHeader()->setStyleSheet(horizontalHeaderStyleSheet);
+
+    QString verticalHeaderStyleSheet = "QHeaderView::section {"+styleSheetString+" border-radius : 6px;}";
+    ui->tableWidgetGroups->verticalHeader()->setStyleSheet(verticalHeaderStyleSheet);
+
+    ui->tableWidgetGroups->verticalHeader()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignmentFlag::AlignHCenter);
     this->setStyleSheet(styleSheetString);
 
-    this->ui->tableWidgetGroups->verticalScrollBar()->setStyleSheet(
+    ui->tableWidgetGroups->verticalScrollBar()->setStyleSheet(
                 "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px;}"
                 "QScrollBar::add-line:vertical { border: none; background: none;}"
-                "QScrollBar::sub-line:vertical { border: none; background: none;}"
-                "QScrollBar::handle:vertical {background: rgb(32, 47, 130), min-height: 0px;}");
+                "QScrollBar::sub-line:vertical { border: none; background: none;}");
     overallThemeStyleSheetString = styleSheetString;
 
 
-
-    this->ui->acceptButton->updateColorTheme(tUsingDarkTheme);
-    this->ui->addGroupButton->updateColorTheme(tUsingDarkTheme);
-    this->ui->editGroupButton->updateColorTheme(tUsingDarkTheme);
-    this->ui->deleteGroupButton->updateColorTheme(tUsingDarkTheme);
+    ui->acceptButton->updateColorTheme(tUsingDarkTheme);
+    ui->addGroupButton->updateColorTheme(tUsingDarkTheme);
+    ui->editGroupButton->updateColorTheme(tUsingDarkTheme);
+    ui->deleteGroupButton->updateColorTheme(tUsingDarkTheme);
     usingDarkTheme = tUsingDarkTheme;
 }
 
