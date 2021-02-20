@@ -575,24 +575,28 @@ void AccountDialog::receiveAccountProperties(std::string &accountName,  //This i
         indexSelectedImage = listOfImagePaths.size()-1; //Substract one because the index is used to access element in vector, which starts from zero
         projectPixMapOntoView(true);
         imageSelected = true;
-    }
+    }    
 }
 
 void AccountDialog::on_selectImageButton_clicked()
 {
     QString originalImagePath;
+    #ifdef USING_WINDOWS
+        homeFolder = QDir::homePath();
+    #endif
+
     const Language iLanguage = static_cast<Language>(dialogAccountLanguage);
     if (iLanguage == ENGLISH){
         originalImagePath = QFileDialog::getOpenFileName(this, tr("Open file"),
-                                                         "/home",
+                                                         homeFolder,
                                                          tr("Images (*.png *.jpeg *.jpg)"));
     } else if (iLanguage == GERMAN){
         originalImagePath = QFileDialog::getOpenFileName(this, tr("Datei öffnen"),
-                                                         "/home",
+                                                         homeFolder,
                                                          tr("Images (*.png *.jpeg *.jpg)"));
     } else if (iLanguage == SPANISH) {
         originalImagePath = QFileDialog::getOpenFileName(this, tr("Seleccionar archivo"),
-                                                         "/home",
+                                                         homeFolder,
                                                          tr("Images (*.png *.jpeg *.jpg)"));
     }
     QImage srcImg(originalImagePath);
@@ -603,7 +607,7 @@ void AccountDialog::on_selectImageButton_clicked()
         indexSelectedImage = listOfImagePaths.size()-1; //Substract one because the index is used to access element in vector, which starts from zero
         projectPixMapOntoView(true);
         imageSelected = true;
-        std::cout<<"IMAGE WAS SELECTED "<<'\n';
+        //std::cout<<"IMAGE WAS SELECTED "<<'\n';
     }
 }
 

@@ -127,6 +127,7 @@ private:
     void projectPixMapOntoView(bool scaleToWidgetSize);
     std::vector<QString> listOfImagePaths;
 
+    QString homeFolder                 = "/home";
     std::string dialogAccountName      = "";
     short int dialogAccountLanguage    = 0;
     short int dialogAccountCurrency    = 0;
