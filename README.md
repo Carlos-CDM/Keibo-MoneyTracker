@@ -23,6 +23,3 @@ This project uses [Qt Open Source] (https://www.qt.io/download-open-source)
 ### QT Creator
 
 To build open keibomoneytracker.pro file with Qt Creator.
-
-## Remarks
-If you want to build on Windows it is recommended to change the fonts of the UI elements in Qt Creator.
