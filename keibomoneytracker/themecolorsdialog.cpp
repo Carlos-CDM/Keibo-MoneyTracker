@@ -2084,7 +2084,8 @@ void ThemeColorsDialog::updateColorsOnScreen()
      this->setStyleSheet(overallThemeStyleSheet);
      this->ui->buttonSaveAndSet->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
      this->ui->comboBox->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
-     this->ui->comboBoxOverallTheme->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
+     this->ui->comboBoxOverallTheme->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);	 
+     this->ui->comboBox->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
 }
 
 void ThemeColorsDialog::addCustomColorConfiguration(const ColorConfiguration &customColorConfig)
