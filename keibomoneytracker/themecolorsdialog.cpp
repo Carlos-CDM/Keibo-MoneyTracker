@@ -2083,8 +2083,7 @@ void ThemeColorsDialog::updateColorsOnScreen()
                               getStyleSheetString("", currentColorConfigIt->colorOverallText, false, false);
      this->setStyleSheet(overallThemeStyleSheet);
      this->ui->buttonSaveAndSet->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
-     this->ui->comboBox->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
-     this->ui->comboBoxOverallTheme->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);	 
+     this->ui->comboBoxOverallTheme->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
      this->ui->comboBox->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
 }
 
@@ -2122,8 +2121,8 @@ void ThemeColorsDialog::addCustomColorConfiguration(const ColorConfiguration &cu
 
 void ThemeColorsDialog::setCurrentColorConfiguration()
 {
-    //USE CREATED VECTOR STORING ALL COLORS HERE, THE COLORS FOR STANDARD, DARK, AND LIGHT WILL BE DECLARED IN THIS CLASS
-    //(THEMECOLORSDIALOG). THE EXTERIOR CLASSES (like mainWindow) WILL CARE JUST ABOUT THE RESULT OF THE CURRENT SELECTED COLOR
+    //USE CREATED VECTOR STORING ALL COLORS HERE, THE COLORS FOR STANDARD, DARK, AND LIGHT WILL BE DECLARED IN THIS CLASS (ThemeColorDialog)
+    //THE EXTERIOR CLASSES (like mainWindow) WILL CARE JUST ABOUT THE RESULT OF THE CURRENT SELECTED COLOR
 
     this->ui->comboBox->setCurrentIndex(currentColorTheme); // Index starts from 0
     this->updateColorsOnScreen();
@@ -2133,7 +2132,7 @@ void ThemeColorsDialog::on_comboBox_currentIndexChanged(int index)
 {
     if (allowUpdateColorsInPresetComboBox)
     {
-        std::cout<<"SIZE OF COLORCONFIG-LIST IS: "<<colorConfigurationList.size()<<'\n';
+        //std::cout<<"SIZE OF COLORCONFIG-LIST IS: "<<colorConfigurationList.size()<<'\n';
         unsigned int selectedIndex = index;
         if (selectedIndex == (colorConfigurationList.size()-1)){
             //If Index was changed to customIndex, then create an iterator pointing to last colorConfiguration (Custom config)
@@ -2172,10 +2171,10 @@ void ThemeColorsDialog::on_comboBox_currentIndexChanged(int index)
         this->allowUpdateColorsInOverallDarkThemeComboBox = false;
         if (currentColorConfigIt->useDarkOverallTheme){
             this->ui->comboBoxOverallTheme->setCurrentIndex(1);
-            std::cout<<"THEME INDEX SET TO DARK"<<'\n';
+            //std::cout<<"THEME INDEX SET TO DARK"<<'\n';
         } else if (!currentColorConfigIt->useDarkOverallTheme) {
             this->ui->comboBoxOverallTheme->setCurrentIndex(0);
-            std::cout<<"THEME INDEX SET TO LIGHT"<<'\n';
+            //std::cout<<"THEME INDEX SET TO LIGHT"<<'\n';
         }
         this->allowUpdateColorsInOverallDarkThemeComboBox = true;
 
@@ -2224,11 +2223,12 @@ void ThemeColorsDialog::on_comboBoxOverallTheme_currentIndexChanged(int index)
 
         //Set here the color selected by user to corresponding elements
         std::vector<ColorConfiguration>::iterator currentColorConfigIt = colorConfigurationList.begin()+currentColorTheme;
-        if (index == 0){
-            currentColorConfigIt->useDarkOverallTheme = false;
-        } else if (index == 1) {
+        if (currentColorConfigIt->useDarkOverallTheme == false) {
             currentColorConfigIt->useDarkOverallTheme = true;
-        }  currentColorConfigIt->setOverallThemeColors();
+        } else {
+            currentColorConfigIt->useDarkOverallTheme = false;
+        }
+        currentColorConfigIt->setOverallThemeColors();
 
         if (switchToCustomTheme){
             this->allowUpdateColorsInPresetComboBox = false;
