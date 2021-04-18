@@ -32,6 +32,7 @@ AccountStatsDialog::AccountStatsDialog(QWidget *parent) :
     this->setFixedSize(this->geometry().width(),this->geometry().height());
     ui->tableStats->setFrameStyle(QFrame::NoFrame);
     ui->tableStats->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 AccountStatsDialog::~AccountStatsDialog()

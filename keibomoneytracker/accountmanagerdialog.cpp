@@ -59,6 +59,7 @@ AccountManagerDialog::AccountManagerDialog(QWidget *parent) :
 
     this->setAttribute(Qt::WA_Hover);
     this->setMouseTracking(true);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 AccountManagerDialog::~AccountManagerDialog()

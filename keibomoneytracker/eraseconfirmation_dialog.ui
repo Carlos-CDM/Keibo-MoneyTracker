@@ -49,6 +49,9 @@
      <family>MS Shell Dlg 2</family>
     </font>
    </property>
+   <property name="cornerButtonEnabled">
+    <bool>false</bool>
+   </property>
    <attribute name="horizontalHeaderHighlightSections">
     <bool>false</bool>
    </attribute>

@@ -22,6 +22,7 @@
 #include "eraseconfirmation_dialog.h"
 #include "ui_eraseconfirmation_dialog.h"
 #include "sstream"
+#include <QScrollBar>
 
 eraseConfirmation_dialog::eraseConfirmation_dialog(QWidget *parent) :
     QDialog(parent),
@@ -33,6 +34,7 @@ eraseConfirmation_dialog::eraseConfirmation_dialog(QWidget *parent) :
     ui->groupBoxButtons->setStyleSheet("QGroupBox#groupBoxButtons{border:1px solid gray; border-color:rgba(255, 255, 255, 0); }");
     ui->pushButtonOk->installEventFilter(this);
     ui->pushButtonCancel->installEventFilter(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 eraseConfirmation_dialog::~eraseConfirmation_dialog()
@@ -86,14 +88,27 @@ bool eraseConfirmation_dialog::eventFilter(QObject *obj, QEvent *event)
 void eraseConfirmation_dialog::setOverallThemeStyleSheet(QString styleSheetString, bool usingDarkTheme)
 {
     this->setStyleSheet(styleSheetString);
-    //this->ui->tableWidget->setStyleSheet(styleSheetString);
     this->ui->pushButtonOk->updateColorTheme(usingDarkTheme);
     this->ui->pushButtonCancel->updateColorTheme(usingDarkTheme);
 }
 
 void eraseConfirmation_dialog::setTableHeaderStyleSheet(QString tTableHeaderStyleSheet)
 {
-    this->ui->tableWidget->setStyleSheet(tTableHeaderStyleSheet);
+    QString tablesStyleSheet = "QTableCornerButton::section {"+tTableHeaderStyleSheet + "border-radius : 6px; }"
+                               "QTableWidget{border: 1px solid gray; "+tTableHeaderStyleSheet + "border-radius : 3px;}";
+
+    this->ui->tableWidget->setStyleSheet(tablesStyleSheet);
+
+    QString horizontalHeaderStyleSheet = "QHeaderView::section { "+tTableHeaderStyleSheet+" border-radius : 0px; border-bottom: 1px solid gray; }";
+    ui->tableWidget->horizontalHeader()->setStyleSheet(horizontalHeaderStyleSheet);
+
+    QString verticalHeaderStyleSheet = "QHeaderView::section {"+tTableHeaderStyleSheet+" border-radius : 6px;}";
+    ui->tableWidget->verticalHeader()->setStyleSheet(verticalHeaderStyleSheet);
+
+    ui->tableWidget->verticalScrollBar()->setStyleSheet(
+                "QScrollBar:vertical { width: 15px; margin: 0px 0px 0px 0px;}"
+                "QScrollBar::add-line:vertical { border: none; background: none;}"
+                "QScrollBar::sub-line:vertical { border: none; background: none;}");
 }
 
 void eraseConfirmation_dialog::setInfoText(const std::string &text)
@@ -109,14 +124,14 @@ void eraseConfirmation_dialog::setInfoList(const Language &iLanguage, const std:
                                            const std::vector<int> &listOfYears, const std::vector<int> &listOfNumberOfTransactions,
                                            bool showTable)
 {
-    std::vector<int>::const_iterator listOfYearsIterator                  = listOfYears.begin();
-    std::vector<int>::const_iterator listOfNumberOfTransactionsIterator   = listOfNumberOfTransactions.begin();
-
     this->ui->label->setText(QString::fromStdString(info));
-    this->ui->tableWidget->setTabKeyNavigation(false);
 
     if (showTable)
     {
+        std::vector<int>::const_iterator listOfYearsIterator                  = listOfYears.begin();
+        std::vector<int>::const_iterator listOfNumberOfTransactionsIterator   = listOfNumberOfTransactions.begin();
+        this->ui->tableWidget->setTabKeyNavigation(false);
+
         ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
         ui->tableWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 

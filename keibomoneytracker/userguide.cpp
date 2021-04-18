@@ -59,6 +59,7 @@ UserGuide::UserGuide(QWidget *parent) :
     this->ui->pushButtonGroups->installEventFilter(this);
     this->ui->pushButtonAppearance->installEventFilter(this);
     this->ui->pushButtonStoredFiles->installEventFilter(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 UserGuide::~UserGuide()

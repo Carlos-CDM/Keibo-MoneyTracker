@@ -61,6 +61,7 @@ checkFaultyTransactionsDialog::checkFaultyTransactionsDialog(QWidget *parent) :
         this->setTabOrder(ui->comboBoxRepeat,ui->discardAllButton);
         this->setTabOrder(ui->discardAllButton,ui->discardButton);
         this->setTabOrder(ui->discardButton,ui->SetAndNextButton);
+        setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 checkFaultyTransactionsDialog::~checkFaultyTransactionsDialog()

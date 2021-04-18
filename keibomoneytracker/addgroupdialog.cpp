@@ -36,6 +36,7 @@ Addgroupdialog::Addgroupdialog(QWidget *parent) :
     this->ui->textEdit->setTabChangesFocus(true);
     this->ui->cancelButton->setAutoDefault(false);
     this->ui->acceptButton->setAutoDefault(false);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 Addgroupdialog::~Addgroupdialog()

@@ -40,6 +40,7 @@ DonateDialog::DonateDialog(QWidget *parent) :
         qFatal("Error %s sending event to object",
             e.what());
     }
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 DonateDialog::~DonateDialog()

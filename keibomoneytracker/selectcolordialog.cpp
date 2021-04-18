@@ -71,6 +71,7 @@ SelectColorDialog::SelectColorDialog(QWidget *parent) :
     ui->Color_34->installEventFilter(this);
     ui->Color_35->installEventFilter(this);
     ui->Transparent->setVisible(false);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 SelectColorDialog::~SelectColorDialog()

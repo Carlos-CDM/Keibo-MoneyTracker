@@ -130,6 +130,7 @@ AccountDialog::AccountDialog(QWidget *parent) :
     this->ui->accountGraphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->ui->accountGraphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->ui->textEditAccountName->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 AccountDialog::~AccountDialog()

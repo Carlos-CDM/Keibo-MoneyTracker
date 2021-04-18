@@ -62,6 +62,7 @@ TransactionDialog::TransactionDialog(QWidget *parent) :
 
         ui->textName->setAlignment(Qt::AlignBottom);
         ui->textPrice->setAlignment(Qt::AlignBottom);
+        setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 TransactionDialog::~TransactionDialog()

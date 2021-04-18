@@ -117,9 +117,7 @@ private slots:
 
 
     void on_actionHow_to_use_triggered();
-
     void on_actionAbout_triggered();
-
     void on_actionDonate_triggered();
 
 private:

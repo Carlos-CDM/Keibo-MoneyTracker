@@ -30,6 +30,7 @@ newElementsAddedAutomaticallyDialog::newElementsAddedAutomaticallyDialog(QWidget
     ui->setupUi(this);
     ui->tableWidget->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     ui->pushButtonClose->installEventFilter(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 newElementsAddedAutomaticallyDialog::~newElementsAddedAutomaticallyDialog()

@@ -81,6 +81,7 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     ui(new Ui::Gui_KeiboMoneyTracker)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     this->ui->tableWidget->installEventFilter(this);
     this->ui->yearForwardButton->installEventFilter(this);
@@ -1179,7 +1180,6 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
 
    std::vector<Transaction> newElementsAddedAutomatically;
    currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
-   displayMonthOnLabel();
        updateGraph();  //Check if necessary, it may be done in updateColorsOnScreen
        updateGroups(); //Check if necessary, it may be done in updateColorsOnScreen
        updateListOfGroups();
@@ -1205,6 +1205,7 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
        displayArticlesOnTable();
        updateUiToLanguage(currentAccount.getAccountLanguage());
        initialLanguage = currentAccount.getAccountLanguage();
+       displayMonthOnLabel();
        ACCOUNT_SET = true;
 
        ///Show to user new elements added automatically by repetition if any.
@@ -1474,7 +1475,7 @@ void Gui_KeiboMoneyTracker::requestAccountOpening(std::string &accountName, std:
 {
     //In case a good account was previously opened. Values of previously opened account have to be cleaned.
     if (CURRENT_SELECTED_ACCOUNT > -1){
-        std::cout<<"ACCOUNT WAS PREVIOUSLY OPENED, CLEARING PROPERTY VALUES"<<'\n';
+        //std::cout<<"ACCOUNT WAS PREVIOUSLY OPENED, CLEARING PROPERTY VALUES"<<'\n';
         this->currentAccount.clearAccountProperties(true);
     }
     bool accountPropertiesOk = currentAccount.loadAccountProperties(accountName, accountPath);
@@ -2068,40 +2069,40 @@ void Gui_KeiboMoneyTracker::deleteSelectedTransaction()
        QModelIndexList highlightedRows =  selection->selectedRows();
        if (highlightedRows.count()>0)
        {
-       eraseConfirmation_dialog eraseConfirmationWindow; //Are you sure you want to delete the selected items?
-       eraseConfirmationWindow.setModal(true);
-       eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
-       if (currentAccount.getAccountLanguage() == ENGLISH){
-           eraseConfirmationWindow.setWindowTitle(" Confirmation");
-           eraseConfirmationWindow.setInfoText("Are you sure you want to delete the selected items?");
-       } else if (currentAccount.getAccountLanguage() == GERMAN){
-           eraseConfirmationWindow.setWindowTitle(" Bestätigung");
-           eraseConfirmationWindow.setInfoText("Möchten Sie die gewählten Transaktionen löschen?");
-       } else if (currentAccount.getAccountLanguage() == SPANISH){
-           eraseConfirmationWindow.setWindowTitle(" Confirmación");
-           eraseConfirmationWindow.setInfoText("¿Desea eliminar las transacciones seleccionadas?");
-       }
-       eraseConfirmationWindow.exec();
-
-       if (eraseConfirmationWindow.comfirmed())
-       {
-           std::vector<int> listOfItemsToDelete;
-           listOfItemsToDelete.clear();
-           for (int i = 0; i!=highlightedRows.count(); ++i)
-           {
-               QModelIndex index = highlightedRows.at(i);
-               int row = index.row();
-               //std::cout<<"Element Row to delete: "<<row<<'\n';
-               listOfItemsToDelete.push_back( row);
+           eraseConfirmation_dialog eraseConfirmationWindow; //Are you sure you want to delete the selected items?
+           eraseConfirmationWindow.setModal(true);
+           eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
+           if (currentAccount.getAccountLanguage() == ENGLISH){
+               eraseConfirmationWindow.setWindowTitle(" Confirmation");
+               eraseConfirmationWindow.setInfoText("Are you sure you want to delete the selected items?");
+           } else if (currentAccount.getAccountLanguage() == GERMAN){
+               eraseConfirmationWindow.setWindowTitle(" Bestätigung");
+               eraseConfirmationWindow.setInfoText("Möchten Sie die gewählten Transaktionen löschen?");
+           } else if (currentAccount.getAccountLanguage() == SPANISH){
+               eraseConfirmationWindow.setWindowTitle(" Confirmación");
+               eraseConfirmationWindow.setInfoText("¿Desea eliminar las transacciones seleccionadas?");
            }
-           currentAccount.deleteMultipleTransactionsInMonth(currentMonth, listOfItemsToDelete); //THIS FUNCTION ARRANGES ELEMENTS BY ITS OWN, IN CASE LIST IDs PROVIDED BY QT DOES NOT MATCH THE DATA IN BUY_DATA CLASS
-           currentAccount.save_Data();
-           displayArticlesOnTable();
-           updateGraph();
-           updateGroups();
-           updateListOfGroups();
-           this->ui->tableWidget->clearSelection();
-       }
+           eraseConfirmationWindow.exec();
+
+           if (eraseConfirmationWindow.comfirmed())
+           {
+               std::vector<int> listOfItemsToDelete;
+               listOfItemsToDelete.clear();
+               for (int i = 0; i!=highlightedRows.count(); ++i)
+               {
+                   QModelIndex index = highlightedRows.at(i);
+                   int row = index.row();
+                   //std::cout<<"Element Row to delete: "<<row<<'\n';
+                   listOfItemsToDelete.push_back( row);
+               }
+               currentAccount.deleteMultipleTransactionsInMonth(currentMonth, listOfItemsToDelete); //THIS FUNCTION ARRANGES ELEMENTS BY ITS OWN, IN CASE LIST IDs PROVIDED BY QT DOES NOT MATCH THE DATA IN BUY_DATA CLASS
+               currentAccount.save_Data();
+               displayArticlesOnTable();
+               updateGraph();
+               updateGroups();
+               updateListOfGroups();
+               this->ui->tableWidget->clearSelection();
+           }
        }
     }
 }

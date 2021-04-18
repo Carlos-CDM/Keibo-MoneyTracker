@@ -43,6 +43,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
      ui->graphicsViewIcon->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
      ui->graphicsViewIcon->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
      ui->textAppVersion->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
 }
 

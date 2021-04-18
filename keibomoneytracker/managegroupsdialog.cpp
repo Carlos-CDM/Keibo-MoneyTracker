@@ -53,6 +53,8 @@ ManageGroupsDialog::ManageGroupsDialog(QWidget *parent) :
 
     this->ui->tableWidgetGroups->setSelectionBehavior( QAbstractItemView::SelectItems );
     this->ui->tableWidgetGroups->setSelectionMode( QAbstractItemView::SingleSelection );
+
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 ManageGroupsDialog::~ManageGroupsDialog()
@@ -606,7 +608,6 @@ void ManageGroupsDialog::deleteSelectedGroup() ///CHECK VALUES AFTER SECOND ITER
         QString confirmationText;
         bool showTable = false;
 
-        {
           if (totalTransactionsToChange > 0){
               showTable = true;
               if (iLanguage == ENGLISH)
@@ -650,13 +651,13 @@ void ManageGroupsDialog::deleteSelectedGroup() ///CHECK VALUES AFTER SECOND ITER
                   confirmationText = "El grupo será eliminado.";
               }
           }
-        }
 
         /// PASS HERE THE VECTORS OF YEARS AND TRANSACTIONS INCLUDING/BELONGING TO THE GROUP TO DELETE TO DIALOG FOR THE LIST
         /// SET CORRECT DIMENSIONS TOO
+
         eraseConfirmation.setInfoList(iLanguage, confirmationText.toStdString() , YearsIncludingTransactionOfGroupToDelete, NumberOfTransactionPerYearOfGroupToDelete, showTable);
         eraseConfirmation.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
-        eraseConfirmation.setTableHeaderStyleSheet(tableHeaderStyleSheet);
+        if (showTable) eraseConfirmation.setTableHeaderStyleSheet(overallThemeStyleSheetString);
         eraseConfirmation.exec();
 
         if (eraseConfirmation.comfirmed())

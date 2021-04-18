@@ -511,6 +511,7 @@ ThemeColorsDialog::ThemeColorsDialog(QWidget *parent) :
     this->allowUpdateColorsInOverallDarkThemeComboBox = true;
 
     this->setFixedSize(this->width(), this->height());
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 ThemeColorsDialog::~ThemeColorsDialog()

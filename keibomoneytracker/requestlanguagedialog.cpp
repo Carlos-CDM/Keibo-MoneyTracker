@@ -36,6 +36,7 @@ requestLanguageDialog::requestLanguageDialog(QWidget *parent) :
     this->ui->pushButtonYes->setEnabled(false);
     this->ui->pushButtonYes->setVisible(false);
     allowTitleUpdate = true;
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 requestLanguageDialog::~requestLanguageDialog()
