@@ -30,7 +30,6 @@
 #include <QOpenGLWidget>
 #include <QOpenGLPaintDevice>
 #include <QWheelEvent>
-#include <QTableWidget>
 #include <QScrollBar>
 #include <QDir>
 
@@ -76,6 +75,7 @@ protected:
             this->verticalScrollBar()->setValue(this->verticalScrollBar()->value()-items);
         }
     }
+
 };
 
 class Gui_KeiboMoneyTracker : public QMainWindow
@@ -99,9 +99,6 @@ private slots:
     void on_editItemButton_clicked();
     void on_deleteItemButton_clicked();
 
-    void on_tableWidget_cellClicked(int row, int column);
-    void on_tableOfGroups_cellClicked(int row, int column);
-
     void on_actionNew_triggered();
     void on_actionOpen_triggered();
     void on_actionExit_triggered();
@@ -114,7 +111,7 @@ private slots:
 
     void incomeGroupSelection(QAction *action);
     void expensesGroupSelection(QAction * action);
-
+    void copyTransaction();
 
     void on_actionHow_to_use_triggered();
     void on_actionAbout_triggered();
@@ -196,10 +193,10 @@ private:
     void addIncome();
     void addOutcome();
     void editSelectedTransaction();  //Change to edit element.
-    void deleteSelectedTransaction();    
+    void deleteSelectedTransaction();
+    void makeCopyOfSelectedTransaction(const QPoint &pos);
 
     void showAccountStats();
-
     void showGroupsMenu();
 
     void updateUiToLanguage(const Language &iLanguage);

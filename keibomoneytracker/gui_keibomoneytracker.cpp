@@ -41,6 +41,11 @@
 #include <QToolTip> //To enable toast
 #include <thread>
 #include <QLocale>
+#include <QMouseEvent>
+#include <QTableWidget>
+
+#include <QKeyEvent>
+#include <QEvent>
 
 GridLineDelegate::GridLineDelegate(QTableWidget* tableView)
 {
@@ -69,12 +74,12 @@ GridLineDelegate::~GridLineDelegate()
 TableWidgetMouse::TableWidgetMouse(QWidget *parent) :
     QTableWidget(parent)
 {
-
 }
 
 TableWidgetMouse::~TableWidgetMouse()
 {
 }
+
 
 Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     QMainWindow(parent),
@@ -96,6 +101,7 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     this->ui->labelAccountIcon->installEventFilter(this);
     this->ui->widget_2->installEventFilter(this);
 
+    //-----------------------------------------------------
     this->ui->tableWidget->setTabKeyNavigation(false);
     this->ui->tableOfGroups->setTabKeyNavigation(false);
 
@@ -265,6 +271,10 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
      this->ui->lineSeparator->setStyleSheet("QFrame#lineSeparator{border:1px solid gray; border-color:rgb(186, 189, 182);}");
      this->ui->lineSeparator2->setStyleSheet("QFrame#lineSeparator2{border:1px solid gray; border-color:rgb(186, 189, 182);}");
 
+     connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &Gui_KeiboMoneyTracker::makeCopyOfSelectedTransaction);
+     ui->tableWidget->setSelectionBehavior(QTableWidget::SelectRows);
+     ui->tableOfGroups->setSelectionBehavior(QTableWidget::SelectRows);
+     ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 Gui_KeiboMoneyTracker::~Gui_KeiboMoneyTracker()
@@ -695,6 +705,42 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
      }
     return false;
 }
+
+void Gui_KeiboMoneyTracker::makeCopyOfSelectedTransaction(const QPoint &pos)
+{
+    if (ACCOUNT_SET)
+    {
+        QString menuStyle;
+        if (usingDarkTheme) {
+            menuStyle = "QMenu{color: rgb(200,200,200); background-color: rgb(60,60,60);} QMenu::item:selected {background-color: rgb(130,130,130);}";
+        } else {
+            menuStyle = "QMenu{color: rgb(60,60,60); background-color: rgb(230,230,230);} QMenu::item:selected {background-color: rgb(180,180,180);}";
+        }
+        QMenu copySelectedTransactionMenu;
+        if (currentAccount.getAccountLanguage() == ENGLISH) {
+            copySelectedTransactionMenu.addAction("Copy");
+        } else if (currentAccount.getAccountLanguage() == GERMAN) {
+            copySelectedTransactionMenu.addAction("Kopieren");
+        } else if (currentAccount.getAccountLanguage() == SPANISH) {
+            copySelectedTransactionMenu.addAction("Copiar");
+        }
+        copySelectedTransactionMenu.setStyleSheet(menuStyle);
+        copySelectedTransactionMenu.setWindowOpacity(0.9);
+
+        QTableWidgetItem *item = ui->tableWidget->itemAt(pos);
+        if(item != nullptr)
+        {
+            int i = item->row();
+            ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+            ui->tableWidget->selectRow(i);
+            ui->tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        }
+
+        connect(&copySelectedTransactionMenu, SIGNAL(triggered(QAction*)), this, SLOT(copyTransaction()));
+        copySelectedTransactionMenu.exec(QCursor::pos());
+    }
+}
+
 
 void Gui_KeiboMoneyTracker::showGroupsMenu()
 {
@@ -1178,8 +1224,20 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
        }
    }
 
-   std::vector<Transaction> newElementsAddedAutomatically;
+   std::vector<Transaction> newElementsAddedAutomatically;   
    currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
+
+   if (currentAccount.getTotalIncomeInYear() > 0.0 && showIncome)//When first opening app, show first income group with amount bigger than zero
+   {
+       for (size_t group = 0; group != currentAccount.IncomeGroupsNames.size(); ++group){
+           if (currentAccount.IncomeGroupsAmounts[group] == 0.0){
+               currentIncomeGroupSelected++;
+           }
+           else {
+               break;
+           }
+       }
+   }
        updateGraph();  //Check if necessary, it may be done in updateColorsOnScreen
        updateGroups(); //Check if necessary, it may be done in updateColorsOnScreen
        updateListOfGroups();
@@ -2051,16 +2109,6 @@ void Gui_KeiboMoneyTracker::on_addIncomeButton_clicked()
     this->addIncome();
 }
 
-void Gui_KeiboMoneyTracker::on_tableWidget_cellClicked(int row, int column) //This may not be required having following function
-{
-    ui->tableWidget->selectRow(row);
-}
-
-void Gui_KeiboMoneyTracker::on_tableOfGroups_cellClicked(int row, int column)
-{
-     ui->tableOfGroups->selectRow(row);
-}
-
 void Gui_KeiboMoneyTracker::deleteSelectedTransaction()
 {
     if (ACCOUNT_SET)
@@ -2232,6 +2280,108 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
             }
             eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             eraseConfirmationWindow.exec();
+        }
+    }
+}
+
+void Gui_KeiboMoneyTracker::copyTransaction()
+{
+    QItemSelectionModel *selection = ui->tableWidget->selectionModel();
+    QModelIndexList highlightedRows = selection->selectedRows();
+    if (highlightedRows.count()>0 && highlightedRows.count()<2)
+    {
+        TransactionDialog newArticleWindow;
+        if (currentAccount.getAccountLanguage() == ENGLISH) {
+            newArticleWindow.setWindowTitle(" Copy transaction");
+        } else if (currentAccount.getAccountLanguage() == GERMAN) {
+            newArticleWindow.setWindowTitle(" Transaktion kopieren");
+        } else if (currentAccount.getAccountLanguage() == SPANISH) {
+            newArticleWindow.setWindowTitle(" Copiar transacción");
+        }
+        newArticleWindow.setLanguage(currentAccount.getAccountLanguage());
+
+        QModelIndex index = highlightedRows.at(0);
+        std::vector<Transaction>::iterator it = currentAccount.Yearly_Articles[currentMonth].begin();
+        it+=index.row(); //Point to selected element
+
+        std::string tname;
+        double      tprice      = 0.0;
+        int         tcategory   = 0;
+        int         tmonth      = 0;
+        int         tday        = 0;
+        bool        tisincome   = false;
+        RepetitionOption trepeat = DO_NOT_REPEAT;
+
+        if (it->IsIncome){
+            newArticleWindow.setCategoryList(currentAccount.IncomeGroupsNames);     ////Assign list of groups
+            tisincome = true;
+        }
+        else if (!it->IsIncome){
+            newArticleWindow.setCategoryList(currentAccount.ExpensesGroupsNames);     ////Assign list of groups
+        }
+        time_t T = time(0);
+        struct tm * currentTime = localtime(&T);
+        newArticleWindow.displayItemInfo(it->Name,
+                                         it->Amount,
+                                         it->Group,
+                                         currentTime->tm_mon,
+                                         currentTime->tm_mday-1,
+                                         it->Repetition_Option,
+                                         currentYear);
+
+        newArticleWindow.setModal(true);
+        newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
+        newArticleWindow.exec();
+
+        newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat);
+
+        bool copyPossible  = false;
+        if ( ((it->Name      != tname)       ||
+              (it->Amount     != tprice)      ||
+              (it->Group  != tcategory)   ||
+              (it->Month     != tmonth)      ||
+              (it->Day       != tday)        ||
+              (it->Repetition_Option != trepeat))   &&
+             newArticleWindow.transactionNameOK     &&
+             newArticleWindow.transactionAmountOK)
+        {
+            copyPossible = true;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///--------------------------------------------------------------------------//////--------------------------------------------------------------------------///
+        if (copyPossible)
+        {
+            if (tisincome){
+                Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat, true);
+                currentAccount.addTransaction(tArticle);
+            }
+            else if (!tisincome){
+                Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat);
+                currentAccount.addTransaction(tArticle);
+            }
+
+            std::vector<Transaction> newElementsAddedAutomatically;
+            currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
+            currentAccount.save_Data();
+            currentMonth = tmonth;
+            updateToCurrentMonth();
+            updateGroups();
+            updateListOfGroups();
+
+            ///Show to user new elements added automatically by repetition if any.
+            if (newElementsAddedAutomatically.size() > 0){
+                newElementsAddedAutomaticallyDialog iNewElementsAddedAutomatically;
+                iNewElementsAddedAutomatically.setModal(true);
+                iNewElementsAddedAutomatically.setLanguage(currentAccount.getAccountLanguage());
+                iNewElementsAddedAutomatically.getInfoToDisplay(newElementsAddedAutomatically,
+                                                                currentAccount.IncomeGroupsNames,
+                                                                currentAccount.ExpensesGroupsNames,
+                                                                colorOfIncomeAmount,
+                                                                currentAccount.getAccountLanguage());
+                iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
+                iNewElementsAddedAutomatically.exec();
+            }
         }
     }
 }
@@ -2718,6 +2868,14 @@ void Gui_KeiboMoneyTracker::toggle_IncomeOutcomeGroup()
     {
         if (showIncome){
             showIncome = false;
+            if (currentAccount.getTotalExpensesInYear() > 0.0 && currentGroupSelected == 0)//If "not classified" group is selected and amount of that group is zero go to first named group
+            {
+                std::vector<double>::iterator amountNotClassifiedExpenses = currentAccount.ExpensesGroupsAmounts.begin();
+                if (*amountNotClassifiedExpenses == 0.0 && currentAccount.ExpensesGroupsAmounts.size() > 0)
+                {
+                    currentGroupSelected++;
+                }
+            }
             updateGroups();
             updateListOfGroups();
             if (currentAccount.getAccountLanguage() == ENGLISH) {
@@ -2729,6 +2887,14 @@ void Gui_KeiboMoneyTracker::toggle_IncomeOutcomeGroup()
             }
         } else if (!showIncome) {
             showIncome = true;
+            if (currentAccount.getTotalIncomeInYear() > 0.0 && currentIncomeGroupSelected == 0) //If "not classified" group is selected and amount of that group is zero go to first named group
+            {
+                std::vector<double>::iterator amountNotClassifiedIncomes = currentAccount.IncomeGroupsAmounts.begin();
+                if (*amountNotClassifiedIncomes == 0.0 && currentAccount.IncomeGroupsAmounts.size() > 0)
+                {
+                    currentIncomeGroupSelected++;
+                }
+            }
             updateGroups();
             updateListOfGroups();
             if (currentAccount.getAccountLanguage() == ENGLISH) {
