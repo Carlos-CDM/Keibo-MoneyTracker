@@ -97,6 +97,7 @@ private slots:
     void on_addExpenseButton_clicked();
     void on_addIncomeButton_clicked();
     void on_editItemButton_clicked();
+    void on_copyButton_clicked();
     void on_deleteItemButton_clicked();
 
     void on_actionNew_triggered();
@@ -111,11 +112,12 @@ private slots:
 
     void incomeGroupSelection(QAction *action);
     void expensesGroupSelection(QAction * action);
-    void copyTransaction();
+    void optionsMenuSelection(QAction * action);
 
     void on_actionHow_to_use_triggered();
     void on_actionAbout_triggered();
     void on_actionDonate_triggered();
+
 
 private:
     Ui::Gui_KeiboMoneyTracker *ui;
@@ -193,8 +195,9 @@ private:
     void addIncome();
     void addOutcome();
     void editSelectedTransaction();  //Change to edit element.
+    void copyTransaction();
     void deleteSelectedTransaction();
-    void makeCopyOfSelectedTransaction(const QPoint &pos);
+    void showOptionsMenu(const QPoint &pos);
 
     void showAccountStats();
     void showGroupsMenu();

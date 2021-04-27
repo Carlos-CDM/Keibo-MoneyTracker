@@ -44,6 +44,8 @@
 #include <QMouseEvent>
 #include <QTableWidget>
 
+
+#include <QMouseEvent>
 #include <QKeyEvent>
 #include <QEvent>
 
@@ -94,6 +96,7 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     this->ui->addIncomeButton->installEventFilter(this);
     this->ui->addExpenseButton->installEventFilter(this);
     this->ui->editItemButton->installEventFilter(this);
+    this->ui->copyButton->installEventFilter(this);
     this->ui->deleteItemButton->installEventFilter(this);
     this->ui->pushButtonToggleGroups->installEventFilter(this);
     this->ui->tableOfGroups->installEventFilter(this);
@@ -271,7 +274,7 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
      this->ui->lineSeparator->setStyleSheet("QFrame#lineSeparator{border:1px solid gray; border-color:rgb(186, 189, 182);}");
      this->ui->lineSeparator2->setStyleSheet("QFrame#lineSeparator2{border:1px solid gray; border-color:rgb(186, 189, 182);}");
 
-     connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &Gui_KeiboMoneyTracker::makeCopyOfSelectedTransaction);
+     connect(ui->tableWidget, &QTableWidget::customContextMenuRequested, this, &Gui_KeiboMoneyTracker::showOptionsMenu);
      ui->tableWidget->setSelectionBehavior(QTableWidget::SelectRows);
      ui->tableOfGroups->setSelectionBehavior(QTableWidget::SelectRows);
      ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -388,6 +391,14 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             {
                 this->addOutcome();
             }
+        }        
+        else if (qobject_cast<QPushButton*>(obj) == ui->copyButton)
+        {
+            QKeyEvent* key = static_cast<QKeyEvent*>(event);
+            if (key->key() == Qt::Key_Enter || (key->key()==Qt::Key_Return))
+            {
+                this->copyTransaction();
+            }
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->editItemButton)
         {
@@ -489,6 +500,9 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
         }
         else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
             this->ui->addExpenseButton->setColorForMouseButtonPressEvent();
+        }        
+        else if (qobject_cast<QWidget*>(obj) == ui->copyButton) {
+            this->ui->copyButton->setColorForMouseButtonPressEvent();
         }
         else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
             this->ui->editItemButton->setColorForMouseButtonPressEvent();
@@ -508,6 +522,9 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
         }
         else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
             this->ui->addExpenseButton->setColorForEnterEvent();
+        }
+        else if (qobject_cast<QWidget*>(obj) == ui->copyButton) {
+            this->ui->copyButton->setColorForEnterEvent();
         }
         else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
             this->ui->editItemButton->setColorForEnterEvent();
@@ -533,6 +550,11 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             }
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->addExpenseButton){
+            if (focusingOverallIncomeExpenses == false){
+                this->focusOverallIncomeExpenses();
+            }
+        }
+        else if (qobject_cast<QPushButton*>(obj) == ui->copyButton){
             if (focusingOverallIncomeExpenses == false){
                 this->focusOverallIncomeExpenses();
             }
@@ -614,6 +636,9 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
          else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
              this->ui->addExpenseButton->setColorForEnterEvent();
          }
+         else if (qobject_cast<QWidget*>(obj) == ui->copyButton) {
+             this->ui->copyButton->setColorForEnterEvent();
+         }
          else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
              this->ui->editItemButton->setColorForEnterEvent();
          }
@@ -669,6 +694,9 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
          else if (qobject_cast<QWidget*>(obj) == ui->addExpenseButton) {
              this->ui->addExpenseButton->setColorForLeaveEvent();
          }
+         else if (qobject_cast<QWidget*>(obj) == ui->copyButton) {
+             this->ui->copyButton->setColorForLeaveEvent();
+         }
          else if (qobject_cast<QWidget*>(obj) == ui->editItemButton) {
              this->ui->editItemButton->setColorForLeaveEvent();
          }
@@ -706,7 +734,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
-void Gui_KeiboMoneyTracker::makeCopyOfSelectedTransaction(const QPoint &pos)
+void Gui_KeiboMoneyTracker::showOptionsMenu(const QPoint &pos)
 {
     if (ACCOUNT_SET)
     {
@@ -716,16 +744,21 @@ void Gui_KeiboMoneyTracker::makeCopyOfSelectedTransaction(const QPoint &pos)
         } else {
             menuStyle = "QMenu{color: rgb(60,60,60); background-color: rgb(230,230,230);} QMenu::item:selected {background-color: rgb(180,180,180);}";
         }
-        QMenu copySelectedTransactionMenu;
+
+        QMenu optionsMenu;
+        optionsMenu.setWindowOpacity(0.9);
+        optionsMenu.setStyleSheet(menuStyle);
+
         if (currentAccount.getAccountLanguage() == ENGLISH) {
-            copySelectedTransactionMenu.addAction("Copy");
+            optionsMenu.addAction("Copy");
+            optionsMenu.addAction("Edit");
         } else if (currentAccount.getAccountLanguage() == GERMAN) {
-            copySelectedTransactionMenu.addAction("Kopieren");
+            optionsMenu.addAction("Kopieren");
+            optionsMenu.addAction("Ändern");
         } else if (currentAccount.getAccountLanguage() == SPANISH) {
-            copySelectedTransactionMenu.addAction("Copiar");
+            optionsMenu.addAction("Copiar");
+            optionsMenu.addAction("Editar");
         }
-        copySelectedTransactionMenu.setStyleSheet(menuStyle);
-        copySelectedTransactionMenu.setWindowOpacity(0.9);
 
         QTableWidgetItem *item = ui->tableWidget->itemAt(pos);
         if(item != nullptr)
@@ -736,11 +769,32 @@ void Gui_KeiboMoneyTracker::makeCopyOfSelectedTransaction(const QPoint &pos)
             ui->tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
         }
 
-        connect(&copySelectedTransactionMenu, SIGNAL(triggered(QAction*)), this, SLOT(copyTransaction()));
-        copySelectedTransactionMenu.exec(QCursor::pos());
+        connect(&optionsMenu, SIGNAL(triggered(QAction*)), this, SLOT(optionsMenuSelection(QAction*)));
+
+        optionsMenu.exec(QCursor::pos());
     }
 }
 
+void Gui_KeiboMoneyTracker::optionsMenuSelection(QAction * action)  //Call only if account is set
+{
+    std::string actionName = action->text().toStdString();
+    if (currentAccount.getAccountLanguage() == ENGLISH) {
+        if (actionName == "Copy"){
+            copyTransaction();
+            return;
+        } editSelectedTransaction();
+    } else if (currentAccount.getAccountLanguage() == GERMAN) {
+        if (actionName == "Kopieren"){
+            copyTransaction();
+            return;
+        } editSelectedTransaction();
+    } else if (currentAccount.getAccountLanguage() == SPANISH) {
+        if (actionName == "Copiar"){
+            copyTransaction();
+            return;
+        } editSelectedTransaction();
+    }
+}
 
 void Gui_KeiboMoneyTracker::showGroupsMenu()
 {
@@ -1060,6 +1114,7 @@ void Gui_KeiboMoneyTracker::updateColorsOnScreen(std::vector<ColorConfiguration>
     this->ui->addIncomeButton->updateColorTheme(usingDarkTheme);
     this->ui->addExpenseButton->updateColorTheme(usingDarkTheme);
     this->ui->editItemButton->updateColorTheme(usingDarkTheme);
+    this->ui->copyButton->updateColorTheme(usingDarkTheme);
     this->ui->deleteItemButton->updateColorTheme(usingDarkTheme);
     this->ui->pushButtonToggleGroups->updateColorTheme(usingDarkTheme);
 
@@ -1294,8 +1349,9 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         }
         this->ui->addIncomeButton->setText("Add income");
         this->ui->addExpenseButton->setText("Add expense");
-        this->ui->editItemButton->setText("Edit item");
-        this->ui->deleteItemButton->setText("Delete item");
+        this->ui->copyButton->setText("Copy");
+        this->ui->editItemButton->setText("Edit");
+        this->ui->deleteItemButton->setText("Delete");
         this->ui->labelTotalYearIncomeText->setText("Total income in year:");
         this->ui->labelTotalYearExpensesText->setText("Total expenses in year:");
         this->ui->labelTotalMonthIncomeText->setText("Total income in month:");
@@ -1327,6 +1383,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         }
         this->ui->addIncomeButton->setText("Einkommen");
         this->ui->addExpenseButton->setText("Ausgabe");
+        this->ui->copyButton->setText("Kopieren");
         this->ui->editItemButton->setText("Ändern");
         this->ui->deleteItemButton->setText("Löschen");
         this->ui->labelTotalYearIncomeText->setText("Jahreseinkommen:");
@@ -1360,6 +1417,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         }
         this->ui->addIncomeButton->setText("Ingreso");
         this->ui->addExpenseButton->setText("Egreso");
+        this->ui->copyButton->setText("Copiar");
         this->ui->editItemButton->setText("Editar");
         this->ui->deleteItemButton->setText("Eliminar");
         this->ui->labelTotalYearIncomeText->setText("Ingreso en el año:");
@@ -2284,6 +2342,11 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
     }
 }
 
+void Gui_KeiboMoneyTracker::on_copyButton_clicked()
+{
+    this->copyTransaction();
+}
+
 void Gui_KeiboMoneyTracker::copyTransaction()
 {
     QItemSelectionModel *selection = ui->tableWidget->selectionModel();
@@ -2383,6 +2446,23 @@ void Gui_KeiboMoneyTracker::copyTransaction()
                 iNewElementsAddedAutomatically.exec();
             }
         }
+    }
+    else if (highlightedRows.count() > 1)
+    {
+        eraseConfirmation_dialog eraseConfirmationWindow;
+        eraseConfirmationWindow.setModal(true);
+        if (currentAccount.getAccountLanguage() == ENGLISH) {
+            eraseConfirmationWindow.setWindowTitle(" Information");
+            eraseConfirmationWindow.setInfoText(" Only one Item can be copied at a time.");
+        } else if (currentAccount.getAccountLanguage() == GERMAN) {
+            eraseConfirmationWindow.setWindowTitle(" Information");
+            eraseConfirmationWindow.setInfoText(" Nur eine Transaktion kann gleichzeitig kopiert werden.");
+        } else if (currentAccount.getAccountLanguage() == SPANISH) {
+            eraseConfirmationWindow.setWindowTitle(" Información");
+            eraseConfirmationWindow.setInfoText("Solo una transacción puede ser copiada a la vez.");
+        }
+        eraseConfirmationWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
+        eraseConfirmationWindow.exec();
     }
 }
 
