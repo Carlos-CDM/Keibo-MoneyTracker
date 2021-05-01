@@ -39,7 +39,6 @@ public:
     GroupPieChartWidget(QWidget *parent = 0);
     ~GroupPieChartWidget();
     bool showingIncome = false;
-    bool useBiggerFont = false;
 
     bool flagMaxValueChecked = false;
 

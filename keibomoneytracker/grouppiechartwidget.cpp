@@ -57,29 +57,26 @@ void GroupPieChartWidget::updateSpace()
         innerRadius2  = lowestDimension*0.345f;        
 
         if (totalWidth > 185){
-            useBiggerFont = true;
-            useBiggerFont = false;
-            int textWidth  = 100;
-            int textHeight = 17;
+            int textWidth  = 105;
+            int textHeight = 19;
 
             int leftPercentage   = (totalWidth/2)-48;
             int topPercentage    = (totalHeigth/2)+3;
             rectangleTextPercentage = QRect(leftPercentage, topPercentage, textWidth, textHeight);
 
-            int leftAmount   = (totalWidth/2)-48;
-            int topAmount    = (totalHeigth/2)-12;
+            int leftAmount   = (totalWidth/2)-49;
+            int topAmount    = (totalHeigth/2)-14;
             rectangleTextAmount = QRect(leftAmount, topAmount, textWidth, textHeight);
         } else {
-            useBiggerFont = false;
-            int textWidth  = 100;
-            int textHeight = 16;
+            int textWidth  = 105;
+            int textHeight = 18;
 
             int leftPercentage   = (totalWidth/2)-48;
             int topPercentage    = (totalHeigth/2)+4;
             rectangleTextPercentage = QRect(leftPercentage, topPercentage, textWidth, textHeight);
 
-            int leftAmount   = (totalWidth/2)-48;
-            int topAmount    = (totalHeigth/2)-12;
+            int leftAmount   = (totalWidth/2)-49;
+            int topAmount    = (totalHeigth/2)-14;
             rectangleTextAmount = QRect(leftAmount, topAmount, textWidth, textHeight);
         }
 
@@ -227,37 +224,42 @@ void GroupPieChartWidget::drawGroupChart()
            painter.setPen(QColor(r, g, b));
        }
 
-       if (useBiggerFont)
-       {
-           QFont iFont;
-           iFont.setFamily(iFont.defaultFamily());
-           iFont.setPointSizeF(11);
-           painter.setFont(iFont);
-       } else {
-           QFont iFont;
-           iFont.setFamily(iFont.defaultFamily());
-           iFont.setPointSizeF(10);
-           painter.setFont(iFont);
-       }
+       QFont iFont;
+       iFont.setFamily(iFont.defaultFamily());
+       iFont.setPointSizeF(10);
+       painter.setFont(iFont);
 
         if (amountOfSelectedGroup >= 0.0){
             if (currentLanguage == GERMAN){
                 std::string percentagetInGerman = getAmountAsStringInGermanFormat(static_cast<double>((finalPercentageEnd-finalPercentageStart)*100.0f));
                 painter.drawText(rectangleTextPercentage, Qt::AlignCenter, QString::fromStdString(percentagetInGerman)+"%");
 
-                std::string amountInGerman = getAmountAsStringInGermanFormat(amountOfSelectedGroup);
+                QString amountInGerman = QString::fromStdString(getAmountAsStringInGermanFormat(amountOfSelectedGroup, 1));
                 QString currencySymbol = QString::fromStdString(getCurrenySymbol(currentCurrency));
-                QString stringAmount = QString::fromStdString(amountInGerman)+" "+currencySymbol;
-                painter.drawText(rectangleTextAmount, Qt::AlignCenter,  stringAmount);
-            }
-            else {
+
+                if (currencySymbol == "$") {
+                    QRect tmpRect = QRect(rectangleTextAmount.left()-5, rectangleTextAmount.top(), rectangleTextAmount.width(), rectangleTextAmount.height());
+                    painter.drawText(tmpRect, Qt::AlignCenter,  QString(currencySymbol + amountInGerman));
+                } else {
+                    painter.drawText(rectangleTextAmount, Qt::AlignCenter,   QString(amountInGerman + " " + currencySymbol));
+                }
+
+            } else {
                 painter.drawText(rectangleTextPercentage, Qt::AlignCenter,
                                  QString::number((finalPercentageEnd-finalPercentageStart)*100.0f, 0, 2)+"%");
-                }
+
                 QString currencySymbol = QString::fromStdString(getCurrenySymbol(currentCurrency));
-                painter.drawText(rectangleTextAmount, Qt::AlignCenter,
-                                 QString::number(amountOfSelectedGroup, 0, 2)+" "+currencySymbol);
+                if (currencySymbol == "$") {
+                    QRect tmpRect = QRect(rectangleTextAmount.left()-5, rectangleTextAmount.top(), rectangleTextAmount.width(), rectangleTextAmount.height());
+                    painter.drawText(tmpRect, Qt::AlignCenter,
+                                 currencySymbol+QString::fromStdString(getAmountAsStringFormatted(amountOfSelectedGroup, 1)));
+                }
+                else {
+                    painter.drawText(rectangleTextAmount, Qt::AlignCenter,
+                                 QString::fromStdString(getAmountAsStringFormatted(amountOfSelectedGroup, 1))+" "+currencySymbol);
+                }
             }
+        }
         painter.end();
 
         if (flagMaxValueChecked) {

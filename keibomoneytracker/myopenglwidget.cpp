@@ -172,16 +172,32 @@ void MyOpenGLWidget::drawQuantities()
            float top    = heightScaleBoardQuantities[i];
            float left   = leftQuantities;
            float width  = 100.0f;
-           float height = 20.0f;
-           QString txt = QString::number(scaleValues[4-i], 0 , 0)+" "+QString::fromStdString(getCurrenySymbol(currentCurrency));
+           float height;
+           QString txt;
+           if (currentLanguage == GERMAN)
+           {
+               if (getCurrenySymbol(currentCurrency) == "$"){
+                   txt = QString::fromStdString(getCurrenySymbol(currentCurrency))+QString::fromStdString(getAmountAsStringInGermanFormat(scaleValues[4-i], 0));
+               } else {
+                  txt = QString::fromStdString(getAmountAsStringInGermanFormat(scaleValues[4-i], 0))+" "+QString::fromStdString(getCurrenySymbol(currentCurrency));
+               }
+           } else {
+               if (getCurrenySymbol(currentCurrency) == "$"){
+                   txt = QString::fromStdString(getCurrenySymbol(currentCurrency))+QString::fromStdString(getAmountAsStringFormatted(scaleValues[4-i], 0));
+               } else {
+                  txt = QString::fromStdString(getAmountAsStringFormatted(scaleValues[4-i], 0))+" "+QString::fromStdString(getCurrenySymbol(currentCurrency));
+               }
+           }
 
            if (useBiggerFont){
                //QFont iFont = QFont("URW Gothic", 11, -1, false);
                QFont iFont;
                iFont.setFamily(iFont.defaultFamily());
-               iFont.setPointSizeF(11);
+               iFont.setPointSizeF(10);
                painter.setFont(iFont);
+               height = 22.0f;
            } else{
+              height  = 20.0f;
               if (scaleValues[4-i] >= 1000000.0){
                   //QFont iFont = QFont("URW Gothic", 8, -1, false);
                   QFont iFont;
@@ -196,8 +212,7 @@ void MyOpenGLWidget::drawQuantities()
                   painter.setFont(iFont);
               }
            }
-           painter.drawText(QRect(left, top, width, height), Qt::AlignLeft,
-                                        txt);
+           painter.drawText(QRect(left, top, width, height), Qt::AlignLeft, txt);
        }
        painter.end();
     }
@@ -254,7 +269,7 @@ void MyOpenGLWidget::updateSpace()
             heightScaleBoardQuantities[4] = totalHeigth - heightHorizontalScaleBoardLines[0]-3.0f;
 
             //Starting position in X for Quantities
-            leftQuantities = Ax+Bx+offsetWidth+3.0f;
+            leftQuantities = Ax+Bx+offsetWidth+1.0f;
 
             //std::cout<<"SPACE UPDATED IN BAR CHART WIDGET\n";
             if (totalWidth > 750){

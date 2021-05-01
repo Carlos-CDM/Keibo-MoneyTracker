@@ -1282,15 +1282,13 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
    std::vector<Transaction> newElementsAddedAutomatically;   
    currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
 
-   if (currentAccount.getTotalIncomeInYear() > 0.0 && showIncome)//When first opening app, show first income group with amount bigger than zero
+   if (currentAccount.getTotalNumberOfIncomeTransactionsInGroup(currentIncomeGroupSelected) == 0 && showIncome)//When first opening account, show first income group with transactions
    {
        for (size_t group = 0; group != currentAccount.IncomeGroupsNames.size(); ++group){
-           if (currentAccount.IncomeGroupsAmounts[group] == 0.0){
-               currentIncomeGroupSelected++;
-           }
-           else {
+           if (currentAccount.IncomeGroupsAmounts[group] != 0.0){
                break;
            }
+           currentIncomeGroupSelected++;
        }
    }
        updateGraph();  //Check if necessary, it may be done in updateColorsOnScreen
@@ -2515,7 +2513,7 @@ void Gui_KeiboMoneyTracker::displayArticlesOnTable()
             if (currentAccount.getAccountLanguage() == GERMAN){
                 ui->tableWidget->setItem(item_Id,1, new QTableWidgetItem (QString("+")+ QString::fromStdString(getAmountAsStringInGermanFormat(it->Amount))  + QString("  ")));
             } else {
-                ui->tableWidget->setItem(item_Id,1, new QTableWidgetItem (QString("+")+ QString::number(it->Amount, 0, 2)  + QString("  ")));
+                ui->tableWidget->setItem(item_Id,1, new QTableWidgetItem (QString("+")+ QString::fromStdString(getAmountAsStringFormatted(it->Amount))  + QString("  ")));
             }
             //Set color of IncomeAmount
             int r = 0, g = 0, b = 0;
@@ -2526,7 +2524,7 @@ void Gui_KeiboMoneyTracker::displayArticlesOnTable()
             if (currentAccount.getAccountLanguage() == GERMAN){
                 ui->tableWidget->setItem(item_Id,1, new QTableWidgetItem (QString("-")+ QString::fromStdString(getAmountAsStringInGermanFormat(it->Amount))  + QString("  ")) );
             } else {
-                ui->tableWidget->setItem(item_Id,1, new QTableWidgetItem (QString("-")+ QString::number(it->Amount, 0, 2) + QString("  ")));
+                ui->tableWidget->setItem(item_Id,1, new QTableWidgetItem (QString("-")+ QString::fromStdString(getAmountAsStringFormatted(it->Amount)) + QString("  ")));
             }
         }
         ui->tableWidget->item(item_Id,1)->setTextAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignBottom);
@@ -2569,21 +2567,21 @@ void Gui_KeiboMoneyTracker::displayArticlesOnTable()
         }
 
     } else {
-        ui->monthlyExpendituresLabel->setText(QString::number((currentAccount.getExpensesInMonth(currentMonth)), 0, 2)+ " "+ currencySymbol+" ");
-        ui->yearlyExpendituresLabel->setText(QString::number(currentAccount.getTotalExpensesInYear(), 0, 2) + " "+ currencySymbol+" ");
-        ui->monthlyIncomeLabel->setText(QString::number((currentAccount.getIncomeInMonth(currentMonth)), 0, 2)+ " "+ currencySymbol+" ");
-        ui->yearlyIncomeLabel->setText(QString::number(currentAccount.getTotalIncomeInYear(), 0, 2) + " "+ currencySymbol+" ");
+        ui->monthlyExpendituresLabel->setText(QString::fromStdString(getAmountAsStringFormatted(currentAccount.getExpensesInMonth(currentMonth)))+ " "+ currencySymbol+" ");
+        ui->yearlyExpendituresLabel->setText(QString::fromStdString(getAmountAsStringFormatted(currentAccount.getTotalExpensesInYear())) + " "+ currencySymbol+" ");
+        ui->monthlyIncomeLabel->setText(QString::fromStdString(getAmountAsStringFormatted(currentAccount.getIncomeInMonth(currentMonth)))+ " "+ currencySymbol+" ");
+        ui->yearlyIncomeLabel->setText(QString::fromStdString(getAmountAsStringFormatted(currentAccount.getTotalIncomeInYear())) + " "+ currencySymbol+" ");
 
         if (currentAccount.getBalanceInYear()>0){
-            ui->yearlyBalanceLabel->setText(QString("+")+QString::number((currentAccount.getBalanceInYear()), 0, 2)+ " "+ currencySymbol+" ");
+            ui->yearlyBalanceLabel->setText(QString("+")+QString::fromStdString(getAmountAsStringFormatted(currentAccount.getBalanceInYear()))+ " "+ currencySymbol+" ");
         } else {
-            ui->yearlyBalanceLabel->setText(QString::number((currentAccount.getBalanceInYear()), 0, 2)+ " "+ currencySymbol+" ");
+            ui->yearlyBalanceLabel->setText(QString::fromStdString(getAmountAsStringFormatted(currentAccount.getBalanceInYear()))+ " "+ currencySymbol+" ");
         }
 
         if (currentAccount.getBalanceInMonth(currentMonth)>0){
-            ui->monthlyBalanceLabel->setText(QString("+")+QString::number((currentAccount.getBalanceInMonth(currentMonth)), 0, 2)+ " "+ currencySymbol+" ");
+            ui->monthlyBalanceLabel->setText(QString("+")+QString::fromStdString(getAmountAsStringFormatted(currentAccount.getBalanceInMonth(currentMonth)))+ " "+ currencySymbol+" ");
         } else {
-            ui->monthlyBalanceLabel->setText(QString::number((currentAccount.getBalanceInMonth(currentMonth)), 0, 2)+ " "+ currencySymbol+" ");
+            ui->monthlyBalanceLabel->setText(QString::fromStdString(getAmountAsStringFormatted(currentAccount.getBalanceInMonth(currentMonth)))+ " "+ currencySymbol+" ");
         }
     }
     ui->monthlyExpendituresLabel->setAlignment(Qt::AlignRight);
@@ -2835,7 +2833,7 @@ void Gui_KeiboMoneyTracker::updateListOfGroups()
                 if (currentAccount.getAccountLanguage() == GERMAN){
                     ui->tableOfGroups->setItem(itemId, 1, new QTableWidgetItem(QString::fromStdString(getAmountAsStringInGermanFormat(listIterator->Amount)) + " " ) );
                 } else {
-                   ui->tableOfGroups->setItem(itemId, 1, new QTableWidgetItem(QString::number(listIterator->Amount, 0, 2)  + " " ));
+                   ui->tableOfGroups->setItem(itemId, 1, new QTableWidgetItem(QString::fromStdString(getAmountAsStringFormatted(listIterator->Amount))  + " " ));
                 }
                 ui->tableOfGroups->item(itemId,1)->setTextAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignBottom);
 
@@ -3272,7 +3270,7 @@ void Gui_KeiboMoneyTracker::showAccountStats()
     tempAccount.setAccountFolderPath(currentAccount.getAccountFolderPath());
     tempAccount.loadIncomeGroups();
     tempAccount.loadExpensesGroups();
-    for (int x = 1900; x != 2101; ++x)
+    for (int x = 1900; x != 2201; ++x)
     {
         tempAccount.clear_Year();
         tempAccount.set_Year(x);
@@ -3620,8 +3618,14 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsValues.push_back(textTotalNumberOfExpensesElements);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            textAverageMonthlyIncome    = QString::number(averageMonthlyIncomeAmount, 0, 2)+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
-            textAverageMonthlyExpenses  = QString::number(averageMonthlyExpensesAmount, 0, 2)+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+            if (this->currentAccount.getAccountCurrencySymbol() == "$")
+            {
+                textAverageMonthlyIncome    = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+QString::fromStdString(getAmountAsStringFormatted(averageMonthlyIncomeAmount));
+                textAverageMonthlyExpenses  = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+QString::fromStdString(getAmountAsStringFormatted(averageMonthlyExpensesAmount));
+            } else {
+                textAverageMonthlyIncome    = QString::fromStdString(getAmountAsStringFormatted(averageMonthlyIncomeAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+                textAverageMonthlyExpenses  = QString::fromStdString(getAmountAsStringFormatted(averageMonthlyExpensesAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+            }
             statsNames.push_back("Average monthly income:");
             statsNames.push_back("Average monthly expenses:");
             statsValues.push_back(textAverageMonthlyIncome);
@@ -3631,18 +3635,36 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             if (highestIncomeElement.Name.empty()){
                 textHighestOverallIncome = "Not available.";
             } else {
-                textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
-                                                +QString::number(highestIncomeElement.Amount, 0, 2)+" "
-                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  on  "
-                                                +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, ENGLISH)) );
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
+                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                    +QString::fromStdString(getAmountAsStringFormatted(highestIncomeElement.Amount))
+                                                    +"  on  "
+                                                    +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, ENGLISH)) );
+                } else {
+                    textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
+                                                    +QString::fromStdString(getAmountAsStringFormatted(highestIncomeElement.Amount))+" "
+                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  on  "
+                                                    +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, ENGLISH)) );
+                }
             }
             if (highestExpenseElement.Name.empty()){
                 textHighestOverallExpense = "Not available.";
             } else {
-                textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
-                                                 +QString::number(highestExpenseElement.Amount, 0, 2)+" "
-                                                 +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  on  "
-                                                 +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, ENGLISH)) );
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                     +QString::fromStdString(getAmountAsStringFormatted(highestExpenseElement.Amount))
+                                                     +"  on  "
+                                                     +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, ENGLISH)) );
+                } else {
+                    textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
+                                                     +QString::fromStdString(getAmountAsStringFormatted(highestExpenseElement.Amount))+" "
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  on  "
+                                                     +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, ENGLISH)) );
+                }
             }
             statsNames.push_back("Highest income (single transaction):");
             statsNames.push_back("Highest expense (single transaction):");
@@ -3653,33 +3675,66 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             if (highestYearlyIncome_Year <= 0){
                 textHighestYearlyIncome = "Not available.";
             } else {
-                textHighestYearlyIncome = QString(QString::number(highestYearlyIncome, 0, 2)+" "
-                                         +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                         +QString::number(highestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestYearlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                             +QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyIncome))
+                                             +"  in  "
+                                             +QString::number(highestYearlyIncome_Year) );
+                } else {
+                    textHighestYearlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyIncome))+" "
+                                             +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                             +QString::number(highestYearlyIncome_Year) );
+                }
+
             }
 
             if (highestYearlyExpenses_Year <= 0){
                 textHighestYearlyExpenses = "Not available.";
             } else {
-                textHighestYearlyExpenses = QString(QString::number(highestYearlyExpenses, 0, 2)+" "
-                                           +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                           +QString::number(highestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestYearlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                               +QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyExpenses))
+                                               +"  in  "
+                                               +QString::number(highestYearlyExpenses_Year) );
+                } else {
+                    textHighestYearlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyExpenses))+" "
+                                               +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                               +QString::number(highestYearlyExpenses_Year) );
+                }
             }
 
             if (lowestYearlyIncome_Year <= 0){
                 textLowestYearlyIncome = "Not available.";
             } else {
-                textLowestYearlyIncome = QString(QString::number(lowestYearlyIncome, 0, 2)+" "
-                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                        +QString::number(lowestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestYearlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                            +QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyIncome))
+                                            +"  in  "
+                                            +QString::number(lowestYearlyIncome_Year) );
+                } else {
+                    textLowestYearlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyIncome))+" "
+                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                            +QString::number(lowestYearlyIncome_Year) );
+                }
             }
 
             if (lowestYearlyExpenses_Year <= 0){
                 textLowestYearlyExpenses = "Not available.";
             } else {
-                textLowestYearlyExpenses = QString(QString::number(lowestYearlyExpenses, 0, 2)+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                          +QString::number(lowestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestYearlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyExpenses))
+                                              +"  in  "
+                                              +QString::number(lowestYearlyExpenses_Year) );
+                } else {
+                    textLowestYearlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyExpenses))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                              +QString::number(lowestYearlyExpenses_Year) );
+                }
             }
             statsNames.push_back("Highest yearly income:");
             statsNames.push_back("Highest yearly expenses:");
@@ -3692,19 +3747,39 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (highestMonthlyIncome_Year > 0){
-                textHighestMonthlyIncome = QString(QString::number(highestMonthlyIncome, 0, 2)+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                          +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
-                                          +QString::number(highestMonthlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestMonthlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyIncome))
+                                              +"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(highestMonthlyIncome_Year) );
+                } else {
+                    textHighestMonthlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyIncome))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(highestMonthlyIncome_Year) );
+                }
+
             } else {
                 textHighestMonthlyIncome = "Not available.";
             }
 
             if (highestMonthlyExpenses_Year > 0){
-                textHighestMonthlyExpenses = QString(QString::number(highestMonthlyExpenses, 0, 2)+" "
-                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                            +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
-                                            +QString::number(highestMonthlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestMonthlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                +QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyExpenses))
+                                                +"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(highestMonthlyExpenses_Year) );
+                } else {
+                    textHighestMonthlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyExpenses))+" "
+                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(highestMonthlyExpenses_Year) );
+                }
+
             } else {
                 textHighestMonthlyExpenses = "Not available.";
             }
@@ -3715,19 +3790,39 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (lowestMonthlyIncome_Year > 0){
-                textLowestMonthlyIncome = QString(QString::number(lowestMonthlyIncome, 0, 2)+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                          +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
-                                          +QString::number(lowestMonthlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestMonthlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyIncome))
+                                              +"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(lowestMonthlyIncome_Year) );
+                } else {
+                    textLowestMonthlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyIncome))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(lowestMonthlyIncome_Year) );
+                }
+
             } else {
                 textLowestMonthlyIncome = "Not available.";
             }
 
             if (lowestMonthlyExpenses_Year > 0){
-                textLowestMonthlyExpenses = QString(QString::number(lowestMonthlyExpenses, 0, 2)+" "
-                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                            +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
-                                            +QString::number(lowestMonthlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestMonthlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                +QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyExpenses))
+                                                +"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(lowestMonthlyExpenses_Year) );
+                } else {
+                    textLowestMonthlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyExpenses))+" "
+                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(lowestMonthlyExpenses_Year) );
+                }
+
             } else {
                 textLowestMonthlyExpenses = "Not available.";
             }
@@ -3738,37 +3833,76 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (!groupWithHighestYearlyIncome.empty()){
-                textGroupWithHighestYearlyIncome = QString(QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
-                                                  +QString::number(groupWithHighestYearlyIncome_Amount, 0, 2)+" "            //group amount
-                                                  +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                  +QString::number(groupWithHighestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithHighestYearlyIncome = QString( QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
+                                                      +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                      + QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyIncome_Amount))            //group amount
+                                                      +"  in  "
+                                                      +QString::number(groupWithHighestYearlyIncome_Year) );
+                } else {
+                    textGroupWithHighestYearlyIncome = QString( QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
+                                                      + QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyIncome_Amount))+" "            //group amount
+                                                      +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                      +QString::number(groupWithHighestYearlyIncome_Year) );
+                }
+
             } else {
                textGroupWithHighestYearlyIncome = "Not available.";
             }
 
             if (!groupWithHighestYearlyExpenses.empty()){
-                textGroupWithHighestYearlyExpenses = QString(QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
-                                                    +QString::number(groupWithHighestYearlyExpenses_Amount, 0, 2)+" "            //group amount
-                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                    +QString::number(groupWithHighestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithHighestYearlyExpenses = QString( QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
+                                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                        +QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyExpenses_Amount))          //group amount
+                                                        +"  in  "
+                                                        +QString::number(groupWithHighestYearlyExpenses_Year) );
+                } else {
+                    textGroupWithHighestYearlyExpenses = QString( QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
+                                                        +QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyExpenses_Amount))+" "            //group amount
+                                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                        +QString::number(groupWithHighestYearlyExpenses_Year) );
+                }
+
             } else {
                textGroupWithHighestYearlyExpenses = "Not available.";
             }
 
             if (!groupWithLowestYearlyIncome.empty()){
-                textGroupWithLowestYearlyIncome = QString(QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
-                                                 +QString::number(groupWithLowestYearlyIncome_Amount, 0, 2)+" "                //group amount
-                                                 +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                 +QString::number(groupWithLowestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithLowestYearlyIncome = QString( QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                     +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyIncome_Amount))                //group amount
+                                                     +"  in  "
+                                                     +QString::number(groupWithLowestYearlyIncome_Year) );
+                } else {
+                    textGroupWithLowestYearlyIncome = QString( QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
+                                                     +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyIncome_Amount))+" "                //group amount
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                     +QString::number(groupWithLowestYearlyIncome_Year) );
+                }
+
             } else {
                textGroupWithLowestYearlyIncome = "Not available.";
             }
 
             if (!groupWithLowestYearlyExpenses.empty()){
-                textGroupWithLowestYearlyExpenses = QString(QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
-                                                   +QString::number(groupWithLowestYearlyExpenses_Amount, 0, 2)+" "                //group amount
-                                                   +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                   +QString::number(groupWithLowestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithLowestYearlyExpenses = QString( QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
+                                                       +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                       +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyExpenses_Amount))               //group amount
+                                                       +"  in  "
+                                                       +QString::number(groupWithLowestYearlyExpenses_Year) );
+                } else {
+                    textGroupWithLowestYearlyExpenses = QString( QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
+                                                       +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyExpenses_Amount))+" "                //group amount
+                                                       +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                       +QString::number(groupWithLowestYearlyExpenses_Year) );
+                }
             } else {
                textGroupWithLowestYearlyExpenses = "Not available.";
             }
@@ -3782,14 +3916,14 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsValues.push_back(textGroupWithLowestYearlyExpenses);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            textYearWithHighestNumberOfTransactions = QString(QString::number(yearWithHighestNumberOfTransactions_NumberOfTransactions)+"  in  "
-                                      +QString::number(yearWithHighestNumberOfTransactions));
+            textYearWithHighestNumberOfTransactions = QString( QString::number(yearWithHighestNumberOfTransactions_NumberOfTransactions)+"  in  "
+                                      +QString::number(yearWithHighestNumberOfTransactions) );
             statsNames.push_back("Year with highest number of transactions:");
             statsValues.push_back(textYearWithHighestNumberOfTransactions);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            textYearWithLowestNumberOfTransactions = QString(QString::number(yearWithLowestNumberOfTransactions_NumberOfTransactions)+"  in  "
-                                      +QString::number(yearWithLowestNumberOfTransactions));
+            textYearWithLowestNumberOfTransactions = QString( QString::number(yearWithLowestNumberOfTransactions_NumberOfTransactions)+"  in  "
+                                      +QString::number(yearWithLowestNumberOfTransactions) );
             statsNames.push_back("Year with lowest number of transactions:");
             statsValues.push_back(textYearWithLowestNumberOfTransactions);
 
@@ -3828,8 +3962,14 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsValues.push_back(textTotalNumberOfExpensesElements);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            textAverageMonthlyIncome    = QString::fromStdString(getAmountAsStringInGermanFormat(averageMonthlyIncomeAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
-            textAverageMonthlyExpenses  = QString::fromStdString(getAmountAsStringInGermanFormat(averageMonthlyExpensesAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+            if (this->currentAccount.getAccountCurrencySymbol() == "$")
+            {
+                textAverageMonthlyIncome    = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+QString::fromStdString(getAmountAsStringInGermanFormat(averageMonthlyIncomeAmount));
+                textAverageMonthlyExpenses  = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+QString::fromStdString(getAmountAsStringInGermanFormat(averageMonthlyExpensesAmount));
+            } else {
+                textAverageMonthlyIncome    = QString::fromStdString(getAmountAsStringInGermanFormat(averageMonthlyIncomeAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+                textAverageMonthlyExpenses  = QString::fromStdString(getAmountAsStringInGermanFormat(averageMonthlyExpensesAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+            }
             statsNames.push_back("Durchnittliches monatilches Einkommen:");
             statsNames.push_back("Durchnittliche monatilche Ausgabe:");
             statsValues.push_back(textAverageMonthlyIncome);
@@ -3839,18 +3979,36 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             if (highestIncomeElement.Name.empty()){
                 textHighestOverallIncome = "Nicht verfügbar.";
             } else {
-                textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
-                                                +QString::fromStdString(getAmountAsStringInGermanFormat(highestIncomeElement.Amount))+" "
-                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  am  "
-                                                +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, GERMAN)) );
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
+                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                    +QString::fromStdString(getAmountAsStringInGermanFormat(highestIncomeElement.Amount))
+                                                    +"  am  "
+                                                    +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, GERMAN)) );
+                } else {
+                    textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
+                                                    +QString::fromStdString(getAmountAsStringInGermanFormat(highestIncomeElement.Amount))+" "
+                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  am  "
+                                                    +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, GERMAN)) );
+                }
             }
             if (highestExpenseElement.Name.empty()){
                 textHighestOverallExpense = "Nicht verfügbar.";
             } else {
-                textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
-                                                 +QString::fromStdString(getAmountAsStringInGermanFormat(highestExpenseElement.Amount))+" "
-                                                 +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  am  "
-                                                 +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, GERMAN)) );
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                     +QString::fromStdString(getAmountAsStringInGermanFormat(highestExpenseElement.Amount))
+                                                     +"  am  "
+                                                     +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, GERMAN)) );
+                } else {
+                    textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
+                                                     +QString::fromStdString(getAmountAsStringInGermanFormat(highestExpenseElement.Amount))+" "
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  am  "
+                                                     +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, GERMAN)) );
+                }
             }
             statsNames.push_back("Höchstes Einkommen (eine Transaktion):");
             statsNames.push_back("Höchste Ausgabe (eine Transaktion):");
@@ -3861,33 +4019,66 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             if (highestYearlyIncome_Year <= 0){
                 textHighestYearlyIncome = "Nicht verfügbar.";
             } else {
-                textHighestYearlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestYearlyIncome))+" "
-                                         +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                         +QString::number(highestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestYearlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                             +QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestYearlyIncome))
+                                             +"  in  "
+                                             +QString::number(highestYearlyIncome_Year));
+                } else {
+                    textHighestYearlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestYearlyIncome))+" "
+                                             +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                             +QString::number(highestYearlyIncome_Year));
+                }
             }
 
             if (highestYearlyExpenses_Year <= 0){
                 textHighestYearlyExpenses = "Nicht verfügbar.";
             } else {
-                textHighestYearlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestYearlyExpenses))+" "
-                                           +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                           +QString::number(highestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestYearlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                               +QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestYearlyExpenses))
+                                               +"  in  "
+                                               +QString::number(highestYearlyExpenses_Year));
+                } else {
+                    textHighestYearlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestYearlyExpenses))+" "
+                                               +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                               +QString::number(highestYearlyExpenses_Year));
+                }
             }
 
             if (lowestYearlyIncome_Year <= 0){
                 textLowestYearlyIncome = "Nicht verfügbar.";
             } else {
-                textLowestYearlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestYearlyIncome))+" "
-                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                        +QString::number(lowestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestYearlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                            +QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestYearlyIncome))
+                                            +"  in  "
+                                            +QString::number(lowestYearlyIncome_Year));
+                } else {
+                    textLowestYearlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestYearlyIncome))+" "
+                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                            +QString::number(lowestYearlyIncome_Year));
+                }
             }
 
             if (lowestYearlyExpenses_Year <= 0){
                 textLowestYearlyExpenses = "Nicht verfügbar.";
             } else {
-                textLowestYearlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestYearlyExpenses))+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                          +QString::number(lowestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestYearlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestYearlyExpenses))
+                                              +"  in  "
+                                              +QString::number(lowestYearlyExpenses_Year));
+                } else {
+                    textLowestYearlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestYearlyExpenses))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                              +QString::number(lowestYearlyExpenses_Year));
+                }
+
             }
             statsNames.push_back("Höchstes Jahreseinkommen:");
             statsNames.push_back("Höchste Jahresausgabe:");
@@ -3900,19 +4091,39 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (highestMonthlyIncome_Year > 0){
-                textHighestMonthlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestMonthlyIncome))+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                          +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
-                                          +QString::number(highestMonthlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestMonthlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestMonthlyIncome))
+                                              +"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(highestMonthlyIncome_Year));
+                } else {
+                    textHighestMonthlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestMonthlyIncome))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(highestMonthlyIncome_Year));
+                }
+
             } else {
                 textHighestMonthlyIncome = "Nicht verfügbar.";
             }
 
             if (highestMonthlyExpenses_Year > 0){
-                textHighestMonthlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestMonthlyExpenses))+" "
-                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                            +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
-                                            +QString::number(highestMonthlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestMonthlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                +QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestMonthlyExpenses))
+                                                +"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(highestMonthlyExpenses_Year));
+                } else {
+                    textHighestMonthlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(highestMonthlyExpenses))+" "
+                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(highestMonthlyExpenses_Year));
+                }
+
             } else {
                 textHighestMonthlyExpenses = "Nicht verfügbar.";
             }
@@ -3923,19 +4134,39 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (lowestMonthlyIncome_Year > 0){
-                textLowestMonthlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestMonthlyIncome))+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                          +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
-                                          +QString::number(lowestMonthlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestMonthlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestMonthlyIncome))
+                                              +"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(lowestMonthlyIncome_Year));
+                } else {
+                    textLowestMonthlyIncome = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestMonthlyIncome))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                              +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(lowestMonthlyIncome_Year));
+                }
+
             } else {
                 textLowestMonthlyIncome = "Nicht verfügbar.";
             }
 
             if (lowestMonthlyExpenses_Year > 0){
-                textLowestMonthlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestMonthlyExpenses))+" "
-                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                            +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
-                                            +QString::number(lowestMonthlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestMonthlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                +QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestMonthlyExpenses))
+                                                +"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(lowestMonthlyExpenses_Year));
+                } else {
+                    textLowestMonthlyExpenses = QString(QString::fromStdString(getAmountAsStringInGermanFormat(lowestMonthlyExpenses))+" "
+                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(lowestMonthlyExpenses_Year));
+                }
+
             } else {
                 textLowestMonthlyExpenses = "Nicht verfügbar.";
             }
@@ -3946,37 +4177,77 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (!groupWithHighestYearlyIncome.empty()){
-                textGroupWithHighestYearlyIncome = QString(QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
-                                                  +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithHighestYearlyIncome_Amount))+" "                //group amount
-                                                  +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                  +QString::number(groupWithHighestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithHighestYearlyIncome = QString(QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
+                                                      +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                      +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithHighestYearlyIncome_Amount))                //group amount
+                                                      +"  in  "
+                                                      +QString::number(groupWithHighestYearlyIncome_Year));
+                } else {
+                    textGroupWithHighestYearlyIncome = QString(QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
+                                                      +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithHighestYearlyIncome_Amount))+" "                //group amount
+                                                      +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                      +QString::number(groupWithHighestYearlyIncome_Year));
+                }
+
             } else {
                textGroupWithHighestYearlyIncome = "Nicht verfügbar.";
             }
 
             if (!groupWithHighestYearlyExpenses.empty()){
-                textGroupWithHighestYearlyExpenses = QString(QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
-                                                    +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithHighestYearlyExpenses_Amount))+" "                //group amount
-                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                    +QString::number(groupWithHighestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithHighestYearlyExpenses = QString(QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
+                                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                        +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithHighestYearlyExpenses_Amount))                //group amount
+                                                        +"  in  "
+                                                        +QString::number(groupWithHighestYearlyExpenses_Year));
+                } else {
+                    textGroupWithHighestYearlyExpenses = QString(QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
+                                                        +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithHighestYearlyExpenses_Amount))+" "                //group amount
+                                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                        +QString::number(groupWithHighestYearlyExpenses_Year));
+                }
+
             } else {
                textGroupWithHighestYearlyExpenses = "Nicht verfügbar.";
             }
 
             if (!groupWithLowestYearlyIncome.empty()){
-                textGroupWithLowestYearlyIncome = QString(QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
-                                                 +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithLowestYearlyIncome_Amount))+" "                //group amount
-                                                 +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                 +QString::number(groupWithLowestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithLowestYearlyIncome = QString(QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                     +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithLowestYearlyIncome_Amount))                //group amount
+                                                     +"  in  "
+                                                     +QString::number(groupWithLowestYearlyIncome_Year));
+                } else {
+                    textGroupWithLowestYearlyIncome = QString(QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
+                                                     +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithLowestYearlyIncome_Amount))+" "                //group amount
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                     +QString::number(groupWithLowestYearlyIncome_Year));
+                }
+
             } else {
                textGroupWithLowestYearlyIncome = "Nicht verfügbar.";
             }
 
             if (!groupWithLowestYearlyExpenses.empty()){
-                textGroupWithLowestYearlyExpenses = QString(QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
-                                                   +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithLowestYearlyExpenses_Amount))+" "                //group amount
-                                                   +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
-                                                   +QString::number(groupWithLowestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithLowestYearlyExpenses = QString(QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
+                                                       +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                       +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithLowestYearlyExpenses_Amount))                //group amount
+                                                       +"  in  "
+                                                       +QString::number(groupWithLowestYearlyExpenses_Year));
+                } else {
+                    textGroupWithLowestYearlyExpenses = QString(QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
+                                                       +QString::fromStdString(getAmountAsStringInGermanFormat(groupWithLowestYearlyExpenses_Amount))+" "                //group amount
+                                                       +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  in  "
+                                                       +QString::number(groupWithLowestYearlyExpenses_Year));
+                }
+
             } else {
                textGroupWithLowestYearlyExpenses = "Nicht verfügbar.";
             }
@@ -4036,8 +4307,14 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsValues.push_back(textTotalNumberOfExpensesElements);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            textAverageMonthlyIncome    = QString::number(averageMonthlyIncomeAmount, 0, 2)+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
-            textAverageMonthlyExpenses  = QString::number(averageMonthlyExpensesAmount, 0, 2)+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+            if (this->currentAccount.getAccountCurrencySymbol() == "$")
+            {
+                textAverageMonthlyIncome    = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+QString::fromStdString(getAmountAsStringFormatted(averageMonthlyIncomeAmount));
+                textAverageMonthlyExpenses  = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+QString::fromStdString(getAmountAsStringFormatted(averageMonthlyExpensesAmount));
+            } else {
+                textAverageMonthlyIncome    = QString::fromStdString(getAmountAsStringFormatted(averageMonthlyIncomeAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+                textAverageMonthlyExpenses  = QString::fromStdString(getAmountAsStringFormatted(averageMonthlyExpensesAmount))+" "+QString::fromStdString(this->currentAccount.getAccountCurrencySymbol());
+            }
             statsNames.push_back("Promedio de ingresos mensuales:");
             statsNames.push_back("Promedio de egresos mensuales:");
             statsValues.push_back(textAverageMonthlyIncome);
@@ -4047,19 +4324,38 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             if (highestIncomeElement.Name.empty()){
                 textHighestOverallIncome = "No disponible.";
             } else {
-                textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
-                                                +QString::number(highestIncomeElement.Amount, 0, 2)+" "
-                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  el  "
-                                                +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, SPANISH)) );
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
+                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                    +QString::fromStdString(getAmountAsStringFormatted(highestIncomeElement.Amount))
+                                                    +"  el  "
+                                                    +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, SPANISH)) );
+                } else {
+                    textHighestOverallIncome  = QString( QString::fromStdString(highestIncomeElement.Name)+"  "
+                                                    +QString::fromStdString(getAmountAsStringFormatted(highestIncomeElement.Amount))+" "
+                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  el  "
+                                                    +QString::fromStdString(getDateInLanguageFormat(highestIncomeElement.Day, highestIncomeElement.Month, highestIncomeElementYear, SPANISH)) );
+                }
+
             }
 
             if (highestExpenseElement.Name.empty()){
                 textHighestOverallExpense = "No disponible.";
             } else {
-                textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
-                                                 +QString::number(highestExpenseElement.Amount, 0, 2)+" "
-                                                 +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  el  "
-                                                 +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, SPANISH)) );
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                     +QString::fromStdString(getAmountAsStringFormatted(highestExpenseElement.Amount))
+                                                     +"  el  "
+                                                     +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, SPANISH)) );
+                } else {
+                    textHighestOverallExpense = QString( QString::fromStdString(highestExpenseElement.Name)+"  "
+                                                     +QString::fromStdString(getAmountAsStringFormatted(highestExpenseElement.Amount))+" "
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  el  "
+                                                     +QString::fromStdString(getDateInLanguageFormat(highestExpenseElement.Day, highestExpenseElement.Month, highestExpenseElementYear, SPANISH)) );
+                }
             }
             statsNames.push_back("Mayor ingreso (una transacción):");
             statsNames.push_back("Mayor egreso (una transacción):");
@@ -4070,33 +4366,65 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             if (highestYearlyIncome_Year <= 0){
                 textHighestYearlyIncome = "No disponible.";
             } else {
-                textHighestYearlyIncome = QString(QString::number(highestYearlyIncome, 0, 2)+" "
-                                         +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                         +QString::number(highestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestYearlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                             +QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyIncome))
+                                             +"  en  "
+                                             +QString::number(highestYearlyIncome_Year) );
+                } else {
+                    textHighestYearlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyIncome))+" "
+                                             +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                             +QString::number(highestYearlyIncome_Year) );
+                }
             }
 
             if (highestYearlyExpenses_Year <= 0){
                 textHighestYearlyExpenses = "No disponible.";
             } else {
-                textHighestYearlyExpenses = QString(QString::number(highestYearlyExpenses, 0, 2)+" "
-                                           +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                           +QString::number(highestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestYearlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                               +QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyExpenses))
+                                               +"  en  "
+                                               +QString::number(highestYearlyExpenses_Year) );
+                } else {
+                    textHighestYearlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(highestYearlyExpenses))+" "
+                                               +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                               +QString::number(highestYearlyExpenses_Year) );
+                }
             }
 
             if (lowestYearlyIncome_Year <= 0){
                 textLowestYearlyIncome = "No disponible.";
             } else {
-                textLowestYearlyIncome = QString(QString::number(lowestYearlyIncome, 0, 2)+" "
-                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                        +QString::number(lowestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestYearlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                            +QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyIncome))
+                                            +"  en  "
+                                            +QString::number(lowestYearlyIncome_Year) );
+                } else {
+                    textLowestYearlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyIncome))+" "
+                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                            +QString::number(lowestYearlyIncome_Year) );
+                }
             }
 
             if (lowestYearlyExpenses_Year <= 0){
                 textLowestYearlyExpenses = "No disponible.";
             } else {
-                textLowestYearlyExpenses = QString(QString::number(lowestYearlyExpenses, 0, 2)+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                          +QString::number(lowestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestYearlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyExpenses))
+                                              +"  en  "
+                                              +QString::number(lowestYearlyExpenses_Year) );
+                } else {
+                    textLowestYearlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(lowestYearlyExpenses))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                              +QString::number(lowestYearlyExpenses_Year) );
+                }
             }
             statsNames.push_back("Mayor ingreso anual:");
             statsNames.push_back("Mayor egreso anual:");
@@ -4109,19 +4437,39 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (highestMonthlyIncome_Year > 0){
-                textHighestMonthlyIncome = QString(QString::number(highestMonthlyIncome, 0, 2)+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                          +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
-                                          +QString::number(highestMonthlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestMonthlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyIncome))
+                                              +"  en  "
+                                              +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(highestMonthlyIncome_Year) );
+                } else {
+                    textHighestMonthlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyIncome))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                              +QString::fromStdString(getMonthInLanguage(highestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(highestMonthlyIncome_Year) );
+                }
+
             } else {
                 textHighestMonthlyIncome = "No disponible.";
             }
 
             if (highestMonthlyExpenses_Year > 0){
-                textHighestMonthlyExpenses = QString(QString::number(highestMonthlyExpenses, 0, 2)+" "
-                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                            +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
-                                            +QString::number(highestMonthlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textHighestMonthlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                +QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyExpenses))
+                                                +"  en  "
+                                                +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(highestMonthlyExpenses_Year) );
+                } else {
+                    textHighestMonthlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(highestMonthlyExpenses))+" "
+                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                                +QString::fromStdString(getMonthInLanguage(highestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(highestMonthlyExpenses_Year) );
+                }
+
             } else {
                 textHighestMonthlyExpenses = "No disponible.";
             }
@@ -4132,19 +4480,39 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (lowestMonthlyIncome_Year > 0){
-                textLowestMonthlyIncome = QString(QString::number(lowestMonthlyIncome, 0, 2)+" "
-                                          +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                          +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
-                                          +QString::number(lowestMonthlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestMonthlyIncome = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                              +QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyIncome))
+                                              +"  en  "
+                                              +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(lowestMonthlyIncome_Year) );
+                } else {
+                    textLowestMonthlyIncome = QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyIncome))+" "
+                                              +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                              +QString::fromStdString(getMonthInLanguage(lowestMonthlyIncome_Month, accountLanguage))+"  "
+                                              +QString::number(lowestMonthlyIncome_Year) );
+                }
+
             } else {
                 textLowestMonthlyIncome = "No disponible.";
             }
 
             if (lowestMonthlyExpenses_Year > 0){
-                textLowestMonthlyExpenses = QString(QString::number(lowestMonthlyExpenses, 0, 2)+" "
-                                            +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                            +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
-                                            +QString::number(lowestMonthlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLowestMonthlyExpenses = QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                +QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyExpenses))
+                                                +"  en  "
+                                                +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(lowestMonthlyExpenses_Year) );
+                } else {
+                    textLowestMonthlyExpenses = QString( QString::fromStdString(getAmountAsStringFormatted(lowestMonthlyExpenses))+" "
+                                                +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                                +QString::fromStdString(getMonthInLanguage(lowestMonthlyExpenses_Month, accountLanguage))+"  "
+                                                +QString::number(lowestMonthlyExpenses_Year) );
+                }
+
             } else {
                 textLowestMonthlyExpenses = "No disponible.";
             }
@@ -4155,37 +4523,77 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (!groupWithHighestYearlyIncome.empty()){
-                textGroupWithHighestYearlyIncome = QString(QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
-                                                  +QString::number(groupWithHighestYearlyIncome_Amount, 0, 2)+" "                //group amount
-                                                  +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                                  +QString::number(groupWithHighestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithHighestYearlyIncome = QString(QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
+                                                      +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                      +QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyIncome_Amount))                //group amount
+                                                      +"  en  "
+                                                      +QString::number(groupWithHighestYearlyIncome_Year));
+                } else {
+                    textGroupWithHighestYearlyIncome = QString(QString::fromStdString(groupWithHighestYearlyIncome)+"  "   //group name
+                                                      +QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyIncome_Amount))+" "                //group amount
+                                                      +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                                      +QString::number(groupWithHighestYearlyIncome_Year));
+                }
+
             } else {
                textGroupWithHighestYearlyIncome = "No disponible.";
             }
 
             if (!groupWithHighestYearlyExpenses.empty()){
-                textGroupWithHighestYearlyExpenses = QString(QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
-                                                    +QString::number(groupWithHighestYearlyExpenses_Amount, 0, 2)+" "                //group amount
-                                                    +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                                    +QString::number(groupWithHighestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithHighestYearlyExpenses = QString(QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
+                                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                        +QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyExpenses_Amount))                //group amount
+                                                        +"  en  "
+                                                        +QString::number(groupWithHighestYearlyExpenses_Year));
+                } else {
+                    textGroupWithHighestYearlyExpenses = QString(QString::fromStdString(groupWithHighestYearlyExpenses)+"  "   //group name
+                                                        +QString::fromStdString(getAmountAsStringFormatted(groupWithHighestYearlyExpenses_Amount))+" "                //group amount
+                                                        +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                                        +QString::number(groupWithHighestYearlyExpenses_Year));
+                }
+
             } else {
                textGroupWithHighestYearlyExpenses = "No disponible.";
             }
 
             if (!groupWithLowestYearlyIncome.empty()){
-                textGroupWithLowestYearlyIncome = QString(QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
-                                                 +QString::number(groupWithLowestYearlyIncome_Amount, 0, 2)+" "                //group amount
-                                                 +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                                 +QString::number(groupWithLowestYearlyIncome_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithLowestYearlyIncome = QString(QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                     +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyIncome_Amount))                //group amount
+                                                     +"  en  "
+                                                     +QString::number(groupWithLowestYearlyIncome_Year));
+                } else {
+                    textGroupWithLowestYearlyIncome = QString(QString::fromStdString(groupWithLowestYearlyIncome)+"  "   //group name
+                                                     +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyIncome_Amount))+" "                //group amount
+                                                     +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                                     +QString::number(groupWithLowestYearlyIncome_Year));
+                }
+
             } else {
                textGroupWithLowestYearlyIncome = "No disponible.";
             }
 
             if (!groupWithLowestYearlyExpenses.empty()){
-                textGroupWithLowestYearlyExpenses = QString(QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
-                                                   +QString::number(groupWithLowestYearlyExpenses_Amount, 0, 2)+" "                //group amount
-                                                   +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
-                                                   +QString::number(groupWithLowestYearlyExpenses_Year));
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textGroupWithLowestYearlyExpenses = QString(QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
+                                                       +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                       +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyExpenses_Amount))                //group amount
+                                                       +"  en  "
+                                                       +QString::number(groupWithLowestYearlyExpenses_Year));
+                } else {
+                    textGroupWithLowestYearlyExpenses = QString(QString::fromStdString(groupWithLowestYearlyExpenses)+"  "   //group name
+                                                       +QString::fromStdString(getAmountAsStringFormatted(groupWithLowestYearlyExpenses_Amount))+" "                //group amount
+                                                       +QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())+"  en  "
+                                                       +QString::number(groupWithLowestYearlyExpenses_Year));
+                }
+
             } else {
                textGroupWithLowestYearlyExpenses = "No disponible.";
             }

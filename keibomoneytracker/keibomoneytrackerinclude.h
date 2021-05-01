@@ -22,6 +22,7 @@
 #ifndef BUYDATAINCLUDE_H
 #define BUYDATAINCLUDE_H
 #include <string>
+#include <sstream>
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-----------------------------------------------------------------------------------------////-----------------------------------------------------------------------------------------//
 
@@ -186,7 +187,6 @@ inline double getAveragePerMonthInInterval(const double &totalAmount, const int 
     return averagePerMonth;
 }
 
-
 inline std::string getMonthInLanguage(const int &monthId, const Language &currentLanguage)
 {
     if (currentLanguage == ENGLISH)
@@ -303,10 +303,13 @@ inline int getNumberOfDaysInMonth(int Year, int Month)
             return 30;
 }
 
-inline std::string getAmountAsStringInGermanFormat(const double &amount)
+inline std::string getAmountAsStringInGermanFormat(const double &amount, int _precision = 2)
 {
     int numberOfDecimals = 0;
-    std::string tempString = std::to_string(amount); //Beware, this sometimes returns the german format "style".
+    std::ostringstream tmpstream;
+    tmpstream.precision(_precision);
+    tmpstream <<std::fixed<<amount;  //get only two numbers after decimal point
+    std::string tempString = tmpstream.str();
     std::string finalString = "";
     bool pointFound = false;
     for (size_t i = 0; i != tempString.size(); ++i)
@@ -324,7 +327,73 @@ inline std::string getAmountAsStringInGermanFormat(const double &amount)
         }
         finalString += tempString[i];
     }
-    return finalString;
+
+    int counter = 0;
+    std::string amountFormattedBackwards;
+    amountFormattedBackwards.clear();
+    for (std::string::reverse_iterator itStr = finalString.rbegin();  //Count from left to right to separate in groups of three digits after decimal point.
+         itStr != finalString.rend(); ++itStr)
+    {
+        if (*itStr == '.' || *itStr == ','){ //If a point or comma is found, just add it, reset digit counter and go to next iteration
+            amountFormattedBackwards += *itStr;
+            counter = 0;
+            continue;
+        }
+        if (counter > 2){   //If three digits are counted (including zero) add a space, reset counter and allow addition of current digit
+            amountFormattedBackwards += '.';
+            counter = 0;
+        }
+        ++counter;
+        amountFormattedBackwards += *itStr;
+    }
+
+    std::string amountFormattedForwards;
+    amountFormattedForwards.clear();
+    for (std::string::reverse_iterator itStr = amountFormattedBackwards.rbegin();
+         itStr != amountFormattedBackwards.rend(); ++itStr)
+    {
+        amountFormattedForwards += *itStr;
+    }
+
+    return amountFormattedForwards;
+}
+
+inline std::string getAmountAsStringFormatted(const double &amount, int _precision = 2) //Separate the digits of amounts in groups of three after decimal point.
+{
+    //Reverse iterators
+    std::ostringstream tmpstream;
+    tmpstream.precision(_precision);
+    tmpstream <<std::fixed<<amount;  //get only two numbers after decimal point
+    std::string amountStr = tmpstream.str();
+    std::string amountFormattedBackwards;
+    amountFormattedBackwards.clear();
+    int counter = 0;
+
+    for (std::string::reverse_iterator itStr = amountStr.rbegin();  //Count from left to right to separate in groups of three digits after decimal point.
+         itStr != amountStr.rend(); ++itStr)
+    {
+        if (*itStr == '.' || *itStr == ','){ //If a point or comma is found, just add it, reset digit counter and go to next iteration
+            amountFormattedBackwards += *itStr;
+            counter = 0;
+            continue;
+        }
+        if (counter > 2){   //If three digits are counted (including zero) add a space, reset counter and allow addition of current digit
+            amountFormattedBackwards += ',';
+            counter = 0;
+        }
+        ++counter;
+        amountFormattedBackwards += *itStr;
+    }
+
+    std::string amountFormattedForwards;
+    amountFormattedForwards.clear();
+    for (std::string::reverse_iterator itStr = amountFormattedBackwards.rbegin();
+         itStr != amountFormattedBackwards.rend(); ++itStr)
+    {
+        amountFormattedForwards += *itStr;
+    }
+
+    return amountFormattedForwards;
 }
 
 ///COLOR CONFIGURATION CLASS - IT STORES ALL COLORS THAT A SET/CONFIGURATION CAN HAVE
