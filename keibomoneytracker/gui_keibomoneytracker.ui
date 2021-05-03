@@ -1716,7 +1716,18 @@ QGroupBox::title {
      <height>24</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Malgun Gothic</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
    <widget class="QMenu" name="menuFile">
+    <property name="font">
+     <font>
+      <family>Malgun Gothic</family>
+     </font>
+    </property>
     <property name="title">
      <string>File</string>
     </property>
@@ -1726,6 +1737,11 @@ QGroupBox::title {
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
+    <property name="font">
+     <font>
+      <family>Malgun Gothic</family>
+     </font>
+    </property>
     <property name="title">
      <string>Options</string>
     </property>
@@ -1733,6 +1749,11 @@ QGroupBox::title {
     <addaction name="actionAppearance"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
+    <property name="font">
+     <font>
+      <family>Malgun Gothic</family>
+     </font>
+    </property>
     <property name="title">
      <string>Edit</string>
     </property>
@@ -1741,6 +1762,11 @@ QGroupBox::title {
     <addaction name="actionManage_Groups"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
+    <property name="font">
+     <font>
+      <family>Malgun Gothic</family>
+     </font>
+    </property>
     <property name="title">
      <string>Help</string>
     </property>

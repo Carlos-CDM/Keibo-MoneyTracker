@@ -719,6 +719,34 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             ui->tableWidget->setColumnWidth(0,static_cast<int>(nameWidth));
             ui->tableWidget->setColumnWidth(1,static_cast<int>(amountWidth));
             ui->tableWidget->setColumnWidth(2,static_cast<int>(dayWidth));
+            if (ui->tableWidget->width() > 660) {
+                QFont fontTable = ui->tableWidget->font();
+                fontTable.setPointSize( 10 );
+                ui->tableWidget->setFont( fontTable );
+                QString tabHeadStyle = ui->tableWidget->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 10pt; }";
+                ui->tableWidget->horizontalHeader()->setStyleSheet(tabHeadStyle);
+
+                QFont upperMenuFont = ui->menubar->font();
+                upperMenuFont.setPointSize(10);
+                ui->menubar->setFont(upperMenuFont);
+                ui->menuFile->setFont(upperMenuFont);
+                ui->menuEdit->setFont(upperMenuFont);
+                ui->menuOptions->setFont(upperMenuFont);
+                ui->menuHelp->setFont(upperMenuFont);
+            } else {
+                QFont fontTable = ui->tableWidget->font();
+                fontTable.setPointSize( 9 );
+                ui->tableWidget->setFont( fontTable );
+                QString tabHeadStyle = ui->tableWidget->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 9pt; }";
+                ui->tableWidget->horizontalHeader()->setStyleSheet(tabHeadStyle);
+                QFont upperMenuFont = ui->menubar->font();
+                upperMenuFont.setPointSize(9);
+                ui->menubar->setFont(upperMenuFont);
+                ui->menuFile->setFont(upperMenuFont);
+                ui->menuEdit->setFont(upperMenuFont);
+                ui->menuOptions->setFont(upperMenuFont);
+                ui->menuHelp->setFont(upperMenuFont);
+            }
         }
         else if (qobject_cast<QTableWidget*>(obj) == ui->tableOfGroups)
         {
@@ -729,6 +757,19 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             ui->tableOfGroups->setColumnWidth(0,static_cast<int>(nameWidth));
             ui->tableOfGroups->setColumnWidth(1,static_cast<int>(amountWidth));
             ui->tableOfGroups->setColumnWidth(2,static_cast<int>(dayWidth));
+            if (ui->tableOfGroups->width() > 470) {
+                QFont font = ui->tableOfGroups->font();
+                font.setPointSize( 9 );
+                ui->tableOfGroups->setFont( font );
+                QString tabHeadStyle = ui->tableOfGroups->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 9pt; }";
+                ui->tableOfGroups->horizontalHeader()->setStyleSheet(tabHeadStyle);
+            } else {
+                QFont font = ui->tableOfGroups->font();
+                font.setPointSize( 8 );
+                ui->tableOfGroups->setFont( font );
+                QString tabHeadStyle = ui->tableOfGroups->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 8pt; }";
+                ui->tableOfGroups->horizontalHeader()->setStyleSheet(tabHeadStyle);
+            }
         }
      }
     return false;
