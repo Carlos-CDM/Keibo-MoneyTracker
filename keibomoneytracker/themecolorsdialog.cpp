@@ -460,8 +460,11 @@ ThemeColorsDialog::ThemeColorsDialog(QWidget *parent) :
     this->setMouseTracking(true);
     this->ui->checkBox->installEventFilter(this);
     this->ui->tableWidget->setTabKeyNavigation(false);
+    this->ui->tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->ui->tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->ui->tableWidget->setFocusPolicy(Qt::NoFocus);
+    this->ui->tableWidget->setWordWrap(false);
     this->ui->labelTextCheckBox->setWordWrap(true);
 
     ui->label_ColorGroupSelected->installEventFilter(this);
@@ -2079,13 +2082,21 @@ void ThemeColorsDialog::updateColorsOnScreen()
 
      ///--------------------------------------------------------------------------///--------------------------------------------------------------------------///
      //Set color for Overall background, text and borders depending on value Light/Dark.
-     this->ui->tableWidget->verticalHeader()->setStyleSheet("background-color: rgba(0, 0, 0, 0); border-bottom-style: rgba(255, 255, 255, 0);");
      overallThemeStyleSheet = getStyleSheetString("", currentColorConfigIt->colorOverallBackground,  true,  false) +
                               getStyleSheetString("", currentColorConfigIt->colorOverallText, false, false);
      this->setStyleSheet(overallThemeStyleSheet);
      this->ui->buttonSaveAndSet->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
      this->ui->comboBoxOverallTheme->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
      this->ui->comboBox->updateColorTheme(currentColorConfigIt->useDarkOverallTheme);
+
+     QString tablesStyleSheet = "QTableCornerButton::section {"+overallThemeStyleSheet + "border-radius : 6px; }"
+                        "QTableWidget{border: 1px solid gray; "+overallThemeStyleSheet + "border-radius : 3px;}";
+     ui->tableWidget->setStyleSheet(tablesStyleSheet);
+     QString horizontalHeaderStyleSheet = "QHeaderView::section { "+overallThemeStyleSheet+" border-radius : 0px; border-bottom: 1px solid gray; }";
+     ui->tableWidget->horizontalHeader()->setStyleSheet(horizontalHeaderStyleSheet);
+     QString verticalHeaderStyleSheet = "QHeaderView::section {"+overallThemeStyleSheet+" border-radius : 6px;}";
+     ui->tableWidget->verticalHeader()->setStyleSheet(verticalHeaderStyleSheet);
+     ui->tableWidget->verticalHeader()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignmentFlag::AlignHCenter);
 }
 
 void ThemeColorsDialog::addCustomColorConfiguration(const ColorConfiguration &customColorConfig)

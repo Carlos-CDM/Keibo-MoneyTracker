@@ -404,6 +404,12 @@ QGroupBox{
    <property name="cornerButtonEnabled">
     <bool>false</bool>
    </property>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
   </widget>
   <widget class="QGroupBox" name="groupBoxTableButtons">
    <property name="geometry">

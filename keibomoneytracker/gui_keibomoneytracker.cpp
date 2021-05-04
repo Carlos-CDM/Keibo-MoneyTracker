@@ -719,7 +719,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             ui->tableWidget->setColumnWidth(0,static_cast<int>(nameWidth));
             ui->tableWidget->setColumnWidth(1,static_cast<int>(amountWidth));
             ui->tableWidget->setColumnWidth(2,static_cast<int>(dayWidth));
-            if (ui->tableWidget->width() > 660) {
+            if (ui->tableWidget->width() > 720 || ui->tableWidget->height() > 650) {
                 QFont fontTable = ui->tableWidget->font();
                 fontTable.setPointSize( 10 );
                 ui->tableWidget->setFont( fontTable );
@@ -733,6 +733,9 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                 ui->menuEdit->setFont(upperMenuFont);
                 ui->menuOptions->setFont(upperMenuFont);
                 ui->menuHelp->setFont(upperMenuFont);
+
+                QHeaderView *verticalHeader = ui->tableWidget->verticalHeader();
+                verticalHeader->setDefaultSectionSize(26);
             } else {
                 QFont fontTable = ui->tableWidget->font();
                 fontTable.setPointSize( 9 );
@@ -746,6 +749,9 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                 ui->menuEdit->setFont(upperMenuFont);
                 ui->menuOptions->setFont(upperMenuFont);
                 ui->menuHelp->setFont(upperMenuFont);
+
+                QHeaderView *verticalHeader = ui->tableWidget->verticalHeader();
+                verticalHeader->setDefaultSectionSize(23);
             }
         }
         else if (qobject_cast<QTableWidget*>(obj) == ui->tableOfGroups)
@@ -757,18 +763,22 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             ui->tableOfGroups->setColumnWidth(0,static_cast<int>(nameWidth));
             ui->tableOfGroups->setColumnWidth(1,static_cast<int>(amountWidth));
             ui->tableOfGroups->setColumnWidth(2,static_cast<int>(dayWidth));
-            if (ui->tableOfGroups->width() > 470) {
+            if (ui->tableOfGroups->width() > 490) {
                 QFont font = ui->tableOfGroups->font();
                 font.setPointSize( 9 );
                 ui->tableOfGroups->setFont( font );
                 QString tabHeadStyle = ui->tableOfGroups->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 9pt; }";
                 ui->tableOfGroups->horizontalHeader()->setStyleSheet(tabHeadStyle);
+                QHeaderView *verticalHeader = ui->tableOfGroups->verticalHeader();
+                verticalHeader->setDefaultSectionSize(22);
             } else {
                 QFont font = ui->tableOfGroups->font();
                 font.setPointSize( 8 );
                 ui->tableOfGroups->setFont( font );
                 QString tabHeadStyle = ui->tableOfGroups->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 8pt; }";
                 ui->tableOfGroups->horizontalHeader()->setStyleSheet(tabHeadStyle);
+                QHeaderView *verticalHeader = ui->tableOfGroups->verticalHeader();
+                verticalHeader->setDefaultSectionSize(20);
             }
         }
      }
@@ -2584,7 +2594,6 @@ void Gui_KeiboMoneyTracker::displayArticlesOnTable()
             ui->tableWidget->setItem(item_Id,3, new QTableWidgetItem (QString::fromStdString(*(groupIterator+(it->Group)))));
         }
         ui->tableWidget->item(item_Id,3)->setTextAlignment(Qt::AlignBottom | Qt::AlignmentFlag::AlignHCenter);
-        ui->tableWidget->setRowHeight(item_Id, 22);
         ++item_Id;
     }
 
@@ -2858,10 +2867,6 @@ void Gui_KeiboMoneyTracker::updateListOfGroups()
         else if (showIncome){
             listOfArticles = currentAccount.getListOfIncomeItemsOfGroup(currentIncomeGroupSelected);
             ui->tableOfGroups->setRowCount(listOfArticles.size());
-        }
-
-        for (unsigned int i = 0; i != listOfArticles.size(); ++i){
-            ui->tableOfGroups->setRowHeight(i, 20);
         }
 
         int itemId = 0;
