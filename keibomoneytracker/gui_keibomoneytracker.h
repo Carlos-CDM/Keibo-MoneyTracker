@@ -129,6 +129,8 @@ private:
 
     bool usingDarkTheme = false;
 
+    bool usingBiggerFontSize = false;
+
     bool eventFilter(QObject *obj, QEvent *event);
 
     bool focusingOverallIncomeExpenses = false;
