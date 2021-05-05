@@ -1338,18 +1338,6 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
    std::vector<Transaction> newElementsAddedAutomatically;   
    currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
 
-   if (currentAccount.getTotalNumberOfIncomeTransactionsInGroup(currentIncomeGroupSelected) == 0 && showIncome)//When first opening account, show first income group with transactions
-   {
-       for (size_t group = 0; group != currentAccount.IncomeGroupsNames.size(); ++group){
-           if (currentAccount.IncomeGroupsAmounts[group] != 0.0){
-               break;
-           }
-           currentIncomeGroupSelected++;
-       }
-   }
-       updateGraph();  //Check if necessary, it may be done in updateColorsOnScreen
-       updateGroups(); //Check if necessary, it may be done in updateColorsOnScreen
-       updateListOfGroups();
        currentAccount.save_Data();
 
        ThemeColorsDialog iAppearanceDialog;
@@ -1388,6 +1376,22 @@ void Gui_KeiboMoneyTracker::setCurrentAccount() //CALL ONLY AFTER LOADING ACCOUN
            iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
            iNewElementsAddedAutomatically.exec();
        }
+
+       if ( showIncome  && //When first opening account, show first income group with transactions
+            currentAccount.getTotalNumberOfIncomeTransactionsInGroup(currentIncomeGroupSelected) == 0 &&
+            currentAccount.getTotalIncomeInYear() > 0.0)
+       {
+           for (size_t group = 0; group != currentAccount.IncomeGroupsNames.size(); ++group){
+               if (currentAccount.IncomeGroupsAmounts[group] != 0.0){
+                   break;
+               }
+               currentIncomeGroupSelected++;
+           }
+       }
+
+       updateGraph();
+       updateGroups();
+       updateListOfGroups();
 
 }
 
