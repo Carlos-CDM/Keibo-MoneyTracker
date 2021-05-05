@@ -60,22 +60,22 @@ void GroupPieChartWidget::updateSpace()
             int textWidth  = 105;
             int textHeight = 19;
 
-            int leftPercentage   = (totalWidth/2)-48;
+            int leftPercentage   = (totalWidth/2)-52;
             int topPercentage    = (totalHeigth/2)+3;
             rectangleTextPercentage = QRect(leftPercentage, topPercentage, textWidth, textHeight);
 
-            int leftAmount   = (totalWidth/2)-49;
+            int leftAmount   = (totalWidth/2)-54;
             int topAmount    = (totalHeigth/2)-14;
             rectangleTextAmount = QRect(leftAmount, topAmount, textWidth, textHeight);
         } else {
             int textWidth  = 105;
             int textHeight = 18;
 
-            int leftPercentage   = (totalWidth/2)-48;
+            int leftPercentage   = (totalWidth/2)-52;
             int topPercentage    = (totalHeigth/2)+4;
             rectangleTextPercentage = QRect(leftPercentage, topPercentage, textWidth, textHeight);
 
-            int leftAmount   = (totalWidth/2)-49;
+            int leftAmount   = (totalWidth/2)-54;
             int topAmount    = (totalHeigth/2)-14;
             rectangleTextAmount = QRect(leftAmount, topAmount, textWidth, textHeight);
         }
