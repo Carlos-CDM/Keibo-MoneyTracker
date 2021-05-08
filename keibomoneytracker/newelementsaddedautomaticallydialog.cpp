@@ -52,7 +52,7 @@ void newElementsAddedAutomaticallyDialog::setLanguage(const Language &currentLan
     {
         this->setWindowTitle(" Information");
         this->ui->labelInfo->setText("Folgende Transaktionen wurden bereits hinzugefügt:");
-        this->ui->pushButtonClose->setText("Schlißen");
+        this->ui->pushButtonClose->setText("Schließen");
     }
     else if (iLanguage == SPANISH)
     {
