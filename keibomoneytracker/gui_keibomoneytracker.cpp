@@ -119,6 +119,7 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     this->ui->yearForwardButton->setFocusPolicy(Qt::NoFocus);
     this->ui->yearBackwardsButton->setFocusPolicy(Qt::NoFocus);
     this->ui->widget1->setFocusPolicy(Qt::NoFocus);
+    this->ui->scrollArea->setFocusPolicy(Qt::NoFocus);
 
     //----------------------------------------------------------//
     int monthIconWidth  = this->ui->monthForwardButton->width();

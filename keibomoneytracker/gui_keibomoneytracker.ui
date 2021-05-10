@@ -1873,14 +1873,20 @@ QGroupBox::title {
  </customwidgets>
  <tabstops>
   <tabstop>tableWidget</tabstop>
+  <tabstop>addIncomeButton</tabstop>
+  <tabstop>addExpenseButton</tabstop>
+  <tabstop>editItemButton</tabstop>
+  <tabstop>copyButton</tabstop>
+  <tabstop>deleteItemButton</tabstop>
   <tabstop>tableOfGroups</tabstop>
-  <tabstop>yearForwardButton</tabstop>
-  <tabstop>yearBackwardsButton</tabstop>
-  <tabstop>monthForwardButton</tabstop>
   <tabstop>monthBackwardButton</tabstop>
+  <tabstop>monthForwardButton</tabstop>
+  <tabstop>yearBackwardsButton</tabstop>
+  <tabstop>yearForwardButton</tabstop>
   <tabstop>groupForwardButton</tabstop>
   <tabstop>groupBackwardsButton</tabstop>
   <tabstop>pushButtonToggleGroups</tabstop>
+  <tabstop>scrollArea</tabstop>
  </tabstops>
  <resources/>
  <connections/>
