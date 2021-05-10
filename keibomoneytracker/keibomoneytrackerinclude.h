@@ -334,6 +334,10 @@ inline std::string getAmountAsStringInGermanFormat(const double &amount, int _pr
     for (std::string::reverse_iterator itStr = finalString.rbegin();  //Count from left to right to separate in groups of three digits after decimal point.
          itStr != finalString.rend(); ++itStr)
     {
+        if (*itStr == '-') {
+            amountFormattedBackwards += *itStr;
+            continue;
+        }
         if (*itStr == '.' || *itStr == ','){ //If a point or comma is found, just add it, reset digit counter and go to next iteration
             amountFormattedBackwards += *itStr;
             counter = 0;
@@ -372,6 +376,10 @@ inline std::string getAmountAsStringFormatted(const double &amount, int _precisi
     for (std::string::reverse_iterator itStr = amountStr.rbegin();  //Count from left to right to separate in groups of three digits after decimal point.
          itStr != amountStr.rend(); ++itStr)
     {
+        if (*itStr == '-') {
+            amountFormattedBackwards += *itStr;
+            continue;
+        }
         if (*itStr == '.' || *itStr == ','){ //If a point or comma is found, just add it, reset digit counter and go to next iteration
             amountFormattedBackwards += *itStr;
             counter = 0;
