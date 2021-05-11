@@ -75,7 +75,26 @@ protected:
             this->verticalScrollBar()->setValue(this->verticalScrollBar()->value()-items);
         }
     }
+};
 
+class TableWidgetMouseGroup : public QTableWidget
+{
+
+Q_OBJECT
+
+public:
+    TableWidgetMouseGroup (QWidget* parent = 0);
+    ~TableWidgetMouseGroup();
+
+protected:
+    void wheelEvent(QWheelEvent* event)
+    {
+        int items = (event->angleDelta().y()/event->DefaultDeltasPerStep)*10;
+        if (event->angleDelta().y() != 0)
+        {
+            this->verticalScrollBar()->setValue(this->verticalScrollBar()->value()-items);
+        }
+    }
 };
 
 class Gui_KeiboMoneyTracker : public QMainWindow

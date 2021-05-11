@@ -297,7 +297,7 @@ QGroupBox::title {
            <item row="1" column="0">
             <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
-              <widget class="TableWidgetMouse" name="tableOfGroups">
+              <widget class="TableWidgetMouseGroup" name="tableOfGroups">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                  <horstretch>0</horstretch>
@@ -805,6 +805,9 @@ QGroupBox::title {
                </property>
                <property name="tabKeyNavigation">
                 <bool>false</bool>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
                </property>
                <property name="cornerButtonEnabled">
                 <bool>false</bool>
@@ -1869,6 +1872,11 @@ QGroupBox::title {
    <extends>QWidget</extends>
    <header>myopenglwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TableWidgetMouseGroup</class>
+   <extends>QTableWidget</extends>
+   <header>gui_keibomoneytracker.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

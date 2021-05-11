@@ -76,12 +76,23 @@ GridLineDelegate::~GridLineDelegate()
 TableWidgetMouse::TableWidgetMouse(QWidget *parent) :
     QTableWidget(parent)
 {
+    QPalette p = palette();
+    p.setColor(QPalette::Inactive, QPalette::Highlight, p.color(QPalette::Active, QPalette::Highlight));
+    setPalette(p);
 }
 
 TableWidgetMouse::~TableWidgetMouse()
 {
 }
 
+TableWidgetMouseGroup::TableWidgetMouseGroup(QWidget *parent) :
+    QTableWidget(parent)
+{
+}
+
+TableWidgetMouseGroup::~TableWidgetMouseGroup()
+{
+}
 
 Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     QMainWindow(parent),
@@ -311,7 +322,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     TopOfTableReached = false;
                     this->ui->tableWidget->selectRow(newSelectedRow);
                 } else if ( (newSelectedRow == 0) && (TopOfTableReached == false) ) {
-                    std::cout<<"Row on the bottom REACHED"<<'\n';
+                    //std::cout<<"Row on the bottom REACHED"<<'\n';
                     this->ui->tableWidget->selectRow(newSelectedRow);
                     TopOfTableReached = true;
                 }
@@ -324,7 +335,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     BottomOfTableReached = false;
                     this->ui->tableWidget->selectRow(newSelectedRow);
                 } else if ((newSelectedRow >= (ui->tableWidget->rowCount()-1)) && (BottomOfTableReached == false)) {
-                    std::cout<<"Row on the top REACHED"<<'\n';
+                    //std::cout<<"Row on the top REACHED"<<'\n';
                     this->ui->tableWidget->selectRow(newSelectedRow);
                     BottomOfTableReached = true;
                 }
@@ -333,7 +344,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             else if (key->key() == Qt::Key_Right)
             {
                 int previousSelectedElement = ui->tableWidget->currentRow();
-                std::cout<<"PREVIOUS SELECTED ELEMENT "<<previousSelectedElement<<'\n';
+                //std::cout<<"PREVIOUS SELECTED ELEMENT "<<previousSelectedElement<<'\n';
                 if (currentMonth>=0 && currentMonth<11) {
                     ++currentMonth;
                     updateToCurrentMonth();
@@ -343,7 +354,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     updateToCurrentYear();
                 }
                 if (previousSelectedElement > ui->tableWidget->rowCount()-1){
-                    std::cout<<"PREVIOUS SELECTED ELEMENT WAS BIGGET THAN CURRENT LIST"<<'\n';
+                    //std::cout<<"PREVIOUS SELECTED ELEMENT WAS BIGGET THAN CURRENT LIST"<<'\n';
                     this->ui->tableWidget->selectRow(ui->tableWidget->rowCount()-1);
                 }
                 return true;
@@ -351,7 +362,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             else if (key->key() == Qt::Key_Left)
             {
                 int previousSelectedElement = ui->tableWidget->currentRow();
-                std::cout<<"PREVIOUS SELECTED ELEMENT "<<previousSelectedElement<<'\n';
+                //std::cout<<"PREVIOUS SELECTED ELEMENT "<<previousSelectedElement<<'\n';
                 if (currentMonth>0 && currentMonth<=11) {
                    --currentMonth;
                     updateToCurrentMonth();
@@ -361,7 +372,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     updateToCurrentYear();
                 }                
                 if (previousSelectedElement > ui->tableWidget->rowCount()-1){
-                    std::cout<<"PREVIOUS SELECTED ELEMENT WAS BIGGET THAN CURRENT LIST"<<'\n';
+                    //std::cout<<"PREVIOUS SELECTED ELEMENT WAS BIGGET THAN CURRENT LIST"<<'\n';
                     this->ui->tableWidget->selectRow(ui->tableWidget->rowCount()-1);
                 }
                 return true;
@@ -546,26 +557,31 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
             }
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->addIncomeButton){
+            this->ui->addIncomeButton->setColorForEnterEvent();
             if (focusingOverallIncomeExpenses == false){
                 this->focusOverallIncomeExpenses();
             }
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->addExpenseButton){
+            this->ui->addExpenseButton->setColorForEnterEvent();
             if (focusingOverallIncomeExpenses == false){
                 this->focusOverallIncomeExpenses();
             }
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->copyButton){
+            this->ui->copyButton->setColorForEnterEvent();
             if (focusingOverallIncomeExpenses == false){
                 this->focusOverallIncomeExpenses();
             }
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->editItemButton){
+            this->ui->editItemButton->setColorForEnterEvent();
             if (focusingOverallIncomeExpenses == false){
                 this->focusOverallIncomeExpenses();
             }
         }
         else if (qobject_cast<QPushButton*>(obj) == ui->deleteItemButton){
+            this->ui->deleteItemButton->setColorForEnterEvent();
             if (focusingOverallIncomeExpenses == false){
                 this->focusOverallIncomeExpenses();
             }
@@ -584,12 +600,20 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
 
     else if (event->type() == QEvent::FocusOut)
     {
-        if (qobject_cast<QTableWidget*>(obj) == ui->tableWidget){
+        if (qobject_cast<QPushButton*>(obj) == ui->addIncomeButton){
+                this->ui->addIncomeButton->setColorForLeaveEvent();
         }
-        if (qobject_cast<QPushButton*>(obj) == ui->deleteItemButton){
+        else if (qobject_cast<QPushButton*>(obj) == ui->addExpenseButton){
+                this->ui->addExpenseButton->setColorForLeaveEvent();
         }
-
-        if (qobject_cast<QTableWidget*>(obj) == ui->tableOfGroups){
+        else if (qobject_cast<QPushButton*>(obj) == ui->copyButton){
+                this->ui->copyButton->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QPushButton*>(obj) == ui->editItemButton){
+                this->ui->editItemButton->setColorForLeaveEvent();
+        }
+        else if (qobject_cast<QPushButton*>(obj) == ui->deleteItemButton){
+                this->ui->deleteItemButton->setColorForLeaveEvent();
         }
     }
 
@@ -948,6 +972,7 @@ void Gui_KeiboMoneyTracker::focusOverallIncomeExpenses()
 
     focusingOverallIncomeExpenses = true;
     focusingGroups = false;
+    this->ui->tableOfGroups->clearSelection();
 }
 
 void Gui_KeiboMoneyTracker::focusGroups()
