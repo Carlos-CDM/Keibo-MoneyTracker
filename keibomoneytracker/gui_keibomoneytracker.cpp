@@ -77,7 +77,9 @@ TableWidgetMouse::TableWidgetMouse(QWidget *parent) :
     QTableWidget(parent)
 {
     QPalette p = palette();
-    p.setColor(QPalette::Inactive, QPalette::Highlight, p.color(QPalette::Active, QPalette::Highlight));
+    //---------- Color group -------- Color role ----------- Color -------------//
+    p.setColor(QPalette::Active, QPalette::Highlight, QColor(119, 187, 197, 220));
+    p.setColor(QPalette::Inactive, QPalette::Highlight, QColor(Qt::gray));
     setPalette(p);
 }
 
@@ -88,6 +90,10 @@ TableWidgetMouse::~TableWidgetMouse()
 TableWidgetMouseGroup::TableWidgetMouseGroup(QWidget *parent) :
     QTableWidget(parent)
 {
+    QPalette p = palette();
+    //---------- Color group -------- Color role ----------- Color -------------//
+    p.setColor(QPalette::Active, QPalette::Highlight, QColor(119, 187, 197, 220));
+    setPalette(p);
 }
 
 TableWidgetMouseGroup::~TableWidgetMouseGroup()
@@ -2412,7 +2418,7 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
             eraseConfirmationWindow.setModal(true);
             if (currentAccount.getAccountLanguage() == ENGLISH) {
                 eraseConfirmationWindow.setWindowTitle(" Information");
-                eraseConfirmationWindow.setInfoText(" Only one Item can be edited at a time.");
+                eraseConfirmationWindow.setInfoText(" Only one item can be edited at a time.");
             } else if (currentAccount.getAccountLanguage() == GERMAN) {
                 eraseConfirmationWindow.setWindowTitle(" Information");
                 eraseConfirmationWindow.setInfoText(" Nur eine Transaktion kann gleichzeitig geändert werden.");
@@ -2537,7 +2543,7 @@ void Gui_KeiboMoneyTracker::copyTransaction()
         eraseConfirmationWindow.setModal(true);
         if (currentAccount.getAccountLanguage() == ENGLISH) {
             eraseConfirmationWindow.setWindowTitle(" Information");
-            eraseConfirmationWindow.setInfoText(" Only one Item can be copied at a time.");
+            eraseConfirmationWindow.setInfoText(" Only one item can be copied at a time.");
         } else if (currentAccount.getAccountLanguage() == GERMAN) {
             eraseConfirmationWindow.setWindowTitle(" Information");
             eraseConfirmationWindow.setInfoText(" Nur eine Transaktion kann gleichzeitig kopiert werden.");
