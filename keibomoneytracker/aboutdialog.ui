@@ -26,7 +26,7 @@
     <enum>QTabWidget::Rounded</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabAbout">
     <attribute name="title">
@@ -858,7 +858,7 @@ border-color: rgba(0, 0, 0, 0);</string>
     <number>0</number>
    </property>
    <property name="plainText">
-    <string>Version 1.1.0</string>
+    <string>Version 1.2.1</string>
    </property>
   </widget>
   <widget class="QGraphicsView" name="graphicsViewIcon">

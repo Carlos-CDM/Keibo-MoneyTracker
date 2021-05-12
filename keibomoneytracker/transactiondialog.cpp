@@ -290,6 +290,7 @@ void TransactionDialog::checkAndSetTransaction() //Save/Set all variables/inform
             {
                 amountFormattedForwards += *itStr;
             }
+        //std::cout<<"AMOUNT FORMATTED "<<amountFormattedForwards<<'\n';
 
         Price_.clear();
         Price_ = QString::fromStdString(amountFormattedForwards);
