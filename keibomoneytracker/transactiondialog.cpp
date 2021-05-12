@@ -190,10 +190,18 @@ void TransactionDialog::checkAndSetTransaction() //Save/Set all variables/inform
             blockNextNumber = true;
         }
 
-        //Take commas as points and count them to not allow more than one
-        if ((tempString[i] == ',') || (tempString[i] == '.')) {
-            tempString[i] = '.';
-            ++numberOfPoints;
+        //Depending on the language, take commas as points and count them to not allow more than one
+        if (iLanguage == GERMAN) {
+            if (tempString[i] == ',') {
+                //tempString[i] = '.';
+                ++numberOfPoints;
+            }
+        }
+        if (iLanguage != GERMAN){
+            if (tempString[i] == '.') {
+                //tempString[i] = '.';
+                ++numberOfPoints;
+            }
         }
 
         //Only allow numbers, point, comma and whitespaces in loop
@@ -215,17 +223,77 @@ void TransactionDialog::checkAndSetTransaction() //Save/Set all variables/inform
         }
     }
 
-    if ((numberOfPoints>1) || (Price_.toStdString().empty())) {amountOk = false;}
-    //std::cout<<"Price processed, "<<tempString<<'\n';
+    if ((numberOfPoints>1) || (tempString.empty())) {amountOk = false;}
 
-    Price_.clear();
-    Price_ = QString::fromStdString(tempString);
+
+    //-----Depending on the language accept/ignore commas(spanish, english) or points(german) in the expected/correct location--------//
+    std::string amountFormattedBackwards;
+    int formatCounter = 0;
+    bool formatOk = true;
+    if (iLanguage == GERMAN && amountOk){
+        for (std::string::reverse_iterator itStr = tempString.rbegin();  //Count from right to left
+             itStr != tempString.rend(); ++itStr)
+        {
+            if (*itStr == ','){ //If a comma is found, substitute it with a point, reset digit counter and go to next iteration. We know here, there is only one.
+                formatCounter = 0;
+                amountFormattedBackwards += '.';
+                continue;
+            }
+            if (*itStr == '.'){
+                if (formatCounter == 3){
+                    formatCounter = 0;
+                    //std::cout<<"POINT IN GERMAN FOUND, IGNORE IT - DON'T PASS IT TO VARIABLE OF TYPE DOUBLE"<<'\n';
+                    continue;
+                }
+                formatOk = false; //IF THERE IS A POINT WHERE THERE SHOULD BE A NUMBER, THEN FORMAT IS NOT OK
+                //std::cout<<"FORMAT IS NOT OK \n";
+            }
+            amountFormattedBackwards += *itStr;
+            ++formatCounter;
+            if (formatCounter > 3) //Accept points in the right position even if this rule is not always fullfilled along the whole string
+                formatCounter = 1;
+        }
+    }
+    if ((iLanguage != GERMAN ) && amountOk){
+        for (std::string::reverse_iterator itStr = tempString.rbegin();  //Count from right to left
+             itStr != tempString.rend(); ++itStr)
+        {
+            if (*itStr == '.'){ //If a point is found, substitute it with a point, reset digit counter and go to next iteration. We know here, there is only one.
+                formatCounter = 0;
+                amountFormattedBackwards += '.'; //std::cout<<"POINT FOUND\n";
+                continue;
+            }
+            if (*itStr == ','){
+                if (formatCounter == 3){
+                    formatCounter = 0;
+                    //std::cout<<"COMMA FOUND, IGNORE IT - DON'T PASS IT TO VARIABLE OF TYPE DOUBLE"<<'\n';
+                    continue;
+                }
+                formatOk = false; //IF THERE IS A POINT WHERE THERE SHOULD BE A NUMBER FORMAT IS NOT OK
+                //std::cout<<"FORMAT IS NOT OK \n";
+            }
+            amountFormattedBackwards += *itStr;
+            ++formatCounter;
+            if (formatCounter > 3) //Accept commas in the right position even if this rule is not always fullfilled along the whole string
+                formatCounter = 1;
+        }
+    }
 
     if (!Name_.isEmpty()){
         transactionNameOK = true;
     }
-    if ((tempPrice >= (0.00)) && amountOk){
-        std::cout<<"TRANSACTION AMOUNT OK "<<'\n';
+    if ((tempPrice >= (0.00)) && amountOk && formatOk){
+        std::string amountFormattedForwards;
+        amountFormattedForwards.clear();
+        for (std::string::reverse_iterator itStr = amountFormattedBackwards.rbegin();
+             itStr != amountFormattedBackwards.rend(); ++itStr)
+            {
+                amountFormattedForwards += *itStr;
+            }
+
+        Price_.clear();
+        Price_ = QString::fromStdString(amountFormattedForwards);
+        //std::cout<<"TRANSACTION AMOUNT OK "<<'\n';
         transactionAmountOK = true;
     }
 }
@@ -955,7 +1023,7 @@ void TransactionDialog::displayItemInfo(std::string Nam, double Pri, int Cat, in
     if (iLanguage == GERMAN) {
         ui->textPrice->setText(QString::fromStdString(getAmountAsStringInGermanFormat(Pri)));
     } else {
-        ui->textPrice->setText(QString::number(Pri, 0, 2));
+        ui->textPrice->setText(QString::fromStdString(getAmountAsStringFormatted(Pri)));
     }
 
     ui->textName->setText(QString::fromStdString(Nam));
