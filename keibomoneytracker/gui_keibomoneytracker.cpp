@@ -945,6 +945,13 @@ void Gui_KeiboMoneyTracker::incomeGroupSelection(QAction *action)
             currentIncomeGroupSelected = groupId;
             this->updateGroups();
             this->updateListOfGroups();
+            if (currentAccount.getAccountLanguage() == ENGLISH) {
+                ui->groupBoxGroups->setTitle("Income Groups");
+            } else if (currentAccount.getAccountLanguage() == GERMAN) {
+                ui->groupBoxGroups->setTitle("Gruppen Einkommen");
+            } else if (currentAccount.getAccountLanguage() == SPANISH) {
+                ui->groupBoxGroups->setTitle("Grupos de ingresos");
+            }
         }
         ++groupId;
     }
@@ -961,6 +968,13 @@ void Gui_KeiboMoneyTracker::expensesGroupSelection(QAction *action)
             currentGroupSelected = groupId;
             this->updateGroups();
             this->updateListOfGroups();
+            if (currentAccount.getAccountLanguage() == ENGLISH) {
+                ui->groupBoxGroups->setTitle("Expenses Groups");
+            } else if (currentAccount.getAccountLanguage() == GERMAN) {
+                ui->groupBoxGroups->setTitle("Gruppen Ausgaben");
+            } else if (currentAccount.getAccountLanguage() == SPANISH) {
+                ui->groupBoxGroups->setTitle("Grupos de egresos");
+            }
         }
         ++groupId;
     }
@@ -3638,6 +3652,12 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
         //Create text for total number of elements
         QString textTotalNumberOfTransactions     = QString::number(totalNumberOfElements);
+
+        //Create text for lifetime income/expenses
+        QString textLifetimeIncome;
+        QString textLifetimeExpenses;
+        QString textLifetimeIncomeAmount;
+        QString textLifetimeExpensesAmount;
         QString textTotalNumberOfIncomeElements   = QString::number(totalNumberOfIncomeElements);
         QString textTotalNumberOfExpensesElements = QString::number(totalNumberOfExpensesElements);
 
@@ -3698,11 +3718,46 @@ void Gui_KeiboMoneyTracker::showAccountStats()
             statsValues.push_back(textTimeInterval);
 
             statsNames.push_back("Total number of transactions:");
-            statsNames.push_back("Number of income elements:");
-            statsNames.push_back("Number of expenses elements:");
             statsValues.push_back(textTotalNumberOfTransactions);
-            statsValues.push_back(textTotalNumberOfIncomeElements);
-            statsValues.push_back(textTotalNumberOfExpensesElements);
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            statsNames.push_back("Lifetime income:");
+            statsNames.push_back("Lifetime expenses:");
+
+            if (totalLifetimeIncome > 0.0)
+            {
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLifetimeIncome = QString (QString::fromStdString(this->currentAccount.getAccountCurrencySymbol()) +"  "+ QString::fromStdString(getAmountAsStringFormatted(totalLifetimeIncome))
+                                                   +"  in  "+ textTotalNumberOfIncomeElements + "  transactions");
+                } else {
+                    textLifetimeIncome = QString (QString::fromStdString(getAmountAsStringFormatted(totalLifetimeIncome)) +"  "+ QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                   +" in "+ textTotalNumberOfIncomeElements + "  transactions");
+                }
+            }
+            else
+            {
+                textLifetimeIncome =QString("Not available.");
+            }
+
+            if (totalLifetimeExpenses > 0.0)
+            {
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLifetimeExpenses = QString (QString::fromStdString(this->currentAccount.getAccountCurrencySymbol()) +"  "+ QString::fromStdString(getAmountAsStringFormatted(totalLifetimeExpenses))
+                                                   +"  in  "+ textTotalNumberOfExpensesElements + "  transactions");
+                } else {
+                    textLifetimeExpenses = QString ( QString::fromStdString(getAmountAsStringFormatted(totalLifetimeExpenses)) +"  "+ QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                   +"  in  "+ textTotalNumberOfExpensesElements + "  transactions");
+                }
+            }
+            else
+            {
+                textLifetimeExpenses =QString("Not available.");
+            }
+
+            statsValues.push_back(textLifetimeIncome);
+            statsValues.push_back(textLifetimeExpenses);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (this->currentAccount.getAccountCurrencySymbol() == "$")
@@ -4042,11 +4097,46 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
 
             statsNames.push_back("Anzahl aller Transaktionen:");
-            statsNames.push_back("Anzahl Transaktionen Einkommen:");
-            statsNames.push_back("Anzahl Transaktionen Ausgabe:");
             statsValues.push_back(textTotalNumberOfTransactions);
-            statsValues.push_back(textTotalNumberOfIncomeElements);
-            statsValues.push_back(textTotalNumberOfExpensesElements);
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            statsNames.push_back("Lebenslanges Einkommen:");
+            statsNames.push_back("Lebenslanges Ausgabe:");
+
+            if (totalLifetimeIncome > 0.0)
+            {
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLifetimeIncome = QString (QString::fromStdString(this->currentAccount.getAccountCurrencySymbol()) +"  "+ QString::fromStdString(getAmountAsStringFormatted(totalLifetimeIncome))
+                                                   +"  in  "+ textTotalNumberOfIncomeElements + "  Transaktionen");
+                } else {
+                    textLifetimeIncome = QString (QString::fromStdString(getAmountAsStringFormatted(totalLifetimeIncome)) +"  "+ QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                   +" in "+ textTotalNumberOfIncomeElements + "  Transaktionen");
+                }
+            }
+            else
+            {
+                textLifetimeIncome =QString("Nicht verfügbar.");
+            }
+
+            if (totalLifetimeExpenses > 0.0)
+            {
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLifetimeExpenses = QString (QString::fromStdString(this->currentAccount.getAccountCurrencySymbol()) +"  "+ QString::fromStdString(getAmountAsStringFormatted(totalLifetimeExpenses))
+                                                   +"  in  "+ textTotalNumberOfExpensesElements + "  Transaktionen");
+                } else {
+                    textLifetimeExpenses = QString ( QString::fromStdString(getAmountAsStringFormatted(totalLifetimeExpenses)) +"  "+ QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                   +"  in  "+ textTotalNumberOfExpensesElements + "  Transaktionen");
+                }
+            }
+            else
+            {
+                textLifetimeExpenses =QString("Nicht verfügbar.");
+            }
+
+            statsValues.push_back(textLifetimeIncome);
+            statsValues.push_back(textLifetimeExpenses);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (this->currentAccount.getAccountCurrencySymbol() == "$")
@@ -4387,11 +4477,45 @@ void Gui_KeiboMoneyTracker::showAccountStats()
 
 
             statsNames.push_back("Número total de transacciones:");
-            statsNames.push_back("Número de ingresos:");
-            statsNames.push_back("Número de egresos:");
             statsValues.push_back(textTotalNumberOfTransactions);
-            statsValues.push_back(textTotalNumberOfIncomeElements);
-            statsValues.push_back(textTotalNumberOfExpensesElements);
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            statsNames.push_back("Ingresos totales:");
+            statsNames.push_back("Egresos totales:");
+            if (totalLifetimeIncome > 0.0)
+            {
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLifetimeIncome = QString (QString::fromStdString(this->currentAccount.getAccountCurrencySymbol()) +"  "+ QString::fromStdString(getAmountAsStringFormatted(totalLifetimeIncome))
+                                                   +"  in  "+ textTotalNumberOfIncomeElements + "  transacciones");
+                } else {
+                    textLifetimeIncome = QString (QString::fromStdString(getAmountAsStringFormatted(totalLifetimeIncome)) +"  "+ QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                   +" in "+ textTotalNumberOfIncomeElements + "  transacciones");
+                }
+            }
+            else
+            {
+                textLifetimeIncome =QString("No disponible.");
+            }
+
+            if (totalLifetimeExpenses > 0.0)
+            {
+                if (this->currentAccount.getAccountCurrencySymbol() == "$")
+                {
+                    textLifetimeExpenses = QString (QString::fromStdString(this->currentAccount.getAccountCurrencySymbol()) +"  "+ QString::fromStdString(getAmountAsStringFormatted(totalLifetimeExpenses))
+                                                   +"  in  "+ textTotalNumberOfExpensesElements + "  transacciones");
+                } else {
+                    textLifetimeExpenses = QString ( QString::fromStdString(getAmountAsStringFormatted(totalLifetimeExpenses)) +"  "+ QString::fromStdString(this->currentAccount.getAccountCurrencySymbol())
+                                                   +"  in  "+ textTotalNumberOfExpensesElements + "  transacciones");
+                }
+            }
+            else
+            {
+                textLifetimeExpenses =QString("No disponible.");
+            }
+
+            statsValues.push_back(textLifetimeIncome);
+            statsValues.push_back(textLifetimeExpenses);
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (this->currentAccount.getAccountCurrencySymbol() == "$")
