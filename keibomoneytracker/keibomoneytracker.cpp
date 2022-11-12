@@ -1846,36 +1846,37 @@ void Account::setElementsToRepeat(std::vector<Transaction> &newElementsAdded)
                                                     }
                                                 }
 
-                                                    if (itemAlreadyCopied == false){
-                                                        (*Articleit1).Repetition_Option = DO_NOT_REPEAT; //Set original transaction as DO_NOT_REPEAT
-                                                        ///ADD NEW COPY TO CURRENT YEAR
-                                                        if ((*Articleit1).IsIncome)
-                                                        {
-                                                            Transaction copyArticle(lookingForName,
-                                                                                lookingForPrice,
-                                                                                monthFromId,
-                                                                                dayFromId,
-                                                                                lookingForGroup,
-                                                                                static_cast<RepetitionOption>(preserveRepetitionOption),
-                                                                                true);
-                                                            this->addTransaction(copyArticle);
-                                                            newElementAdded = true;
-                                                            newElementsAdded.push_back(copyArticle);
+                                                if (itemAlreadyCopied == false)
+                                                {
+                                                    (*Articleit1).Repetition_Option = DO_NOT_REPEAT; //Set original transaction as DO_NOT_REPEAT
+                                                    ///ADD NEW COPY TO CURRENT YEAR
+                                                    if ((*Articleit1).IsIncome)
+                                                    {
+                                                        Transaction copyArticle(lookingForName,
+                                                                            lookingForPrice,
+                                                                            monthFromId,
+                                                                            dayFromId,
+                                                                            lookingForGroup,
+                                                                            static_cast<RepetitionOption>(preserveRepetitionOption),
+                                                                            true);
+                                                        this->addTransaction(copyArticle);
+                                                        newElementAdded = true;
+                                                        newElementsAdded.push_back(copyArticle);
 
-                                                        }
-                                                        else if (!(*Articleit1).IsIncome)
-                                                        {
-                                                            Transaction copyArticle(lookingForName,
-                                                                                lookingForPrice,
-                                                                                monthFromId,
-                                                                                dayFromId,
-                                                                                lookingForGroup,
-                                                                                static_cast<RepetitionOption>(preserveRepetitionOption));
-                                                            this->addTransaction(copyArticle);
-                                                            newElementAdded = true;
-                                                            newElementsAdded.push_back(copyArticle);
-                                                        }
                                                     }
+                                                    else if (!(*Articleit1).IsIncome)
+                                                    {
+                                                        Transaction copyArticle(lookingForName,
+                                                                            lookingForPrice,
+                                                                            monthFromId,
+                                                                            dayFromId,
+                                                                            lookingForGroup,
+                                                                            static_cast<RepetitionOption>(preserveRepetitionOption));
+                                                        this->addTransaction(copyArticle);
+                                                        newElementAdded = true;
+                                                        newElementsAdded.push_back(copyArticle);
+                                                    }
+                                                }
                                             }
                                 }
                     }

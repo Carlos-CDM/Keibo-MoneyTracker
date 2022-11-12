@@ -1475,7 +1475,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         this->ui->actionAbout->setText("About");
         this->ui->actionDonate->setText("Donate");
         WeeklyPhrases weeklyPhrase;
-        this->ui->labelPhrase->setText(QString::fromStdString(weeklyPhrase.getPhraseOfTheWeek(ENGLISH)));
+        this->ui->labelPhrase->setText(QString::fromStdString(weeklyPhrase.getQuoteOfTheWeek(ENGLISH)));
     }
     else if (iLanguage == GERMAN){
         this->ui->groupBoxOverall->setTitle("Einkommen/Ausgaben");
@@ -1509,7 +1509,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         this->ui->actionAbout->setText("Über");
         this->ui->actionDonate->setText("Spenden");
         WeeklyPhrases weeklyPhrase;
-        this->ui->labelPhrase->setText(QString::fromStdString(weeklyPhrase.getPhraseOfTheWeek(GERMAN)));
+        this->ui->labelPhrase->setText(QString::fromStdString(weeklyPhrase.getQuoteOfTheWeek(GERMAN)));
     }
     else if (iLanguage == SPANISH){
         this->ui->groupBoxOverall->setTitle("Ingresos/Egresos");
@@ -1543,7 +1543,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         this->ui->actionAbout->setText("Acerca de");
         this->ui->actionDonate->setText("Donar");
         WeeklyPhrases weeklyPhrase;
-        this->ui->labelPhrase->setText(QString::fromStdString(weeklyPhrase.getPhraseOfTheWeek(SPANISH)));
+        this->ui->labelPhrase->setText(QString::fromStdString(weeklyPhrase.getQuoteOfTheWeek(SPANISH)));
         this->ui->labelPhrase->setWordWrap(true);
     }
 }

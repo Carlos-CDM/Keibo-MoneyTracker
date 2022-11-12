@@ -28,7 +28,7 @@ class WeeklyPhrases
 {
 public:
     WeeklyPhrases();
-    std::string getPhraseOfTheWeek(const Language &iLanguage);
+    std::string getQuoteOfTheWeek(const Language &iLanguage);
 };
 
 #endif // WEEKLYPHRASES_H
