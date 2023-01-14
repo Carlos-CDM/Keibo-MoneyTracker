@@ -1075,9 +1075,30 @@ void Gui_KeiboMoneyTracker::updateToCurrentYear() //Updates also to the selected
                 {
                     this->currentAccount.addTransaction(*itUpdatedTransactions);
                 }
-                this->currentAccount.save_Data();
+                //this->currentAccount.save_Data();
             }
         }
+
+
+        // Check for repeated elements when switching years:
+        // In case elements needed to be repeated on days of previous year and app was not opened in those days.
+        std::vector<Transaction> newElementsAddedAutomatically;
+        currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
+        currentAccount.save_Data();
+        ///Show to user new elements added automatically by repetition if any.
+        if (newElementsAddedAutomatically.size() > 0){
+            newElementsAddedAutomaticallyDialog iNewElementsAddedAutomatically;
+            iNewElementsAddedAutomatically.setModal(true);
+            iNewElementsAddedAutomatically.setLanguage(currentAccount.getAccountLanguage());
+            iNewElementsAddedAutomatically.getInfoToDisplay(newElementsAddedAutomatically,
+                                                            currentAccount.IncomeGroupsNames,
+                                                            currentAccount.ExpensesGroupsNames,
+                                                            colorOfIncomeAmount,
+                                                            currentAccount.getAccountLanguage());
+            iNewElementsAddedAutomatically.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
+            iNewElementsAddedAutomatically.exec();
+        }
+
 
         displayArticlesOnTable();
         updateGraph();
@@ -2152,8 +2173,8 @@ void Gui_KeiboMoneyTracker::addOutcome()
 {
     if (ACCOUNT_SET)
     {
-        std::string tname; double tprice; int tcategory; int tmonth; int tday; RepetitionOption trepeat = DO_NOT_REPEAT;  //Temporary variables
-        TransactionDialog newArticleWindow;                                    //Open QDialog
+        std::string tname; double tprice; int tcategory; int tmonth; int tday; RepetitionOption trepeat = DO_NOT_REPEAT; int tyear;  //Temporary variables.
+        TransactionDialog newArticleWindow;                                    //Open QDialog.
         if (currentAccount.getAccountLanguage() == ENGLISH) {
             newArticleWindow.setWindowTitle(" Add expense");
         } else if (currentAccount.getAccountLanguage() == GERMAN) {
@@ -2167,20 +2188,26 @@ void Gui_KeiboMoneyTracker::addOutcome()
 
         time_t T = time(0);
         struct tm * currentTime = localtime(&T);
-        newArticleWindow.displayItemInfo("", 0.0, 0, currentTime->tm_mon, currentTime->tm_mday-1, DO_NOT_REPEAT, currentYear);
+        newArticleWindow.displayItemInfo("", 0.0, 0, currentTime->tm_mon, currentTime->tm_mday-1, DO_NOT_REPEAT, currentYear); //Suggest to add outcome to current year.
         newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
 
         newArticleWindow.exec();
-        newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat);  //Assign values fetching temp variables
+        newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat, tyear);  //Assign values fetching temp variables.
         //rename "provide" to "submit" (coming from object).
         if (newArticleWindow.transactionNameOK && newArticleWindow.transactionAmountOK)
         {
             Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat);              //Create temp article!!! ORDER OF INITIALIZERS
 
             std::vector<Transaction> newElementsAddedAutomatically;
+            currentAccount.set_Year(tyear);  //Update to year entered in transaction dialog. It can be the same as current selected year, it doesn't matter.
+            currentYear = tyear;
+            updateToCurrentYear();
+            if (focusingOverallIncomeExpenses == false){
+                this->focusOverallIncomeExpenses();
+            }
             currentAccount.addTransaction(tArticle);
-            currentMonth = tmonth;
-            displayMonthOnLabel();
+            currentMonth = tmonth;            
+            updateToCurrentMonth();
             currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
             currentAccount.save_Data();
             std::cout<<"Data saved"<<'\n';
@@ -2233,16 +2260,22 @@ void Gui_KeiboMoneyTracker::addIncome()
         newIncomeWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
 
         newIncomeWindow.exec();
-        std::string tname; double tprice; int tcategory; int tmonth; int tday; RepetitionOption trepeat = DO_NOT_REPEAT;  //Temporary variables
-        newIncomeWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat);
+        std::string tname; double tprice; int tcategory; int tmonth; int tday; RepetitionOption trepeat = DO_NOT_REPEAT; int tyear;  //Temporary variables
+        newIncomeWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat, tyear);
 
         if (newIncomeWindow.transactionNameOK && newIncomeWindow.transactionAmountOK)
         {
+            currentAccount.set_Year(tyear); //Update to year entered in transaction dialog. It can be the same as current selected year, it doesn't matter.
+            currentYear = tyear;
+            updateToCurrentYear();
+            if (focusingOverallIncomeExpenses == false){
+                this->focusOverallIncomeExpenses();
+            }
             std::vector<Transaction> newElementsAddedAutomatically;
             Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat, true);
             currentAccount.addTransaction(tArticle);
-            currentMonth = tmonth;
-            displayMonthOnLabel();
+            currentMonth = tmonth;            
+            updateToCurrentMonth();
             currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
             currentAccount.save_Data();
             displayArticlesOnTable();
@@ -2328,7 +2361,7 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
     {
         QItemSelectionModel *selection = ui->tableWidget->selectionModel();
         QModelIndexList highlightedRows = selection->selectedRows();
-        if (highlightedRows.count()>0 && highlightedRows.count()<2)
+        if (highlightedRows.count()>0 && highlightedRows.count()<2)   //If only one transaction is being selected.
         {
             TransactionDialog newArticleWindow;
             if (currentAccount.getAccountLanguage() == ENGLISH) {
@@ -2351,6 +2384,7 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
             int         tday        = 0;
             bool        tisincome   = false;
             RepetitionOption trepeat = DO_NOT_REPEAT;
+            int         tyear       = 0;
 
             if (it->IsIncome){
                 newArticleWindow.setCategoryList(currentAccount.IncomeGroupsNames);     ////Assign list of groups
@@ -2371,16 +2405,17 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
             newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
             newArticleWindow.exec();
 
-            newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat);
+            newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat, tyear);
 
             bool editionPossible  = false;
 
-            if ( ((it->Name      != tname)       ||
-                  (it->Amount     != tprice)      ||
-                  (it->Group  != tcategory)   ||
-                  (it->Month     != tmonth)      ||
-                  (it->Day       != tday)        ||
-                  (it->Repetition_Option != trepeat))   &&
+            if ( ((it->Name      != tname)           ||
+                  (it->Amount     != tprice)         ||
+                  (it->Group  != tcategory)          ||
+                  (it->Month     != tmonth)          ||
+                  (it->Day       != tday)            ||
+                  (it->Repetition_Option != trepeat) ||
+                  (tyear != currentYear) )              &&
                  newArticleWindow.transactionNameOK     &&
                  newArticleWindow.transactionAmountOK)
             {
@@ -2393,15 +2428,54 @@ void Gui_KeiboMoneyTracker::editSelectedTransaction()
 
             if (!tname.empty() && editionPossible)
             {
-                if (tisincome){
-                    Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat, true);
-                    currentAccount.editTransaction((*it), tArticle);
+                std::cout<<"EDITION POSSIBLE: \n";
+                if (tyear == currentYear)  //If year of transaction hasn't been changed just edit the transaction
+                {
+                    if (tisincome){
+                        Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat, true);
+                        currentAccount.editTransaction((*it), tArticle);
+                    }
+                    else if (!tisincome){
+                        Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat);
+                        currentAccount.editTransaction((*it), tArticle);
+                    }
+                    else {
+                        //Do nothing
+                    }
                 }
-                else if (!tisincome){
-                    Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat);
-                    currentAccount.editTransaction((*it), tArticle);
+                else // Else if year has been changed, delete transaction in previous year -> switch to new year -> and add transaction edited there.
+                {
+                    QModelIndex index = highlightedRows.at(0);
+                    int transactionId = index.row();
+                    currentAccount.deleteSingleTransaction(it->Month, transactionId);
+                    currentAccount.save_Data();   //Save in the previous year THAT a transaction has been deleted.
+
+                    currentAccount.set_Year(tyear);  //Update to year entered in transaction dialog. It can be the same as current selected year, it doesn't matter.
+                    currentYear = tyear;
+                    updateToCurrentYear();
+                    if (tisincome){
+                        Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat, true);
+                        currentAccount.addTransaction(tArticle);
+                        //std::cout<<"ADDED INCOME "<<tyear<<std::endl;
+                        currentAccount.save_Data();   //Save newly edited transaction in selected year.
+                    }
+                    else if (!tisincome){
+                        Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat);
+                        currentAccount.addTransaction(tArticle);
+                        //std::cout<<"ADDED OUTCOME "<<tyear<<std::endl;
+                        currentAccount.save_Data();   //Save newly edited transaction in selected year.
+                    }
+                    else {
+                        //Do nothing
+                    }
+
+                    if (focusingOverallIncomeExpenses == false){
+                        this->focusOverallIncomeExpenses();
+                    }
                 }
 
+                currentMonth = tmonth;
+                updateToCurrentMonth();
                 std::vector<Transaction> newElementsAddedAutomatically;
                 currentAccount.setElementsToRepeat(newElementsAddedAutomatically);
                 currentAccount.save_Data();
@@ -2478,6 +2552,7 @@ void Gui_KeiboMoneyTracker::copyTransaction()
         int         tday        = 0;
         bool        tisincome   = false;
         RepetitionOption trepeat = DO_NOT_REPEAT;
+        int         tyear       = 0;
 
         if (it->IsIncome){
             newArticleWindow.setCategoryList(currentAccount.IncomeGroupsNames);     ////Assign list of groups
@@ -2488,26 +2563,28 @@ void Gui_KeiboMoneyTracker::copyTransaction()
         }
         time_t T = time(0);
         struct tm * currentTime = localtime(&T);
+
         newArticleWindow.displayItemInfo(it->Name,
                                          it->Amount,
                                          it->Group,
                                          currentTime->tm_mon,
                                          currentTime->tm_mday-1,
                                          it->Repetition_Option,
-                                         currentYear);
+                                         realWorldYear);  // When copying a transaction, suggest copy it to the current real year (Not the year looking at).
 
         newArticleWindow.setModal(true);
         newArticleWindow.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
         newArticleWindow.exec();
 
-        newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat);
+        newArticleWindow.provideArticleInfo(tname, tprice, tcategory, tmonth, tday, trepeat, tyear);
 
         bool copyPossible  = false;
         if ( ((it->Name      != tname)       ||
-              (it->Amount     != tprice)      ||
-              (it->Group  != tcategory)   ||
+              (it->Amount    != tprice)      ||
+              (it->Group     != tcategory)   ||
               (it->Month     != tmonth)      ||
               (it->Day       != tday)        ||
+              (tyear         != currentYear) ||           //Check also if the same transaction is being copied to a different year.
               (it->Repetition_Option != trepeat))   &&
              newArticleWindow.transactionNameOK     &&
              newArticleWindow.transactionAmountOK)
@@ -2519,6 +2596,13 @@ void Gui_KeiboMoneyTracker::copyTransaction()
         ///--------------------------------------------------------------------------//////--------------------------------------------------------------------------///
         if (copyPossible)
         {
+            currentAccount.set_Year(tyear);  //Update to year entered in transaction dialog. It can be the same as current selected year, it doesn't matter.
+            currentYear = tyear;
+            updateToCurrentYear();
+            if (focusingOverallIncomeExpenses == false){
+                this->focusOverallIncomeExpenses();
+            }
+
             if (tisincome){
                 Transaction tArticle(tname, tprice, tmonth, tday, tcategory, trepeat, true);
                 currentAccount.addTransaction(tArticle);
@@ -3365,7 +3449,7 @@ void Gui_KeiboMoneyTracker::showAccountStats()
     ////////////////////////////////////////////// Gather all years containing data //////////////////////////////////////////////////////////////////////
     std::vector<Account> listOfYearsWithData;
 
-    //Search from 1900 until 2100
+    //Search from 1900 until 2200
     bool dataExists = false;
     Account tempAccount;
     tempAccount.setAccountFolderPath(currentAccount.getAccountFolderPath());

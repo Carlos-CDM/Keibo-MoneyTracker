@@ -158,10 +158,10 @@
   <widget class="CustomPushButton" name="pushButtonOk">
    <property name="geometry">
     <rect>
-     <x>375</x>
-     <y>125</y>
-     <width>85</width>
-     <height>29</height>
+     <x>409</x>
+     <y>120</y>
+     <width>51</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -208,6 +208,21 @@
    </property>
    <property name="text">
     <string>Repeat</string>
+   </property>
+  </widget>
+  <widget class="CustomComboBox" name="comboBoxYear">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>120</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+    </font>
    </property>
   </widget>
  </widget>

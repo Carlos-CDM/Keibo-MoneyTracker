@@ -43,6 +43,7 @@ TransactionDialog::TransactionDialog(QWidget *parent) :
         ui->comboBoxCategory->installEventFilter(this);
         ui->comboBoxDay->installEventFilter(this);
         ui->comboBoxMonth->installEventFilter(this);
+        ui->comboBoxYear->installEventFilter(this);
         ui->comboBoxRepeat->installEventFilter(this);
         ui->pushButtonOk->installEventFilter(this);
 
@@ -51,12 +52,14 @@ TransactionDialog::TransactionDialog(QWidget *parent) :
         ui->textName->setWordWrapMode(QTextOption::NoWrap);
         ui->textPrice->setWordWrapMode(QTextOption::NoWrap);
 
-        this->setTabOrder(ui->textName,ui->textPrice);
-        this->setTabOrder(ui->textPrice,ui->comboBoxCategory);
+        this->setTabOrder(ui->textName,        ui->textPrice);
+        this->setTabOrder(ui->textPrice,       ui->comboBoxRepeat);
+        this->setTabOrder(ui->comboBoxRepeat,  ui->comboBoxCategory);
         this->setTabOrder(ui->comboBoxCategory,ui->comboBoxDay);
-        this->setTabOrder(ui->comboBoxDay,ui->comboBoxMonth);
-        this->setTabOrder(ui->comboBoxMonth,ui->comboBoxRepeat);
-        this->setTabOrder(ui->comboBoxRepeat,ui->pushButtonOk);
+        this->setTabOrder(ui->comboBoxDay,     ui->comboBoxMonth);
+        this->setTabOrder(ui->comboBoxMonth,   ui->comboBoxYear);
+        this->setTabOrder(ui->comboBoxYear,    ui->pushButtonOk);
+
 
         this->setFixedSize(this->width(), this->height());        
 
@@ -151,6 +154,7 @@ void TransactionDialog::setOverallThemeStyleSheet(QString styleSheetString, bool
     this->ui->pushButtonOk->updateColorTheme(usingDarkTheme);
     this->ui->comboBoxDay->updateColorTheme(usingDarkTheme);
     this->ui->comboBoxMonth->updateColorTheme(usingDarkTheme);
+    this->ui->comboBoxYear->updateColorTheme(usingDarkTheme);
     this->ui->comboBoxRepeat->updateColorTheme(usingDarkTheme);
     this->ui->comboBoxCategory->updateColorTheme(usingDarkTheme);
     this->ui->textName->updateColorTheme(usingDarkTheme);
@@ -167,6 +171,7 @@ void TransactionDialog::checkAndSetTransaction() //Save/Set all variables/inform
     Month_        = ui->comboBoxMonth->currentIndex();
     Day_          = ui->comboBoxDay->currentIndex();
     Category_     = ui->comboBoxCategory->currentIndex();
+    Year_         = ui->comboBoxYear->currentText().toInt();
     Repeat_       = static_cast<RepetitionOption>(ui->comboBoxRepeat->currentIndex());
 
     //If Price has a comma instead of a point replace it by a point
@@ -306,7 +311,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
         if (qobject_cast<QTextEdit*>(obj) == ui->textName)
           {
             QKeyEvent* key = static_cast<QKeyEvent*>(event);
-            if ( (key->key()==Qt::Key_Enter) || (key->key()==Qt::Key_Return) ) {
+            if ( (key->key()==Qt::Key_Enter) || (key->key()==Qt::Key_Return) ) {     //When pressing "Enter" on TextName
                 this->checkAndSetTransaction();
                 if(transactionNameOK && transactionAmountOK){ //If a name and amount have been given, close.
                     this->close();
@@ -357,7 +362,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                     }
                 return true;
             }
-            else if (key->key()==Qt::Key_Tab) {
+            else if (key->key()==Qt::Key_Tab) {                             //When pressing "Tab" on TextName
                 this->focusNextChild();
                 //std::cout<<"KEY TAB PRESSED FROM NAME"<<'\n';
                 this->ui->textPrice->selectAll();   //Select all text in Price
@@ -367,7 +372,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
         else if (qobject_cast<QTextEdit*>(obj) == ui->textPrice)
           {
             QKeyEvent* key = static_cast<QKeyEvent*>(event);
-            if ( (key->key()==Qt::Key_Enter) || (key->key()==Qt::Key_Return) ) {
+            if ( (key->key()==Qt::Key_Enter) || (key->key()==Qt::Key_Return) ) {   //When pressing "Enter" on textPrice
                 this->checkAndSetTransaction();
                 if(transactionNameOK && transactionAmountOK){ //If a name and amount have been given, close.
                     this->close();
@@ -439,7 +444,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                 }
                 return true;
             }
-            else if (key->key()==Qt::Key_Tab) {
+            else if (key->key()==Qt::Key_Tab) {   //When pressing "Tab" on textPrice
                 QTextCursor cursor = ui->textPrice->textCursor();
                 cursor.movePosition( QTextCursor::End );
                 ui->textPrice->setTextCursor( cursor );
@@ -477,6 +482,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                     eraseConfirmationWindow.exec();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
+                    this->focusPreviousChild();
                 }
                 else if (transactionNameOK && !transactionAmountOK){
                     eraseConfirmation_dialog eraseConfirmationWindow;
@@ -498,6 +504,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
                     eraseConfirmationWindow.exec();
+                    this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->ui->textPrice->selectAll();   //Select all text in Price
                 }
@@ -521,6 +528,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
                     eraseConfirmationWindow.exec();
+                    this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
                 }
@@ -562,6 +570,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                     this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
+                    this->focusPreviousChild();
                 }
                 else if (transactionNameOK && !transactionAmountOK){
                     eraseConfirmation_dialog eraseConfirmationWindow;
@@ -583,6 +592,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
                     eraseConfirmationWindow.exec();
+                    this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->ui->textPrice->selectAll();   //Select all text in Price
@@ -607,6 +617,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
                     eraseConfirmationWindow.exec();
+                    this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
@@ -626,7 +637,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                 this->checkAndSetTransaction();
                 if(transactionNameOK && transactionAmountOK){ //If a name and amount have been given, close.
                     this->close();
-                } else if (!transactionNameOK && transactionAmountOK){
+                } else if (!transactionNameOK && transactionAmountOK){  //If a name wrong, go to name.
                     eraseConfirmation_dialog eraseConfirmationWindow;
                     eraseConfirmationWindow.setModal(true);
                     eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
@@ -673,6 +684,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                     this->focusPreviousChild();
                     this->focusPreviousChild();
                     this->focusPreviousChild();
+                    this->focusPreviousChild();
                     this->ui->textPrice->selectAll();   //Select all text in Price
                 }
                 else if (!transactionNameOK && !transactionAmountOK){
@@ -703,10 +715,96 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
             }
             else if (key->key()==Qt::Key_Tab) {
                 this->focusNextChild();
-                std::cout<<"KEY TAB PRESSED FROM MONTH"<<'\n';
+                //std::cout<<"KEY TAB PRESSED FROM MONTH"<<'\n';
                 return true;
             }
           }
+        else if (qobject_cast<QComboBox*>(obj) == ui->comboBoxYear)
+           {
+             QKeyEvent* key = static_cast<QKeyEvent*>(event);
+             if ( (key->key()==Qt::Key_Enter) || (key->key()==Qt::Key_Return) ) {
+                 this->checkAndSetTransaction();
+                 if(transactionNameOK && transactionAmountOK){ //If a name and amount have been given, close.
+                     this->close();
+                 } else if (!transactionNameOK && transactionAmountOK){
+                     eraseConfirmation_dialog eraseConfirmationWindow;
+                     eraseConfirmationWindow.setModal(true);
+                     eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
+                     if (iLanguage == ENGLISH)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Information");
+                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
+                     }
+                     else if (iLanguage == GERMAN)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Information");
+                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
+                     }
+                     else if (iLanguage == SPANISH)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Información");
+                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
+                     }
+                     eraseConfirmationWindow.exec();
+                     this->focusNextChild();
+                     this->focusNextChild();
+                 }
+                 else if (transactionNameOK && !transactionAmountOK){
+                     eraseConfirmation_dialog eraseConfirmationWindow;
+                     eraseConfirmationWindow.setModal(true);
+                     eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
+                     if (iLanguage == ENGLISH)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Information");
+                         eraseConfirmationWindow.setInfoText("Please enter a valid amount.");
+                     }
+                     else if (iLanguage == GERMAN)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Information");
+                         eraseConfirmationWindow.setInfoText("Bitte geben Sie einen gültigen Betrag ein.");
+                     }
+                     else if (iLanguage == SPANISH)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Información");
+                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
+                     }
+                     eraseConfirmationWindow.exec();
+                     this->focusNextChild();
+                     this->focusNextChild();
+                     this->focusNextChild();
+                     this->ui->textPrice->selectAll();   //Select all text in Price
+                 }
+                 else if (!transactionNameOK && !transactionAmountOK){
+                     eraseConfirmation_dialog eraseConfirmationWindow;
+                     eraseConfirmationWindow.setModal(true);
+                     eraseConfirmationWindow.setOverallThemeStyleSheet(overallThemeStyleSheetString, usingDarkTheme);
+                     if (iLanguage == ENGLISH)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Information");
+                         eraseConfirmationWindow.setInfoText("Every transaction needs a name.");
+                     }
+                     else if (iLanguage == GERMAN)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Information");
+                         eraseConfirmationWindow.setInfoText("Ein Name wird benötigt.");
+                     }
+                     else if (iLanguage == SPANISH)
+                     {
+                         eraseConfirmationWindow.setWindowTitle(" Información");
+                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
+                     }
+                     eraseConfirmationWindow.exec();
+                     this->focusNextChild();
+                     this->focusNextChild();
+                 }
+                 return true;
+             }
+             else if (key->key()==Qt::Key_Tab) {
+                 this->focusNextChild();
+                 //std::cout<<"KEY TAB PRESSED FROM MONTH"<<'\n';
+                 return true;
+             }
+           }
         else if (qobject_cast<QComboBox*>(obj) == ui->comboBoxRepeat)
           {
             QKeyEvent* key = static_cast<QKeyEvent*>(event);
@@ -734,8 +832,8 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
                     eraseConfirmationWindow.exec();
-                    this->focusNextChild();
-                    this->focusNextChild();
+                    this->focusPreviousChild();
+                    this->focusPreviousChild();
                 }
                 else if (transactionNameOK && !transactionAmountOK){
                     eraseConfirmation_dialog eraseConfirmationWindow;
@@ -757,9 +855,7 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                         eraseConfirmationWindow.setInfoText("Por favor introduzca un monto válido.");
                     }
                     eraseConfirmationWindow.exec();
-                    this->focusNextChild();
-                    this->focusNextChild();
-                    this->focusNextChild();
+                    this->focusPreviousChild();
                     this->ui->textPrice->selectAll();   //Select all text in Price
                 }
                 else if (!transactionNameOK && !transactionAmountOK){
@@ -782,14 +878,14 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
                         eraseConfirmationWindow.setInfoText("Cada transacción necesita un nombre.");
                     }
                     eraseConfirmationWindow.exec();
-                    this->focusNextChild();
-                    this->focusNextChild();
+                    this->focusPreviousChild();
+                    this->focusPreviousChild();
                 }
                 return true;
             }
             else if (key->key()==Qt::Key_Tab) {
                 this->focusNextChild();
-                std::cout<<"KEY TAB PRESSED FROM COMBO BOX REPEAT"<<'\n';
+                //std::cout<<"KEY TAB PRESSED FROM COMBO BOX REPEAT"<<'\n';
                 return true;
             }
           }
@@ -885,7 +981,9 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
             this->ui->comboBoxDay->setColorForMouseButtonPressEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
             this->ui->comboBoxMonth->setColorForMouseButtonPressEvent();
-        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxYear) {
+            this->ui->comboBoxYear->setColorForMouseButtonPressEvent();
+        }else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
             this->ui->comboBoxCategory->setColorForMouseButtonPressEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
             this->ui->comboBoxRepeat->setColorForMouseButtonPressEvent();
@@ -903,7 +1001,9 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
             this->ui->comboBoxDay->setColorForEnterEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
             this->ui->comboBoxMonth->setColorForEnterEvent();
-        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxYear) {
+            this->ui->comboBoxYear->setColorForEnterEvent();
+        }else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
             this->ui->comboBoxCategory->setColorForEnterEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
             this->ui->comboBoxRepeat->setColorForEnterEvent();
@@ -921,7 +1021,9 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
              this->ui->comboBoxDay->setColorForEnterEvent();
          } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
              this->ui->comboBoxMonth->setColorForEnterEvent();
-         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
+         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxYear) {
+             this->ui->comboBoxYear->setColorForEnterEvent();
+         }else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
              this->ui->comboBoxCategory->setColorForEnterEvent();
          } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
              this->ui->comboBoxRepeat->setColorForEnterEvent();
@@ -939,6 +1041,8 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
              this->ui->comboBoxDay->setColorForLeaveEvent();
          } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
              this->ui->comboBoxMonth->setColorForLeaveEvent();
+         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxYear) {
+             this->ui->comboBoxYear->setColorForLeaveEvent();
          } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
              this->ui->comboBoxCategory->setColorForLeaveEvent();
          } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
@@ -957,6 +1061,8 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
             this->ui->comboBoxDay->setColorForEnterEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
             this->ui->comboBoxMonth->setColorForEnterEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxYear) {
+            this->ui->comboBoxYear->setColorForEnterEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
             this->ui->comboBoxCategory->setColorForEnterEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
@@ -975,6 +1081,8 @@ bool TransactionDialog::eventFilter(QObject *obj, QEvent *event)
             this->ui->comboBoxDay->setColorForLeaveEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxMonth) {
             this->ui->comboBoxMonth->setColorForLeaveEvent();
+        } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxYear) {
+            this->ui->comboBoxYear->setColorForLeaveEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxCategory) {
             this->ui->comboBoxCategory->setColorForLeaveEvent();
         } else if (qobject_cast<QWidget*>(obj) == ui->comboBoxRepeat) {
@@ -996,16 +1104,24 @@ void TransactionDialog::setCategoryList(std::vector<std::string> categoryList)
     }
 }
 
+void TransactionDialog::setListOfPossibleYears()
+{
+    for (int possibleYear = 1900; possibleYear != 2201; ++possibleYear)
+        {
+            ui->comboBoxYear->addItem(QString::number(possibleYear));
+        }
+}
+
 void TransactionDialog::displayItemInfo(std::string Nam, double Pri, int Cat, int Mon, int Day, RepetitionOption Repeat, int year)
 {
     this->ui->comboBoxDay->clear();
-    Year = year;
     int Month = Mon;
     int NumberOfDaysInMonth = 0;
+    setListOfPossibleYears();
 
     if( Month == 1)
     {
-        if((Year%400==0) || (Year%4==0 && Year%100!=0))
+        if((year%400==0) || (year%4==0 && year%100!=0))
             NumberOfDaysInMonth = 29;
         else
             NumberOfDaysInMonth = 28;
@@ -1032,6 +1148,20 @@ void TransactionDialog::displayItemInfo(std::string Nam, double Pri, int Cat, in
     ui->comboBoxMonth->setCurrentIndex(Mon);
     ui->comboBoxDay->setCurrentIndex(Day);
     ui->comboBoxRepeat->setCurrentIndex(static_cast<int>(Repeat));
+
+    int currentYearId = 0;
+        for (int possibleYear = 1900; possibleYear != 2201; ++possibleYear)
+        {
+            if (year == possibleYear)
+            {
+                break;
+            }
+            else
+            {
+                ++currentYearId;
+            }
+        }
+        ui->comboBoxYear->setCurrentIndex(currentYearId);
 }
 
 void TransactionDialog::on_pushButtonOk_clicked()
@@ -1087,7 +1217,7 @@ void TransactionDialog::on_pushButtonOk_clicked()
     }
 }
 
-void TransactionDialog::provideArticleInfo(std::string & Nam, double &Pri, int &Cat, int &Mon, int &Day, RepetitionOption &Repeat)
+void TransactionDialog::provideArticleInfo(std::string & Nam, double &Pri, int &Cat, int &Mon, int &Day, RepetitionOption &Repeat, int &Year)
 {
     Nam     = Name_.toStdString();
     Pri     = Price_.toDouble();
@@ -1095,9 +1225,10 @@ void TransactionDialog::provideArticleInfo(std::string & Nam, double &Pri, int &
     Day     = Day_+1;
     Cat     = Category_;
     Repeat  = Repeat_;
+    Year    = Year_;
 }
 
-void TransactionDialog::setNumberOfDaysInSelectedMonth(int selectedMonth)
+void TransactionDialog::setNumberOfDaysInSelectedMonth(int selectedMonth, int selectedYear)
 {
     int selectedDay = this->ui->comboBoxDay->currentIndex();
     this->ui->comboBoxDay->clear();
@@ -1106,7 +1237,7 @@ void TransactionDialog::setNumberOfDaysInSelectedMonth(int selectedMonth)
 
     if( selectedMonth == 1)
     {
-        if((Year%400==0) || (Year%4==0 && Year%100!=0))
+        if((selectedYear%400==0) || (selectedYear%4==0 && selectedYear%100!=0))
             NumberOfDaysInMonth = 29;
         else
             NumberOfDaysInMonth = 28;
@@ -1131,5 +1262,11 @@ void TransactionDialog::setNumberOfDaysInSelectedMonth(int selectedMonth)
 
 void TransactionDialog::on_comboBoxMonth_currentIndexChanged(int index)
 {
-    this->setNumberOfDaysInSelectedMonth(index);
+    this->setNumberOfDaysInSelectedMonth(index, ui->comboBoxYear->currentText().toInt());
+}
+
+void TransactionDialog::on_comboBoxYear_currentIndexChanged(int index)
+{
+
+    this->setNumberOfDaysInSelectedMonth(ui->comboBoxMonth->currentIndex(), ui->comboBoxYear->currentText().toInt());
 }

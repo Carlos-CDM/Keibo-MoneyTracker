@@ -38,15 +38,16 @@ public:
     explicit TransactionDialog(QWidget *parent = 0);
     ~TransactionDialog();
 
-    void provideArticleInfo(std::string &Nam, double &Pri, int &Cat, int &Mon, int &Day, RepetitionOption &Repeat);
+    void provideArticleInfo(std::string &Nam, double &Pri, int &Cat, int &Mon, int &Day, RepetitionOption &Repeat, int &Year);
     void setCategoryList(std::vector<std::string> categoryList);
+    void setListOfPossibleYears();
     void displayItemInfo(std::string Nam, double Pri, int Cat, int Mon, int Day, RepetitionOption Repeat, int year);
     bool transactionNameOK = false;
     bool transactionAmountOK = false;
     bool usingDarkTheme = false;
 
     void setOverallThemeStyleSheet(QString styleSheetString, bool tUsingDarkTheme);
-    void setNumberOfDaysInSelectedMonth(int selectedMonth);
+    void setNumberOfDaysInSelectedMonth(int selectedMonth, int selectedYear);
 
     void setLanguage(const Language & accountLanguage);
 
@@ -54,18 +55,21 @@ private slots:
     void on_pushButtonOk_clicked();
     void on_comboBoxMonth_currentIndexChanged(int index);
 
+    void on_comboBoxYear_currentIndexChanged(int index);
+
 private:
     Ui::TransactionDialog *ui;
     RepetitionOption        Repeat_;
     QString     Name_ ;
     QString     Price_;
+    int         Year_;
     int         Month_;
     int         Day_;
     int         Category_;
 
     Language iLanguage = ENGLISH;
 
-    int Year = 2020;
+    std::vector<int> ListOfPossibleYears;
 
     bool eventFilter(QObject *obj, QEvent *event);
 
