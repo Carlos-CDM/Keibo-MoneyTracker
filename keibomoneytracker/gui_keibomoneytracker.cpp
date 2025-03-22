@@ -1,5 +1,5 @@
 /*
-* Copyright © 2020 Carlos Constancio Dominguez Martinez
+* Copyright © 2020-2025 Carlos Constancio Dominguez Martinez
 *
 * This file is part of Keibo-MoneyTracker
 *
@@ -28,6 +28,7 @@
 #include "checkfaultytransactionsdialog.h"
 #include "accountstatsdialog.h"
 #include "newelementsaddedautomaticallydialog.h"
+#include "exportdialog.h"
 
 #include "accountmanagerdialog.h"
 #include "themecolorsdialog.h"
@@ -1485,6 +1486,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         this->ui->menuFile->setTitle("File");
         this->ui->actionNew->setText("New");
         this->ui->actionOpen->setText("Open");
+        this->ui->actionExport->setText("Export");
         this->ui->actionExit->setText("Exit");
         this->ui->menuEdit->setTitle("Edit");
         this->ui->actionManage_Groups->setText("Expenses groups");
@@ -1519,6 +1521,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         this->ui->menuFile->setTitle("Datei");
         this->ui->actionNew->setText("Neu");
         this->ui->actionOpen->setText("Öffnen");
+        this->ui->actionExport->setText("Exportieren");
         this->ui->actionExit->setText("Beenden");
         this->ui->menuEdit->setTitle("Bearbeiten");
         this->ui->actionManage_Groups->setText("Gruppen Ausgaben");
@@ -1553,6 +1556,7 @@ void Gui_KeiboMoneyTracker::updateUiToLanguage(const Language &iLanguage)
         this->ui->menuFile->setTitle("Archivo");
         this->ui->actionNew->setText("Nuevo");
         this->ui->actionOpen->setText("Abrir");
+        this->ui->actionExport->setText("Exportar");
         this->ui->actionExit->setText("Salir");
         this->ui->menuEdit->setTitle("Editar");
         this->ui->actionManage_Groups->setText("Grupos de egresos");
@@ -3455,7 +3459,7 @@ void Gui_KeiboMoneyTracker::showAccountStats()
     tempAccount.setAccountFolderPath(currentAccount.getAccountFolderPath());
     tempAccount.loadIncomeGroups();
     tempAccount.loadExpensesGroups();
-    for (int x = 1900; x != 2201; ++x)
+    for (int x = 1900; x != 2201; ++x) //If humans still exist by 2200, will they still use money?
     {
         tempAccount.clear_Year();
         tempAccount.set_Year(x);
@@ -4933,3 +4937,52 @@ void Gui_KeiboMoneyTracker::on_actionDonate_triggered()
         iDonateDialog.exec();
     }
 }
+
+void Gui_KeiboMoneyTracker::on_actionExport_triggered()
+{
+    std::vector<int> listOfYearsWithData;
+    Account *tempAccount = new Account();
+    tempAccount->setAccountFolderPath(currentAccount.getAccountFolderPath());
+    tempAccount->loadIncomeGroups();
+    tempAccount->loadExpensesGroups();
+    bool dataExists = false;
+
+    for (int x = 1900; x != 2201; ++x) //If humans still exist by 2200, will they still use money?
+    {
+        tempAccount->clear_Year();
+        tempAccount->set_Year(x);
+        if (tempAccount->load_Data()){
+            if (tempAccount->getTotalNumberOfElements() > 0) {
+                listOfYearsWithData.push_back(x);
+                dataExists = true;
+                }
+        }
+    }
+
+    if (!dataExists) {
+        eraseConfirmation_dialog iExportNotPossibleDialog;
+        if (currentAccount.getAccountLanguage() == ENGLISH){
+            iExportNotPossibleDialog.setWindowTitle(" Information");
+            iExportNotPossibleDialog.setInfoText("There is not enough data to export.");
+        } else if (currentAccount.getAccountLanguage() == GERMAN){
+            iExportNotPossibleDialog.setWindowTitle(" Information");
+            iExportNotPossibleDialog.setInfoText("Es gibt nicht genug Daten zu exportieren.");
+        } else if (currentAccount.getAccountLanguage() == SPANISH){
+            iExportNotPossibleDialog.setWindowTitle(" Información");
+            iExportNotPossibleDialog.setInfoText("No hay suficientes datos a exportar.");
+        }
+        iExportNotPossibleDialog.setModal(true);
+        iExportNotPossibleDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
+        iExportNotPossibleDialog.exec();
+    } else {
+        ExportDialog iExportDialog;
+        iExportDialog.setOverallThemeStyleSheet(currentOverallThemeStyleSheet, usingDarkTheme);
+        iExportDialog.setAccount(&currentAccount);
+        iExportDialog.setListOfYearsWithData(listOfYearsWithData);
+
+        iExportDialog.exec();
+    }
+
+    delete tempAccount;
+}
+

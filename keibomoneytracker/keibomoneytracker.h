@@ -1,5 +1,5 @@
 /*
-* Copyright © 2020 Carlos Constancio Dominguez Martinez
+* Copyright © 2020-2025 Carlos Constancio Dominguez Martinez
 *
 * This file is part of Keibo-MoneyTracker
 *
@@ -240,6 +240,9 @@ public:
     std::string getAccountFolderPath()                          {return ACCOUNT_FOLDER_PATH;}
 
     inline bool isCurrentYearLeap();
+
+    bool exportDataToCsvFile(std::string fileName, std::vector<int> &listOfYearsToExport);
+    std::string deleteCommaFromText(std::string &text);
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ///--------------------------       PRIVATE MEMBERS      -----------------------------///

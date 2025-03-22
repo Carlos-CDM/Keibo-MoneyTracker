@@ -50,7 +50,7 @@ Keibo-MoneyTracker is written with the help of the Qt library.
 
 Using Qt 5.15.0
 
-(c) 2021-2023 Carlos Constancio Dominguez Martinez</string>
+(c) 2021-2025 Carlos Constancio Dominguez Martinez</string>
      </property>
     </widget>
    </widget>
@@ -858,7 +858,7 @@ border-color: rgba(0, 0, 0, 0);</string>
     <number>0</number>
    </property>
    <property name="plainText">
-    <string>Version 1.5.0</string>
+    <string>Version 1.6.0</string>
    </property>
   </widget>
   <widget class="QGraphicsView" name="graphicsViewIcon">

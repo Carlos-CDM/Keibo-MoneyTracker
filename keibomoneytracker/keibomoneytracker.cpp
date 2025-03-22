@@ -1,5 +1,5 @@
 /*
-* Copyright © 2020 Carlos Constancio Dominguez Martinez
+* Copyright © 2020-2025 Carlos Constancio Dominguez Martinez
 *
 * This file is part of Keibo-MoneyTracker
 *
@@ -1316,6 +1316,7 @@ bool Account::save_Data()
        }
    }
    savedata_File.close();
+
    return true;
 }
 
@@ -2130,4 +2131,222 @@ double Account::getPercentageOfExpensesGroup(const int &groupId)
     else {
         return 0.0;
     }
+}
+
+bool Account::exportDataToCsvFile(std::string savingPath, std::vector<int> &listOfYearsToExport)//File name can be set by user
+{
+    bool result = false;
+
+    //To open the current year after generating csv's of exported years.
+    int currentlyOpenedYear = getYear();
+
+    for (std::vector<int>::iterator i = listOfYearsToExport.begin(); i != listOfYearsToExport.end(); ++i)
+    {
+        clear_Year();
+        set_Year(*i);
+        if (load_Data())
+            {
+
+                std::ofstream csvFile;
+                csvFile.open(savingPath+"/"+getAccountName()+"_"+std::to_string(this->Year)+".csv");
+
+                //Print Account name and year
+                csvFile<<getAccountName()<<','<<*i<<"\n\n";
+
+
+                for (size_t month= 0; month!= 12; ++month)  //Iterate through all months
+                {
+                    if (getNumberOfTransactionsInMonth(month) < 1) {
+                        continue;
+                    }
+
+                    csvFile<<','<<getMonthInLanguage(month, ACCOUNT_LANGUAGE)<<'\n';
+
+                    //Print header "name / amount / /day / group " for the columns
+                    switch(ACCOUNT_LANGUAGE)
+                    {
+                        case ENGLISH:
+                            csvFile<<"Name"<<','<<"Day"<<','<<"Group"<<','<<"Amount"<<"\n\n"; break;
+                        case GERMAN:
+                            csvFile<<"Name"<<','<<"Tag"<<','<<"Gruppe"<<','<<"Betrag"<<"\n\n"; break;
+                        case SPANISH:
+                            csvFile<<"Nombre"<<','<<"Día"<<','<<"Grupo"<<','<<"Monto"<<"\n\n"; break;
+                        default:
+                            break;
+                    }
+
+                    //Print list of transactions for each month
+                    for (std::vector<Transaction>::iterator it = Yearly_Articles[month].begin(); it != Yearly_Articles[month].end(); ++it)
+                    {
+                        if (it->IsIncome)
+                        {
+                            csvFile<<deleteCommaFromText(it->Name)
+                                      <<','<<it->Day
+                                     <<','<<deleteCommaFromText(IncomeGroupsNames[it->Group])
+                                    <<','<<it->Amount
+                                  <<'\n';
+                        }
+                        else
+                        {
+                            csvFile<<deleteCommaFromText(it->Name)
+                                      <<','<<it->Day
+                                     <<','<<deleteCommaFromText(ExpensesGroupsNames[it->Group])
+                                    <<','<<it->Amount
+                                  <<'\n';
+                        }
+
+                    }
+
+                    csvFile<<'\n';
+                    //Show balances for each month
+                    switch(ACCOUNT_LANGUAGE)
+                    {
+                        case ENGLISH:
+                            csvFile<<"Income"<<','<<','<<','<<getIncomeInMonth(month)<<'\n';
+                            csvFile<<"Expenses"<<','<<','<<','<<getExpensesInMonth(month)<<'\n';
+                            csvFile<<"Balance"<<','<<','<<','<<getBalanceInMonth(month)<<'\n'<<'\n'<<'\n'; break;
+                        case GERMAN:
+                            csvFile<<"Einkommen"<<','<<','<<','<<getIncomeInMonth(month)<<'\n';
+                            csvFile<<"Ausgaben"<<','<<','<<','<<getExpensesInMonth(month)<<'\n';
+                            csvFile<<"Bilanz"<<','<<','<<','<<getBalanceInMonth(month)<<'\n'<<'\n'<<'\n'; break;
+                        case SPANISH:
+                            csvFile<<"Ingreso"<<','<<','<<','<<getIncomeInMonth(month)<<'\n';
+                            csvFile<<"Egreso"<<','<<','<<','<<getExpensesInMonth(month)<<'\n';
+                            csvFile<<"Balance"<<','<<','<<','<<getBalanceInMonth(month)<<'\n'<<'\n'<<'\n'; break;
+                        default:
+                            break;
+                    }
+                }
+
+                    //Print Income groups
+                    switch(ACCOUNT_LANGUAGE)
+                    {
+                        case ENGLISH:
+                            csvFile<<'\n'<<"Income Groups"<<'\n'<<'\n'; break;
+                        case GERMAN:
+                            csvFile<<'\n'<<"Gruppe Einkommen"<<'\n'<<'\n'; break;
+                        case SPANISH:
+                            csvFile<<'\n'<<"Grupos de Ingresos"<<'\n'<<'\n'; break;
+                        default:
+                            break;
+                    }
+
+                    for(size_t groupId = 0; groupId != IncomeGroupsNames.size(); ++groupId)
+                    {
+                        if (getTotalNumberOfIncomeTransactionsInGroup(groupId) < 1) {
+                            continue;
+                        }
+
+                        csvFile<<IncomeGroupsNames[groupId]<<'\n';
+
+                        switch(ACCOUNT_LANGUAGE)
+                        {
+                            case ENGLISH:
+                                csvFile<<"Name"<<','<<"Month"<<','<<"Day"<<','<<"Amount"<<"\n\n"; break;
+                            case GERMAN:
+                                csvFile<<"Name"<<','<<"Monat"<<','<<"Tag"<<','<<"Betrag"<<"\n\n"; break;
+                            case SPANISH:
+                                csvFile<<"Nombre"<<','<<"Mes"<<','<<"Día"<<','<<"Monto"<<"\n\n"; break;
+                            default:
+                                break;
+                        }
+
+                        std::vector<Transaction> listOfTransactionsOfIncomeGroup = getListOfIncomeItemsOfGroup(groupId);
+                        for(std::vector<Transaction>::iterator t = listOfTransactionsOfIncomeGroup.begin();
+                            t != listOfTransactionsOfIncomeGroup.end(); ++t)
+                        {
+                            csvFile<<t->Name<<','<<getMonthInLanguage(t->Month, ACCOUNT_LANGUAGE)<<','<<t->Day<<','<<t->Amount<<'\n';
+                        }
+
+                        csvFile<<'\n';
+                        switch(ACCOUNT_LANGUAGE)
+                        {
+                            case GERMAN:
+                                csvFile <<"Gesamtbetrag"<<','<<','<<','<<getTotalIncomeOfGroup(groupId)<<'\n'; break;
+                            default:
+                                csvFile <<"Total"<<','<<','<<','<<getTotalIncomeOfGroup(groupId)<<'\n'; break;
+
+                        }
+
+                        csvFile<<"\n\n";
+                    }
+
+                    //Print Expenses groups
+                    switch(ACCOUNT_LANGUAGE)
+                    {
+                        case ENGLISH:
+                            csvFile<<'\n'<<"Expenses Groups"<<'\n'<<'\n'; break;
+                        case GERMAN:
+                            csvFile<<'\n'<<"Gruppe Ausgaben"<<'\n'<<'\n'; break;
+                        case SPANISH:
+                            csvFile<<'\n'<<"Grupos de Egresos"<<'\n'<<'\n'; break;
+                        default:
+                            break;
+                    }
+
+                    for(size_t groupId = 0; groupId != ExpensesGroupsNames.size(); ++groupId)
+                    {
+                        if (getTotalNumberOfExpensesTransactionsInGroup(groupId) < 1) {
+                            continue;
+                        }
+
+                        csvFile<<ExpensesGroupsNames[groupId]<<'\n';
+
+                        switch(ACCOUNT_LANGUAGE)
+                        {
+                            case ENGLISH:
+                                csvFile<<"Name"<<','<<"Month"<<','<<"Day"<<','<<"Amount"<<"\n\n"; break;
+                            case GERMAN:
+                                csvFile<<"Name"<<','<<"Monat"<<','<<"Tag"<<','<<"Betrag"<<"\n\n"; break;
+                            case SPANISH:
+                                csvFile<<"Nombre"<<','<<"Mes"<<','<<"Día"<<','<<"Monto"<<"\n\n"; break;
+                            default:
+                                break;
+                        }
+
+                        std::vector<Transaction> listOfTransactionsOfExpensesGroup = getListOfExpensesItemsOfGroup(groupId);
+                        for(std::vector<Transaction>::iterator t = listOfTransactionsOfExpensesGroup.begin();
+                            t != listOfTransactionsOfExpensesGroup.end(); ++t)
+                        {
+                            csvFile<<deleteCommaFromText(t->Name)<<','<<getMonthInLanguage(t->Month, ACCOUNT_LANGUAGE)<<','<<t->Day<<','<<t->Amount<<'\n';
+                        }
+
+                        csvFile<<'\n';
+                        switch(ACCOUNT_LANGUAGE)
+                        {
+                            case GERMAN:
+                                csvFile <<"Gesamtbetrag"<<','<<','<<','<<getTotalExpensesOfGroup(groupId)<<'\n'; break;
+                            default:
+                                csvFile <<"Total"<<','<<','<<','<<getTotalExpensesOfGroup(groupId)<<'\n'; break;
+
+                        }
+                        csvFile<<"\n\n";
+                    }
+
+                csvFile.close();
+
+            }
+        }
+
+    clear_Year();
+    set_Year(currentlyOpenedYear);
+    load_Data();
+
+    return result;
+}
+
+std::string Account::deleteCommaFromText(std::string &text)
+{
+    std::string result;
+    for(std::string::iterator it = text.begin(); it != text.end(); ++it)
+    {
+        if (*it != ',') {
+            result += *it;
+        }
+        else {
+            result += ' ';
+        }
+    }
+
+    return result;
 }

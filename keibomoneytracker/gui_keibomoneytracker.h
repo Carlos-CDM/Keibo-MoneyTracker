@@ -1,5 +1,5 @@
 /*
-* Copyright © 2020 Carlos Constancio Dominguez Martinez
+* Copyright © 2020-2025 Carlos Constancio Dominguez Martinez
 *
 * This file is part of Keibo-MoneyTracker
 *
@@ -137,6 +137,8 @@ private slots:
     void on_actionAbout_triggered();
     void on_actionDonate_triggered();
 
+
+    void on_actionExport_triggered();
 
 private:
     Ui::Gui_KeiboMoneyTracker *ui;

@@ -1,5 +1,9 @@
+#ifndef EXPORTDIALOG_H
+#define EXPORTDIALOG_H
+
+#include <QDialog>
 /*
-* Copyright © 2020 Carlos Constancio Dominguez Martinez
+* Copyright © 2020-2025 Carlos Constancio Dominguez Martinez
 *
 * This file is part of Keibo-MoneyTracker
 *
@@ -19,39 +23,37 @@
 * Authored by: Carlos Constancio Dominguez Martinez <dmartinez.carlos@gmail.com>
 */
 
-#ifndef DONATEDIALOG_H
-#define DONATEDIALOG_H
-
-#include <QDialog>
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-#include <keibomoneytrackerinclude.h>
+#include "keibomoneytracker.h"
 
 namespace Ui {
-class DonateDialog;
+class ExportDialog;
 }
 
-class DonateDialog : public QDialog
+class ExportDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DonateDialog(QWidget *parent = nullptr);
-    ~DonateDialog();
+    explicit ExportDialog(QWidget *parent = nullptr);
+    ~ExportDialog();
 
-    void setLanguageAndStyleSheet(const Language &iLanguage, const QString &iStyleSheet, bool usingDarkTheme);
+    void setAccount(Account *tAccount);
+    void setListOfYearsWithData(std::vector<int>& listOfYearsWithData);
+    void setOverallThemeStyleSheet(QString styleSheetString, bool useDarkTheme);
 
 private slots:
-    void on_pushButtonDonate_clicked();
+    void on_exportButton_clicked();
+    void on_cancelButton_clicked();
 
 private:
-    Ui::DonateDialog *ui;
-    const QString DonateLink = "https://paypal.me/codingjoker?country.x=MX&locale.x=es_XC";
-    void setImageOnLabel(const QString &imagePath);
-    QGraphicsPixmapItem *item;
-    QGraphicsScene *scene;
-
+    Ui::ExportDialog *ui;
+    Account *mainAccount = nullptr;
+    QString homeFolder   = "/home";
     bool eventFilter(QObject *obj, QEvent *event);
+    QString styleSheetStr;
+    bool usingDarkTheme = false;
+
+
 };
 
-#endif // DONATEDIALOG_H
+#endif // EXPORTDIALOG_H

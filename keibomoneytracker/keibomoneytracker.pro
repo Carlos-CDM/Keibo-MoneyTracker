@@ -18,6 +18,7 @@ SOURCES += main.cpp \
     custompushbutton.cpp \
     customtextedit.cpp \
     donatedialog.cpp \
+    exportdialog.cpp \
     gui_keibomoneytracker.cpp \
     keibomoneytracker.cpp \
     myopenglwidget.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     custompushbutton.h \
     customtextedit.h \
     donatedialog.h \
+    exportdialog.h \
     gui_keibomoneytracker.h \
     keibomoneytracker.h \
     myopenglwidget.h \
@@ -67,6 +69,7 @@ FORMS += \
     checkfaultytransactionsdialog.ui \
     donatedialog.ui \
     eraseconfirmation_dialog.ui \
+    exportdialog.ui \
     gui_keibomoneytracker.ui \
     managegroupsdialog.ui \
     addgroupdialog.ui \
