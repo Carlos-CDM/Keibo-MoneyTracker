@@ -22,6 +22,11 @@
      <height>26</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
+   </property>
    <property name="text">
     <string>OK</string>
    </property>
@@ -35,6 +40,11 @@
      <height>26</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
+   </property>
   </widget>
   <widget class="QPushButton" name="pushButtonYes">
    <property name="geometry">
@@ -44,6 +54,11 @@
      <width>91</width>
      <height>26</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
    </property>
    <property name="text">
     <string>Yes</string>

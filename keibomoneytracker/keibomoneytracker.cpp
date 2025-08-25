@@ -1045,6 +1045,80 @@ int Account::deleteMultipleTransactionsInMonth(const int &mon, std::vector<int> 
     return NumberOfTransactions;
 }
 
+double Account::getBalanceForSelectedTransactionsInMonth(const int &mon, std::vector<int> listOfItemsToBalance)
+{
+    double balance = 0.0;
+    //std::sort(listOfItemsToBalance.begin(), listOfItemsToBalance.end()); //Stick to own method
+    sortNumberList(listOfItemsToBalance);
+
+    std::vector<std::vector<Transaction>>::iterator monthIterator = Yearly_Articles.begin()+mon;
+    std::vector<Transaction>::iterator transactionIterator = (*monthIterator).begin();
+
+    for (std::vector<int>::iterator idOfItemToSum = listOfItemsToBalance.begin();
+         idOfItemToSum != listOfItemsToBalance.end(); ++idOfItemToSum) {
+
+        Transaction const *currentTransaction = &*(transactionIterator + (*idOfItemToSum));
+
+        if (currentTransaction->IsIncome)
+        {
+            balance += currentTransaction->Amount;
+        }
+        else
+        {
+            balance -= currentTransaction->Amount;
+        }
+    }
+
+    return balance;
+}
+
+double Account::getBalanceForSelectedTransactionsInGroup(const bool &isIncomeGroup, const int &group, std::vector<int> listOfItemsToBalance)
+{
+    double balance = 0.0;
+    sortNumberList(listOfItemsToBalance);
+
+    std::vector<Transaction>::iterator transactionIterator;
+
+    if (isIncomeGroup)
+    {
+        transactionIterator = getListOfIncomeItemsOfGroup(group).begin();
+    }
+    else if (!isIncomeGroup)
+    {
+        transactionIterator = getListOfExpensesItemsOfGroup(group).begin();
+    }
+
+    for (std::vector<int>::iterator idOfItemToSum = listOfItemsToBalance.begin();
+         idOfItemToSum != listOfItemsToBalance.end(); ++idOfItemToSum) {
+        Transaction const *currentTransaction = &*(transactionIterator + (*idOfItemToSum));
+
+        balance += currentTransaction->Amount;
+
+    }
+
+
+    return balance;
+}
+
+inline void Account::sortNumberList(std::vector<int> &list)
+{
+    int offset = 1;
+    //IF LIST OF ELEMENTS PROVIDED (FROM SELECTED ELEMENTS IN LIST) IS NOT ARRANGED ACCORDING TO ELEMENTS IN THIS CLASS, ARRANGE THEM!
+    for (std::vector<int>::iterator startFrom = list.begin(); startFrom != list.end()-1; startFrom++)
+    {
+        //std::cout<<"START FROM= "<<*startFrom<<'\n';
+        for (std::vector<int>::iterator x = list.begin()+offset; x != list.end(); ++x) {
+            if (*x < *startFrom ){
+                int buffer = *startFrom;
+                //std::cout<<"Smaller number found values are going to be swaped "<<*x<<'\n';
+                *startFrom = *x;
+                *x = buffer;
+            }
+        }
+        ++offset;
+    }
+}
+
 double Account::getExpensesInMonth(const int &mon)
 {
     double Monthly_Expenditures = 0.0;
@@ -2160,7 +2234,7 @@ bool Account::exportDataToCsvFile(std::string savingPath, std::vector<int> &list
                         continue;
                     }
 
-                    csvFile<<','<<getMonthInLanguage(month, ACCOUNT_LANGUAGE)<<'\n';
+                    csvFile<<getMonthInLanguage(month, ACCOUNT_LANGUAGE)<<'\n';
 
                     //Print header "name / amount / /day / group " for the columns
                     switch(ACCOUNT_LANGUAGE)
@@ -2183,7 +2257,7 @@ bool Account::exportDataToCsvFile(std::string savingPath, std::vector<int> &list
                             csvFile<<deleteCommaFromText(it->Name)
                                       <<','<<it->Day
                                      <<','<<deleteCommaFromText(IncomeGroupsNames[it->Group])
-                                    <<','<<it->Amount
+                                    <<','<<'+'<<it->Amount
                                   <<'\n';
                         }
                         else
@@ -2191,7 +2265,7 @@ bool Account::exportDataToCsvFile(std::string savingPath, std::vector<int> &list
                             csvFile<<deleteCommaFromText(it->Name)
                                       <<','<<it->Day
                                      <<','<<deleteCommaFromText(ExpensesGroupsNames[it->Group])
-                                    <<','<<it->Amount
+                                    <<','<<'-'<<it->Amount
                                   <<'\n';
                         }
 
@@ -2255,7 +2329,7 @@ bool Account::exportDataToCsvFile(std::string savingPath, std::vector<int> &list
                         for(std::vector<Transaction>::iterator t = listOfTransactionsOfIncomeGroup.begin();
                             t != listOfTransactionsOfIncomeGroup.end(); ++t)
                         {
-                            csvFile<<t->Name<<','<<getMonthInLanguage(t->Month, ACCOUNT_LANGUAGE)<<','<<t->Day<<','<<t->Amount<<'\n';
+                            csvFile<<deleteCommaFromText(t->Name)<<','<<getMonthInLanguage(t->Month, ACCOUNT_LANGUAGE)<<','<<t->Day<<','<<t->Amount<<'\n';
                         }
 
                         csvFile<<'\n';
@@ -2337,7 +2411,7 @@ bool Account::exportDataToCsvFile(std::string savingPath, std::vector<int> &list
 
 std::string Account::deleteCommaFromText(std::string &text)
 {
-    std::string result;
+    std::string result = "";
     for(std::string::iterator it = text.begin(); it != text.end(); ++it)
     {
         if (*it != ',') {

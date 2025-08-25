@@ -117,6 +117,9 @@ void ManageGroupsDialog::setOverallThemeStyleSheet(QString styleSheetString, QSt
     ui->editGroupButton->updateColorTheme(tUsingDarkTheme);
     ui->deleteGroupButton->updateColorTheme(tUsingDarkTheme);
     usingDarkTheme = tUsingDarkTheme;
+
+    QString tabVerticalHeadStyle = ui->tableWidgetGroups->verticalHeader()->styleSheet() + "QHeaderView { font-size: 9pt; }";
+    ui->tableWidgetGroups->verticalHeader()->setStyleSheet(tabVerticalHeadStyle);
 }
 
 void ManageGroupsDialog::setYearData(Account tempYearData, bool showIncomeGroups)

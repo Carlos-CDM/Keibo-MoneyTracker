@@ -604,6 +604,11 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
+   </property>
    <property name="text">
     <string>No Color</string>
    </property>
@@ -613,7 +618,7 @@
   <customwidget>
    <class>CustomPushButton</class>
    <extends>QPushButton</extends>
-   <header location="global">custompushbutton.h</header>
+   <header>custompushbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

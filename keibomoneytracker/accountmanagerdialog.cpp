@@ -220,7 +220,7 @@ void AccountManagerDialog::on_tableWidget_itemSelectionChanged()
         //Search for existing images for accounts.
         if (SELECTED_ACCOUNT_INDEX >= 0) {
             QString imagePath = QString::fromStdString(*accountPathIterator+"/AccountIcon.png");
-            std::cout<<"IMAGE ACCOUNT PATH: "<<imagePath.toStdString()<<'\n';
+            //std::cout<<"IMAGE ACCOUNT PATH: "<<imagePath.toStdString()<<'\n';
             QImage srcImg(imagePath);
             QPixmap imagePixmap = QPixmap::fromImage(srcImg);
             if (!imagePixmap.isNull()) {

@@ -35,6 +35,7 @@
 
 #include <math.h>
 #include "keibomoneytracker.h"
+#include "qpen.h"
 
 namespace Ui {
 class Gui_KeiboMoneyTracker;
@@ -139,6 +140,9 @@ private slots:
 
 
     void on_actionExport_triggered();
+    void on_tableWidget_itemSelectionChanged();
+
+    void on_tableOfGroups_itemSelectionChanged();
 
 private:
     Ui::Gui_KeiboMoneyTracker *ui;
@@ -169,7 +173,7 @@ private:
 
     int currentYear                = 2020;
     int currentMonth               = 0;
-    unsigned int currentGroupSelected       = 0;
+    unsigned int currentExpensesGroupSelected       = 0;
     unsigned int currentIncomeGroupSelected = 0;
     bool showIncome                = true;
 
@@ -201,6 +205,8 @@ private:
     void toggle_IncomeOutcomeGroup();
     void goToNextGroup();
     void goToPreviousGroup();
+    void displayBalanceForSelectedTransactionsInCurrentMonth();
+    void displayBalanceForSelectedTransactionsInCurrentGroup();
 
     QDir homeDir;
     QDir AppDir;

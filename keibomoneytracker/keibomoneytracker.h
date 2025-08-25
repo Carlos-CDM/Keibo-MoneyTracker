@@ -102,6 +102,7 @@ public:
     void setElementsToRepeat(std::vector<Transaction> &newElementsAdded);
 
     void sortTransactionsByDate();
+    inline void sortNumberList(std::vector<int> &list);
 
     void loadExpensesGroups();
     void saveExpensesGroups();
@@ -208,6 +209,8 @@ public:
 
     double  getBalanceInYear();
     double  getBalanceInMonth(const int &mon);
+    double  getBalanceForSelectedTransactionsInMonth(const int &mon, std::vector<int> listOfItemsToBalance);
+    double  getBalanceForSelectedTransactionsInGroup(const bool &isIncomeGroup, const int &group, std::vector<int> listOfItemsToBalance);
 
     int     getNumberOfTransactionsInMonth(const int &mon)                {return (this->Yearly_Articles[mon].size());}
     std::vector<Transaction>    getListOfExpensesItemsOfGroup(const int &group);

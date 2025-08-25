@@ -40,7 +40,6 @@
 
 #include <ctime>
 #include <QToolTip> //To enable toast
-#include <thread>
 #include <QLocale>
 #include <QMouseEvent>
 #include <QTableWidget>
@@ -78,6 +77,7 @@ TableWidgetMouse::TableWidgetMouse(QWidget *parent) :
     QTableWidget(parent)
 {
     QPalette p = palette();
+    //------------Set table custom focus color for selected rows here-----------//
     //---------- Color group -------- Color role ----------- Color -------------//
     p.setColor(QPalette::Active, QPalette::Highlight, QColor(119, 187, 197, 220));
     p.setColor(QPalette::Inactive, QPalette::Highlight, QColor(Qt::gray));
@@ -92,8 +92,10 @@ TableWidgetMouseGroup::TableWidgetMouseGroup(QWidget *parent) :
     QTableWidget(parent)
 {
     QPalette p = palette();
+    //------------Set table custom focus color for selected rows here-----------//
     //---------- Color group -------- Color role ----------- Color -------------//
     p.setColor(QPalette::Active, QPalette::Highlight, QColor(119, 187, 197, 220));
+    p.setColor(QPalette::Inactive, QPalette::Highlight, QColor(Qt::gray));
     setPalette(p);
 }
 
@@ -125,9 +127,13 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
     //-----------------------------------------------------
     this->ui->tableWidget->setTabKeyNavigation(false);
     this->ui->tableOfGroups->setTabKeyNavigation(false);
+    this->ui->tableWidgetSum->setTabKeyNavigation(false);
+    this->ui->tableWidgetSumGroup->setTabKeyNavigation(false);
 
     this->ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->ui->tableOfGroups->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    this->ui->tableWidgetSum->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    this->ui->tableWidgetSumGroup->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     this->ui->pushButtonToggleGroups->setFocusPolicy(Qt::NoFocus);
     this->ui->monthForwardButton->setFocusPolicy(Qt::NoFocus);
@@ -297,6 +303,18 @@ Gui_KeiboMoneyTracker::Gui_KeiboMoneyTracker(QWidget *parent) :
      ui->tableWidget->setSelectionBehavior(QTableWidget::SelectRows);
      ui->tableOfGroups->setSelectionBehavior(QTableWidget::SelectRows);
      ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+     ui->tableWidgetSum->setSelectionMode(QAbstractItemView::NoSelection);
+     ui->tableWidgetSum->setColumnCount(2);
+     ui->tableWidgetSum->setRowCount(1);
+     ui->tableWidgetSum->horizontalHeader()->setStretchLastSection(true);
+     ui->tableWidgetSum->horizontalHeader()->setVisible(false);
+     ui->tableWidgetSum->verticalHeader()->setVisible(false);
+     ui->tableWidgetSumGroup->setSelectionMode(QAbstractItemView::NoSelection);
+     ui->tableWidgetSumGroup->setColumnCount(2);
+     ui->tableWidgetSumGroup->setRowCount(1);
+     ui->tableWidgetSumGroup->horizontalHeader()->setStretchLastSection(true);
+     ui->tableWidgetSumGroup->horizontalHeader()->setVisible(false);
+     ui->tableWidgetSumGroup->verticalHeader()->setVisible(false);
 }
 
 Gui_KeiboMoneyTracker::~Gui_KeiboMoneyTracker()
@@ -760,6 +778,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     ui->tableWidget->setFont( fontTable );
                     QString tabHeadStyle = ui->tableWidget->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 10pt; }";
                     ui->tableWidget->horizontalHeader()->setStyleSheet(tabHeadStyle);
+                    ui->tableWidgetSum->setFont(fontTable);
 
                     QFont upperMenuFont = ui->menubar->font();
                     upperMenuFont.setPointSize(10);
@@ -777,6 +796,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                     ui->tableOfGroups->setFont( font );
                     tabHeadStyle = ui->tableOfGroups->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 9pt; }";
                     ui->tableOfGroups->horizontalHeader()->setStyleSheet(tabHeadStyle);
+                    ui->tableWidgetSumGroup->setFont(font);
                     verticalHeader = ui->tableOfGroups->verticalHeader();
                     verticalHeader->setDefaultSectionSize(22);
                 }
@@ -785,6 +805,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                 QFont fontTable = ui->tableWidget->font();
                 fontTable.setPointSize( 9 );
                 ui->tableWidget->setFont( fontTable );
+                ui->tableWidgetSum->setFont(fontTable);
                 QString tabHeadStyle = ui->tableWidget->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 9pt; }";
                 ui->tableWidget->horizontalHeader()->setStyleSheet(tabHeadStyle);
                 QFont upperMenuFont = ui->menubar->font();
@@ -801,6 +822,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
                 QFont font = ui->tableOfGroups->font();
                 font.setPointSize( 8 );
                 ui->tableOfGroups->setFont( font );
+                ui->tableWidgetSumGroup->setFont(font);
                 tabHeadStyle = ui->tableOfGroups->horizontalHeader()->styleSheet() + "QHeaderView { font-size: 8pt; }";
                 ui->tableOfGroups->horizontalHeader()->setStyleSheet(tabHeadStyle);
                 verticalHeader = ui->tableOfGroups->verticalHeader();
@@ -811,7 +833,7 @@ bool Gui_KeiboMoneyTracker::eventFilter(QObject *obj, QEvent *event)
         else if (qobject_cast<QTableWidget*>(obj) == ui->tableOfGroups)
         {
             const float tableWidth  = static_cast<float>(ui->tableOfGroups->width());
-            const float nameWidth   = (0.34f)*(tableWidth);
+            const float nameWidth   = (0.40f)*(tableWidth);
             const float amountWidth = (0.16f)*(tableWidth);
             const float dayWidth    = (0.08f)*(tableWidth);
             ui->tableOfGroups->setColumnWidth(0,static_cast<int>(nameWidth));
@@ -966,7 +988,7 @@ void Gui_KeiboMoneyTracker::expensesGroupSelection(QAction *action)
          expensesGroupIt != currentAccount.ExpensesGroupsNames.end(); ++ expensesGroupIt){
         if (groupName == *expensesGroupIt) {
             showIncome = false;
-            currentGroupSelected = groupId;
+            currentExpensesGroupSelected = groupId;
             this->updateGroups();
             this->updateListOfGroups();
             if (currentAccount.getAccountLanguage() == ENGLISH) {
@@ -993,7 +1015,7 @@ void Gui_KeiboMoneyTracker::focusOverallIncomeExpenses()
 
     focusingOverallIncomeExpenses = true;
     focusingGroups = false;
-    this->ui->tableOfGroups->clearSelection();
+    //this->ui->tableOfGroups->clearSelection();
 }
 
 void Gui_KeiboMoneyTracker::focusGroups()
@@ -1105,6 +1127,7 @@ void Gui_KeiboMoneyTracker::updateToCurrentYear() //Updates also to the selected
         updateGraph();
         updateGroups();
         updateListOfGroups();
+        displayBalanceForSelectedTransactionsInCurrentMonth();
     }
 }
 
@@ -1115,6 +1138,7 @@ void Gui_KeiboMoneyTracker::updateToCurrentMonth()
         this->displayArticlesOnTable();
         this->updateGraph();
     }
+    displayBalanceForSelectedTransactionsInCurrentMonth();
 }
 
 void Gui_KeiboMoneyTracker::updateColorsOnScreen(std::vector<ColorConfiguration>::iterator currentColorConfigIt)
@@ -1206,6 +1230,8 @@ void Gui_KeiboMoneyTracker::updateColorsOnScreen(std::vector<ColorConfiguration>
 
     ui->tableWidget->setStyleSheet(tablesStyleSheet);
     ui->tableOfGroups->setStyleSheet(tablesStyleSheet);
+    ui->tableWidgetSum->setStyleSheet(tablesStyleSheet);
+    ui->tableWidgetSumGroup->setStyleSheet(tablesStyleSheet);
 
     horizontalHeaderStyleSheet = "QHeaderView::section { background-color:"+ overallBackgroundColor+" border-radius : 0px; border-bottom: 1px solid gray; }";
     ui->tableWidget->horizontalHeader()->setStyleSheet(horizontalHeaderStyleSheet);
@@ -2349,6 +2375,7 @@ void Gui_KeiboMoneyTracker::deleteSelectedTransaction()
                updateGroups();
                updateListOfGroups();
                this->ui->tableWidget->clearSelection();
+               this->ui->tableOfGroups->clearSelection();
            }
        }
     }
@@ -2899,17 +2926,17 @@ void Gui_KeiboMoneyTracker::updateGroups()
         if (!showIncome)
         {
             ui->widget_2->showingIncome = false;
-            if (currentGroupSelected > 0)
+            if (currentExpensesGroupSelected > 0)
             {
-                if (this->currentAccount.getTotalExpensesOfGroup(currentGroupSelected) != 0){
-                    for (unsigned int i = 0; i != currentGroupSelected; ++i){  ///Calculate offset.
+                if (this->currentAccount.getTotalExpensesOfGroup(currentExpensesGroupSelected) != 0){
+                    for (unsigned int i = 0; i != currentExpensesGroupSelected; ++i){  ///Calculate offset.
                         percentageOffSetArc = percentageOffSetArc + (this->currentAccount.getTotalExpensesOfGroup(i)/this->currentAccount.getTotalExpensesInYear());
                     }
 
                     ///Calculate arc relative to expense.
                     ui->widget_2->finalPercentageStart =   percentageOffSetArc;
                     ui->widget_2->finalPercentageEnd   =  (percentageOffSetArc
-                                                        + (this->currentAccount.getTotalExpensesOfGroup(currentGroupSelected)/this->currentAccount.getTotalExpensesInYear()) );
+                                                        + (this->currentAccount.getTotalExpensesOfGroup(currentExpensesGroupSelected)/this->currentAccount.getTotalExpensesInYear()) );
                 } else {
                     ui->widget_2->finalPercentageStart =   0;
                     ui->widget_2->finalPercentageEnd   =   0.0f;
@@ -2931,14 +2958,14 @@ void Gui_KeiboMoneyTracker::updateGroups()
             }
 
             std::vector<std::string>::iterator groupIteratorName = currentAccount.ExpensesGroupsNames.begin();
-            //ui->groupNameLabel->setText(QString::fromStdString(*(groupIteratorName+currentGroupSelected)));
-            ui->groupNameLabel->setText(QString::fromStdString(*(groupIteratorName+currentGroupSelected)));
+            //ui->groupNameLabel->setText(QString::fromStdString(*(groupIteratorName+currentExpensesGroupSelected)));
+            ui->groupNameLabel->setText(QString::fromStdString(*(groupIteratorName+currentExpensesGroupSelected)));
 
             std::vector<double>::iterator groupExpensesIterator = currentAccount.ExpensesGroupsAmounts.begin();
-            //ui->groupAmountLabel->setText(QString::number( (*(groupExpensesIterator+currentGroupSelected)), 0, 2) + QString(" €") );
+            //ui->groupAmountLabel->setText(QString::number( (*(groupExpensesIterator+currentExpensesGroupSelected)), 0, 2) + QString(" €") );
 
 
-            ui->widget_2->amountOfSelectedGroup = *(groupExpensesIterator+currentGroupSelected);
+            ui->widget_2->amountOfSelectedGroup = *(groupExpensesIterator+currentExpensesGroupSelected);
         }
 
         else if (showIncome)
@@ -3004,7 +3031,7 @@ void Gui_KeiboMoneyTracker::updateListOfGroups()
         listOfArticles.clear();
 
         if (!showIncome){
-            listOfArticles = currentAccount.getListOfExpensesItemsOfGroup(currentGroupSelected);
+            listOfArticles = currentAccount.getListOfExpensesItemsOfGroup(currentExpensesGroupSelected);
             ui->tableOfGroups->setRowCount(listOfArticles.size());
         }
         else if (showIncome){
@@ -3037,6 +3064,8 @@ void Gui_KeiboMoneyTracker::updateListOfGroups()
         ui->tableOfGroups->horizontalHeader()->setVisible(true);
         ui->tableOfGroups->setShowGrid(false);
         ui->tableOfGroups->setItemDelegate(new GridLineDelegate(ui->tableOfGroups));
+
+        displayBalanceForSelectedTransactionsInCurrentGroup();
 }
 
 void Gui_KeiboMoneyTracker::goToPreviousGroup()
@@ -3045,15 +3074,15 @@ void Gui_KeiboMoneyTracker::goToPreviousGroup()
     {
         if (!showIncome)
         {
-            if (currentGroupSelected <= 0)
+            if (currentExpensesGroupSelected <= 0)
             {
-                currentGroupSelected = currentAccount.ExpensesGroupsNames.size()-1;
+                currentExpensesGroupSelected = currentAccount.ExpensesGroupsNames.size()-1;
                 updateGroups();
                 updateListOfGroups();
             }
 
-            else if (currentGroupSelected >= 1){
-                --currentGroupSelected;
+            else if (currentExpensesGroupSelected >= 1){
+                --currentExpensesGroupSelected;
                 updateGroups();
                 updateListOfGroups();
             }
@@ -3090,15 +3119,15 @@ void Gui_KeiboMoneyTracker::goToNextGroup()
     {
         if (!showIncome)
         {
-            if (currentGroupSelected >= currentAccount.ExpensesGroupsNames.size()-1)
+            if (currentExpensesGroupSelected >= currentAccount.ExpensesGroupsNames.size()-1)
             {
-                currentGroupSelected = 0;
+                currentExpensesGroupSelected = 0;
                 updateGroups();
                 updateListOfGroups();
             }
 
-            else if (currentGroupSelected != (currentAccount.ExpensesGroupsNames.size()-1)){  ///Current number of groups
-                ++currentGroupSelected;
+            else if (currentExpensesGroupSelected != (currentAccount.ExpensesGroupsNames.size()-1)){  ///Current number of groups
+                ++currentExpensesGroupSelected;
                 updateGroups();
                 updateListOfGroups();
             }
@@ -3135,12 +3164,12 @@ void Gui_KeiboMoneyTracker::toggle_IncomeOutcomeGroup()
     {
         if (showIncome){
             showIncome = false;
-            if (currentAccount.getTotalExpensesInYear() > 0.0 && currentGroupSelected == 0)//If "not classified" group is selected and amount of that group is zero go to first named group
+            if (currentAccount.getTotalExpensesInYear() > 0.0 && currentExpensesGroupSelected == 0)//If "not classified" group is selected and amount of that group is zero go to first named group
             {
                 std::vector<double>::iterator amountNotClassifiedExpenses = currentAccount.ExpensesGroupsAmounts.begin();
                 if (*amountNotClassifiedExpenses == 0.0 && currentAccount.ExpensesGroupsAmounts.size() > 0)
                 {
-                    currentGroupSelected++;
+                    currentExpensesGroupSelected++;
                 }
             }
             updateGroups();
@@ -3277,8 +3306,8 @@ void Gui_KeiboMoneyTracker::on_actionManage_Groups_triggered()
 
         else if (manageGroupDialog.groupWasDeleted())
         {
-            //--currentGroupSelected; //If more than one group is deleted a -1 decrement will make the program crash.
-            currentGroupSelected = 0;
+            //--currentExpensesGroupSelected; //If more than one group is deleted a -1 decrement will make the program crash.
+            currentExpensesGroupSelected = 0;
             updateGroups();
             displayArticlesOnTable();
             updateListOfGroups();
@@ -4985,4 +5014,101 @@ void Gui_KeiboMoneyTracker::on_actionExport_triggered()
 
     delete tempAccount;
 }
+
+
+void Gui_KeiboMoneyTracker::on_tableWidget_itemSelectionChanged()
+{
+    displayBalanceForSelectedTransactionsInCurrentMonth();
+}
+
+void Gui_KeiboMoneyTracker::on_tableOfGroups_itemSelectionChanged()
+{
+    displayBalanceForSelectedTransactionsInCurrentGroup();
+}
+
+
+void Gui_KeiboMoneyTracker::displayBalanceForSelectedTransactionsInCurrentMonth()
+{
+    if (ACCOUNT_SET)
+    {
+       QItemSelectionModel * selection = ui->tableWidget->selectionModel();
+       QModelIndexList highlightedRows =  selection->selectedRows();
+       if (highlightedRows.count()>1)
+       {
+            std::vector<int> listOfItemsToBalance;
+            listOfItemsToBalance.clear();
+            //Get list of selected items in current month
+            for (int i = 0; i!=highlightedRows.count(); ++i)
+            {
+                QModelIndex index = highlightedRows.at(i);
+                int row = index.row();
+                listOfItemsToBalance.push_back( row);
+            }
+
+            double selectedItemsBalance = currentAccount.getBalanceForSelectedTransactionsInMonth(currentMonth, listOfItemsToBalance);
+
+            ui->tableWidgetSum->setItem(0,0, new QTableWidgetItem(QString::number(listOfItemsToBalance.size())));
+            ui->tableWidgetSum->item(0,0)->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignVCenter);
+
+            if (currentAccount.getAccountLanguage() == GERMAN){
+                ui->tableWidgetSum->setItem(0,1, new QTableWidgetItem (QString::fromStdString(getAmountAsStringInGermanFormat(selectedItemsBalance))  + QString("            ")));
+            } else {
+                ui->tableWidgetSum->setItem(0,1, new QTableWidgetItem (QString::fromStdString(getAmountAsStringFormatted(selectedItemsBalance))  + QString("            ")));
+            }
+            ui->tableWidgetSum->item(0,1)->setTextAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);
+
+       }
+       else
+       {
+           ui->tableWidgetSum->clearContents();
+       }
+    }
+}
+
+void Gui_KeiboMoneyTracker::displayBalanceForSelectedTransactionsInCurrentGroup()
+{
+    if (ACCOUNT_SET)
+    {
+       QItemSelectionModel * selection = ui->tableOfGroups->selectionModel();
+       QModelIndexList highlightedRows =  selection->selectedRows();
+       if (highlightedRows.count()>1)
+       {
+            std::vector<int> listOfItemsToBalance;
+            listOfItemsToBalance.clear();
+            //Get list of selected items in current group
+            for (int i = 0; i!=highlightedRows.count(); ++i)
+            {
+                QModelIndex index = highlightedRows.at(i);
+                int row = index.row();
+                listOfItemsToBalance.push_back( row);
+            }
+            double selectedItemsBalance = 0.0;
+            if (showIncome)
+            {
+                selectedItemsBalance = currentAccount.getBalanceForSelectedTransactionsInGroup(true, currentIncomeGroupSelected, listOfItemsToBalance);
+            }
+            else
+            {
+                selectedItemsBalance = currentAccount.getBalanceForSelectedTransactionsInGroup(false, currentExpensesGroupSelected, listOfItemsToBalance);
+            }
+
+
+            ui->tableWidgetSumGroup->setItem(0,0, new QTableWidgetItem(QString::number(listOfItemsToBalance.size())));
+            ui->tableWidgetSumGroup->item(0,0)->setTextAlignment(Qt::AlignmentFlag::AlignHCenter | Qt::AlignmentFlag::AlignVCenter);
+
+            if (currentAccount.getAccountLanguage() == GERMAN){
+                ui->tableWidgetSumGroup->setItem(0,1, new QTableWidgetItem (QString::fromStdString(getAmountAsStringInGermanFormat(selectedItemsBalance))  + QString("       ")));
+            } else {
+                ui->tableWidgetSumGroup->setItem(0,1, new QTableWidgetItem (QString::fromStdString(getAmountAsStringFormatted(selectedItemsBalance))  + QString("       ")));
+            }
+            ui->tableWidgetSumGroup->item(0,1)->setTextAlignment(Qt::AlignmentFlag::AlignRight | Qt::AlignmentFlag::AlignVCenter);
+
+       }
+       else
+       {
+           ui->tableWidgetSumGroup->clearContents();
+       }
+    }
+}
+
 

@@ -29,7 +29,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="mouseTracking">
@@ -47,7 +48,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
   </widget>
@@ -62,7 +64,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
   </widget>
@@ -77,7 +80,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="focusPolicy">
@@ -104,7 +108,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="frameShape">
@@ -166,7 +171,7 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>URW Gothic L</family>
     </font>
    </property>
    <property name="text">
@@ -184,7 +189,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="mouseTracking">
@@ -221,7 +227,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
   </widget>

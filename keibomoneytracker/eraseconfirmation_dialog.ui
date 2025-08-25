@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>488</width>
-    <height>121</height>
+    <height>123</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,8 +24,8 @@
    </property>
    <property name="font">
     <font>
-     <family>MS Shell Dlg 2</family>
-     <pointsize>9</pointsize>
+     <family>DejaVu Sans</family>
+     <pointsize>10</pointsize>
     </font>
    </property>
    <property name="text">
@@ -83,6 +83,11 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>URW Gothic L</family>
+     </font>
+    </property>
     <property name="text">
      <string>OK</string>
     </property>
@@ -95,6 +100,11 @@
       <width>85</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>URW Gothic L</family>
+     </font>
     </property>
     <property name="text">
      <string>Cancel</string>

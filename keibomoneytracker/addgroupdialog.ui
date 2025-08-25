@@ -35,6 +35,11 @@
      <height>25</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
+   </property>
    <property name="focusPolicy">
     <enum>Qt::TabFocus</enum>
    </property>
@@ -53,6 +58,11 @@
      <width>89</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
    </property>
    <property name="focusPolicy">
     <enum>Qt::TabFocus</enum>

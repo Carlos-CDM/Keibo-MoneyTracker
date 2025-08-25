@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>720</height>
+    <width>1281</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="font">
@@ -57,8 +57,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1278</width>
-         <height>672</height>
+         <width>1279</width>
+         <height>703</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -154,7 +154,7 @@
                </property>
                <property name="font">
                 <font>
-                 <family>Malgun Gothic</family>
+                 <family>URW Gothic L</family>
                  <pointsize>10</pointsize>
                  <italic>false</italic>
                 </font>
@@ -267,9 +267,8 @@
           </property>
           <property name="font">
            <font>
-            <family>MS Shell Dlg 2</family>
+            <family>URW Gothic L</family>
             <pointsize>10</pointsize>
-            <weight>50</weight>
             <bold>false</bold>
            </font>
           </property>
@@ -306,13 +305,13 @@ QGroupBox::title {
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>375</width>
-                 <height>160</height>
+                 <width>385</width>
+                 <height>140</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>600</width>
+                 <width>750</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -346,6 +345,22 @@ QGroupBox::title {
               </widget>
              </item>
              <item>
+              <widget class="QTableWidget" name="tableWidgetSumGroup">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>29</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>750</width>
+                 <height>29</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
               <layout class="QHBoxLayout" name="horizontalLayout_2">
                <property name="sizeConstraint">
                 <enum>QLayout::SetMinAndMaxSize</enum>
@@ -372,7 +387,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>MS Shell Dlg 2</family>
+                   <family>URW Gothic L</family>
                    <pointsize>8</pointsize>
                    <kerning>true</kerning>
                   </font>
@@ -416,7 +431,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>MS Shell Dlg 2</family>
+                   <family>URW Gothic L</family>
                   </font>
                  </property>
                  <property name="text">
@@ -471,8 +486,8 @@ QGroupBox::title {
              </property>
              <property name="maximumSize">
               <size>
-               <width>220</width>
-               <height>210</height>
+               <width>253</width>
+               <height>241</height>
               </size>
              </property>
             </widget>
@@ -612,9 +627,8 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>MS Shell Dlg 2</family>
+                   <family>URW Gothic L</family>
                    <pointsize>14</pointsize>
-                   <weight>50</weight>
                    <bold>false</bold>
                   </font>
                  </property>
@@ -724,7 +738,7 @@ QGroupBox::title {
                  </property>
                  <property name="font">
                   <font>
-                   <family>MS Shell Dlg 2</family>
+                   <family>URW Gothic L</family>
                    <pointsize>15</pointsize>
                   </font>
                  </property>
@@ -881,6 +895,22 @@ QGroupBox::title {
               </widget>
              </item>
              <item>
+              <widget class="QTableWidget" name="tableWidgetSum">
+               <property name="minimumSize">
+                <size>
+                 <width>400</width>
+                 <height>29</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>29</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
               <layout class="QHBoxLayout" name="horizontalLayout">
                <property name="spacing">
                 <number>20</number>
@@ -897,9 +927,8 @@ QGroupBox::title {
                    </property>
                    <property name="font">
                     <font>
-                     <family>MS Shell Dlg 2</family>
+                     <family>URW Gothic L</family>
                      <pointsize>10</pointsize>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -918,9 +947,8 @@ QGroupBox::title {
                    </property>
                    <property name="font">
                     <font>
-                     <family>MS Shell Dlg 2</family>
+                     <family>URW Gothic L</family>
                      <pointsize>10</pointsize>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -943,9 +971,8 @@ QGroupBox::title {
                    </property>
                    <property name="font">
                     <font>
-                     <family>MS Shell Dlg 2</family>
+                     <family>URW Gothic L</family>
                      <pointsize>10</pointsize>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -964,9 +991,8 @@ QGroupBox::title {
                    </property>
                    <property name="font">
                     <font>
-                     <family>MS Shell Dlg 2</family>
+                     <family>URW Gothic L</family>
                      <pointsize>10</pointsize>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -985,9 +1011,8 @@ QGroupBox::title {
                    </property>
                    <property name="font">
                     <font>
-                     <family>MS Shell Dlg 2</family>
+                     <family>URW Gothic L</family>
                      <pointsize>10</pointsize>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -1132,7 +1157,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1154,7 +1179,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1218,7 +1243,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1246,7 +1271,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1321,7 +1346,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1401,9 +1426,8 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
-                    <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
@@ -1422,7 +1446,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1486,7 +1510,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1514,7 +1538,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1577,7 +1601,7 @@ QGroupBox::title {
                   </property>
                   <property name="font">
                    <font>
-                    <family>MS Shell Dlg 2</family>
+                    <family>URW Gothic L</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -1633,9 +1657,8 @@ QGroupBox::title {
           </property>
           <property name="font">
            <font>
-            <family>MS Shell Dlg 2</family>
+            <family>URW Gothic L</family>
             <pointsize>11</pointsize>
-            <weight>50</weight>
             <bold>false</bold>
            </font>
           </property>
@@ -1715,8 +1738,8 @@ QGroupBox::title {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
-     <height>23</height>
+     <width>1281</width>
+     <height>22</height>
     </rect>
    </property>
    <property name="font">
@@ -1729,6 +1752,7 @@ QGroupBox::title {
     <property name="font">
      <font>
       <family>Malgun Gothic</family>
+      <pointsize>9</pointsize>
      </font>
     </property>
     <property name="title">
@@ -1814,7 +1838,9 @@ QGroupBox::title {
     <string>Open</string>
    </property>
    <property name="font">
-    <font/>
+    <font>
+     <family>URW Gothic L</family>
+    </font>
    </property>
   </action>
   <action name="actionAppearance">
@@ -1830,7 +1856,9 @@ QGroupBox::title {
     <string>Exit</string>
    </property>
    <property name="font">
-    <font/>
+    <font>
+     <family>URW Gothic L</family>
+    </font>
    </property>
   </action>
   <action name="actionHow_to_use">
@@ -1847,6 +1875,11 @@ QGroupBox::title {
    <property name="text">
     <string>New</string>
    </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
+   </property>
   </action>
   <action name="actionDonate">
    <property name="text">
@@ -1856,6 +1889,11 @@ QGroupBox::title {
   <action name="actionExport">
    <property name="text">
     <string>Export</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>URW Gothic L</family>
+    </font>
    </property>
   </action>
  </widget>

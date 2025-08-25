@@ -23,7 +23,6 @@
 #define ACCOUNTMANAGERDIALOG_H
 
 #include <QDialog>
-#include <iostream>
 
 namespace Ui {
 class AccountManagerDialog;
