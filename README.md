@@ -10,10 +10,13 @@
 
 - Create multiple accounts.
 - Visualize and classify your transactions on a yearly basis.
-- Automatically repeat transactions.
+- Copy, Edit or automatically repeat transactions.
 - Customize the colors of the user interface including dark theme.
 - Easy to use with keyboard support.
 - Interface in English, German and Spanish.
+- Export data as csv files.
+- Analyze key statistics based on your inputs.
+- Available on Linux as a single AppImage file.
 
 
 ## Build
